@@ -1,7 +1,7 @@
 import axios from 'axios'
 // 创建axios实例
 const request = axios.create({
-    baseURL: '',// 所有的请求地址前缀部分(没有后端请求不用写)
+    baseURL: '/api',// 所有的请求地址前缀部分(没有后端请求不用写)
     timeout: 80000, // 请求超时时间(毫秒)
     withCredentials: true,// 异步请求携带cookie
     // headers: {
@@ -32,7 +32,7 @@ request.interceptors.request.use(
 request.interceptors.response.use(
     response => {
         // 对响应数据做点什么
-        return response.data
+        return response
     },
     error => {  
         // 对响应错误做点什么
