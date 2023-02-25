@@ -1,55 +1,78 @@
 <template>
-    <el-form :model="fileForm" label-width="120px">
-        <el-form-item label="选择文件">
-            <el-upload ref="upload" class="upload-demo" action="/api/upload-file" :limit="1" :on-exceed="handleExceed"
-                :auto-upload="false" :data="fileForm" :on-success="handleSuccess" :on-error="handleError">
-                <template #trigger>
-                    <el-button type="primary">选择文件</el-button>
-
-                </template>
-                <template #tip>
-                    <div class="el-upload__tip text-red">
-                        最多选择一个文件
-                    </div>
-                </template>
-            </el-upload>
-        </el-form-item>
-
-        <el-form-item label="文件key">
-            <el-input v-model="fileForm.file_key" placeholder="留空自动生成" />
-        </el-form-item>
-        <el-form-item label="可下载次数">
-            <el-input-number v-model="fileForm.count" :min="0" :max="100" />
-
-            <div class="el-upload__tip text-red">
-                选择0为永不消失
+    <el-card class="box-card">
+        <template #header>
+            <div class="card-header">
+                <span>上传文件</span>
             </div>
+        </template>
+        <el-form :model="fileForm" label-width="120px">
+            <el-form-item label="选择文件">
+                <el-upload ref="upload" class="upload-demo" action="/api/upload-file" :limit="1" :on-exceed="handleExceed"
+                    :auto-upload="false" :data="fileForm" :on-success="handleSuccess" :on-error="handleError">
+                    <template #trigger>
+                        <el-button type="primary">选择文件</el-button>
 
-        </el-form-item>
-        <el-button class="ml-3" type="success" @click="submitUpload">
-            上传
-        </el-button>
-    </el-form>
+                    </template>
+                    <template #tip>
+                        <div class="el-upload__tip text-red">
+                            最多选择一个文件
+                        </div>
+                    </template>
+                </el-upload>
+            </el-form-item>
+
+            <el-form-item label="文件key">
+                <el-input v-model="fileForm.file_key" placeholder="留空自动生成" />
+            </el-form-item>
+            <el-form-item label="可下载次数">
+                <el-input-number v-model="fileForm.count" :min="0" :max="100" />
+
+                <div class="el-upload__tip text-red">
+                    选择0为永不消失
+                </div>
+
+            </el-form-item>
+            <el-form-item>
+                <el-button class="ml-3" type="primary" @click="submitUpload">
+                    上传
+                </el-button>
+            </el-form-item>
+        </el-form>
+    </el-card>
     <br>
     <el-divider />
-    <el-form :model="downloadForm" label-width="120px">
-        <el-form-item label="文件key">
-            <el-input v-model="downloadForm.file_key" />
-        </el-form-item>
-        <el-form-item>
-            <el-button type="primary" @click="downloadSubmit">下载</el-button>
-        </el-form-item>
-    </el-form>
+    <el-card class="box-card">
+        <template #header>
+            <div class="card-header">
+                <span>下载文件</span>
+            </div>
+        </template>
+        <el-form :model="downloadForm" label-width="120px">
+            <el-form-item label="文件key">
+                <el-input v-model="downloadForm.file_key" />
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="downloadSubmit">下载</el-button>
+            </el-form-item>
+        </el-form>
+    </el-card>
     <br>
     <el-divider />
-    <el-form :model="deleteForm" label-width="120px">
-        <el-form-item label="文件key">
-            <el-input v-model="deleteForm.file_key" />
-        </el-form-item>
-        <el-form-item>
-            <el-button type="danger" @click="deleteSubmit">删除</el-button>
-        </el-form-item>
-    </el-form>
+    <el-card class="box-card">
+        <template #header>
+            <div class="card-header">
+                <span>删除文件</span>
+            </div>
+        </template>
+        <el-form :model="deleteForm" label-width="120px">
+            <el-form-item label="文件key">
+                <el-input v-model="deleteForm.file_key" />
+            </el-form-item>
+            <el-form-item>
+                <el-button type="danger" @click="deleteSubmit">删除</el-button>
+            </el-form-item>
+        </el-form>
+    </el-card>
 </template>
   
 <script setup lang="ts">
@@ -151,9 +174,9 @@ const handleSuccess = (res: any, _file: any, _files: any) => {
 }
 const handleError = (error: any, _file: any, _files: any) => {
     ElNotification({
-            title: '上传失败',
-            message: error,
-            type: 'error',
-        })
+        title: '上传失败',
+        message: error,
+        type: 'error',
+    })
 }
 </script>
