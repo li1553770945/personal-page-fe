@@ -20,8 +20,10 @@ import { loginAPI } from "../request/api"
 import { ElNotification } from 'element-plus'
 import { useUser } from "../store/user"
 import { storeToRefs } from 'pinia'
+import { useRouter} from 'vue-router'
 
 const userStore = useUser()
+const router = useRouter();
 const { isLogined, username, nickname } = storeToRefs(userStore)
 
 
@@ -51,6 +53,7 @@ const onSubmit = () => {
                 isLogined.value = true;
                 username.value = data.username;
                 nickname.value = data.nickname;
+                router.back();
 
             }
         }

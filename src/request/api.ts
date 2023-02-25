@@ -10,3 +10,9 @@ export const loginAPI = (data: any) =>
 export const userInfoAPI = () =>
   instance.get(`/user-info`);
  
+
+  export const fileInfoAPI = (fileKey:any) =>
+  instance.get(`/file-info?file_key=`+fileKey);
+
+  export const deleteFileAPI = (fileKey:any) =>
+  instance.delete(`/delete-file?file_key=`+fileKey);

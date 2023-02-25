@@ -110,7 +110,7 @@ onMounted(() => {
       } else {
         data = data.data
         ElNotification({
-          title: '登录成功',
+          title: '用户状态恢复成功',
           message: "欢迎回来," + data.nickname,
           type: 'success',
         })
