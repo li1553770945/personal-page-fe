@@ -1,5 +1,5 @@
 <template>
-    <el-card class="box-card">
+    <el-card class="box-card" v-if="isLogined">
         <template #header>
             <div class="card-header">
                 <span>上传文件</span>
@@ -47,7 +47,7 @@
     <el-card class="box-card">
         <template #header>
             <div class="card-header">
-                <span>下载文件</span>
+                <span>下载文件（上传、删除文件登陆后可见）</span>
             </div>
         </template>
         <el-form :model="downloadForm" label-width="120px">
@@ -61,7 +61,7 @@
     </el-card>
     <br>
     <el-divider />
-    <el-card class="box-card">
+    <el-card class="box-card" v-if="isLogined">
         <template #header>
             <div class="card-header">
                 <span>删除文件</span>
@@ -94,6 +94,10 @@ import { ref, reactive } from 'vue'
 import { ElNotification, genFileId } from 'element-plus'
 import type { UploadInstance, UploadProps, UploadRawFile } from 'element-plus'
 import { fileInfoAPI, deleteFileAPI } from "../request/api"
+import { useUser } from "../store/user"
+import { storeToRefs } from 'pinia'
+const userStore = useUser()
+const { isLogined, username, nickname, role } = storeToRefs(userStore)
 const upload = ref<UploadInstance>()
 const fileForm = reactive({
     file_key: "",

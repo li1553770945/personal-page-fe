@@ -1,7 +1,16 @@
 import { createRouter, createWebHistory } from "vue-router";
- 
- 
-let routes= [
+
+
+let routes = [
+    {
+        // /search/screens -> /search?q=screens
+        path: '/',
+        redirect: () => {
+            // 方法接收目标路由作为参数
+            // return 重定向的字符串路径/路径对象
+            return { path: '/home' }
+        },
+    },
     {
         path: '/home',
         name: 'home',
@@ -33,10 +42,10 @@ let routes= [
         component: () => import('@pages/generateCode.vue')
     },
     //{
-        //配置404页面
-        //path: '/:catchAll(.*)',
-        //name: '404',
-        //component: () => import(''),
+    //配置404页面
+    //path: '/:catchAll(.*)',
+    //name: '404',
+    //component: () => import(''),
     //}
 ]
 // 路由
