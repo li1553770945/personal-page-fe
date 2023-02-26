@@ -24,7 +24,7 @@ import { useRouter} from 'vue-router'
 
 const userStore = useUser()
 const router = useRouter();
-const { isLogined, username, nickname } = storeToRefs(userStore)
+const { isLogined, username, nickname,role } = storeToRefs(userStore)
 
 
 const loginForm = reactive({
@@ -53,6 +53,7 @@ const onSubmit = () => {
                 isLogined.value = true;
                 username.value = data.username;
                 nickname.value = data.nickname;
+                role.value = data.role;
                 router.back();
 
             }

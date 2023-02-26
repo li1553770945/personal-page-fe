@@ -8,6 +8,7 @@ export const useUser = defineStore('user', {
             isLogined: false,
             username: "",
             nickname: "",
+            role:"",
         }
     },
 

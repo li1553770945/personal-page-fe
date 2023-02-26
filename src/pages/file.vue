@@ -32,6 +32,9 @@
                 </div>
 
             </el-form-item>
+            <el-form-item v-if="uploadFileName != ''">
+                {{ uploadFileName }}的key是{{ uploadFileKey }}
+            </el-form-item>
             <el-form-item>
                 <el-button class="ml-3" type="primary" @click="submitUpload">
                     上传
@@ -73,6 +76,17 @@
             </el-form-item>
         </el-form>
     </el-card>
+
+    <el-dialog v-model="dialogVisible" title="确认删除">
+        <span>您确定要删除文件“{{ deleteFileName }}”？</span>
+        <br>
+        <template #footer>
+            <span class="dialog-footer">
+                <el-button type="primary" @click="deleteFile">确认</el-button>
+                <el-button @click="dialogVisible = false">取消</el-button>
+            </span>
+        </template>
+    </el-dialog>
 </template>
   
 <script setup lang="ts">
@@ -85,7 +99,10 @@ const fileForm = reactive({
     file_key: "",
     count: 0,
 })
-
+const dialogVisible = ref(false);
+const deleteFileName = ref("");
+const uploadFileName = ref("");
+const uploadFileKey = ref("");
 const downloadForm = reactive({
     file_key: "",
 })
@@ -129,6 +146,35 @@ const downloadSubmit = () => {
 }
 
 const deleteSubmit = () => {
+    fileInfoAPI(deleteForm.file_key).then(
+        (res) => {
+            let data = res.data;
+            if (data.code != 0) {
+                ElNotification({
+                    title: '获取文件信息失败',
+                    message: data.msg,
+                    type: 'error',
+                })
+            } else {
+                console.log(dialogVisible)
+
+                deleteFileName.value = data.data.file_name;
+                dialogVisible.value = true;
+
+            }
+        }
+    ).catch(
+        err => {
+            ElNotification({
+                title: '请求失败',
+                message: err.message,
+                type: 'error',
+            })
+        }
+    )
+}
+
+const deleteFile = () => {
     deleteFileAPI(deleteForm.file_key).then(
         (res) => {
             let data = res.data;
@@ -143,7 +189,7 @@ const deleteSubmit = () => {
                     title: '删除成功',
                     type: 'success',
                 })
-
+                dialogVisible.value = false;
             }
         }
     ).catch(
@@ -169,6 +215,8 @@ const handleSuccess = (res: any, _file: any, _files: any) => {
             title: '上传成功',
             type: 'success',
         })
+        uploadFileName.value = res['data'].file_name
+        uploadFileKey.value = res['data'].file_key
 
     }
 }
