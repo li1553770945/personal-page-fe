@@ -1,7 +1,7 @@
 # This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
 
-name: Node.js CI
+name: build and push
 
 on:
   push:
@@ -26,5 +26,20 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: npm install -g yarn
-    - run: yarn build
+
+    - name: build
+      run: |
+        npm install -g yarn
+        yarn install
+        yarn build
+    - name: push
+      uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+        with:
+            username: 'git'
+            server: '${{secrets.REMOTE_ADDRESS}}'
+            ssh_private_key: ${{ secrets.GIT_SSH_KEY }} 
+            local_path: './dist/*'
+            remote_path: '/srv/personal-page-fe/'
+
+
+
