@@ -7,6 +7,12 @@
         <el-radio-group id="collapse-menu-button" v-model="isCollapse">
           <el-radio-button :label="!isCollapse">|||</el-radio-button>
         </el-radio-group>
+        <router-link to="/home"><el-menu-item index="home">
+            <el-icon>
+              <House />
+            </el-icon>
+            主页
+          </el-menu-item></router-link>
         <el-menu-item index="1" @click="openBlogWindow">
           <el-icon>
             <Notebook />
@@ -37,25 +43,47 @@
           </div>
           <div id="logined" v-if="isLogined">
             <el-menu-item index="10-11">{{ nickname }}</el-menu-item>
-            <div id="generate-code" v-if="role=='admin'">
+            <div id="generate-code" v-if="role == 'admin'">
               <router-link to="/generate-code"><el-menu-item index="10-12">生成激活码</el-menu-item></router-link>
             </div>
             <el-menu-item index="10-13" @click="logout">登出</el-menu-item>
           </div>
         </el-sub-menu>
+        <el-sub-menu index="contact">
+          <template #title>
+            <el-icon>
+              <Comment />
+            </el-icon>
+            <span>联系方式</span>
+          </template>
+          <el-menu-item index="email" @click="openMail">
+            <el-icon>
+              <Message />
+            </el-icon>
+            <span>邮箱</span>
+          </el-menu-item>
+          <el-menu-item index="github" @click="openGithub">
+            <el-icon>
+              <github theme="outline" size="24" fill="#333" />
+            </el-icon>
+            <span>Github</span>
+          </el-menu-item>
+        </el-sub-menu>
+
       </el-menu>
+
     </el-aside>
   </el-container>
 </template>
 <script lang="ts" setup>
 import { ref } from "vue";
-import { Notebook, TopRight, User, Tools } from "@element-plus/icons-vue";
+import { Notebook, TopRight, User, Tools, Message, House, Comment } from "@element-plus/icons-vue";
 import { useUser } from "../store/user"
 import { storeToRefs } from 'pinia'
 import { logoutAPI, userInfoAPI } from "@/request/api";
 import { ElNotification } from 'element-plus'
 import { onMounted } from 'vue'
-
+import { Github } from '@icon-park/vue-next';
 const userStore = useUser()
 const { isLogined, username, nickname, role } = storeToRefs(userStore)
 const isCollapse = ref(false);
@@ -137,6 +165,14 @@ onMounted(() => {
     }
   )
 })
+
+const openMail = () => {
+  window.open("mailto:peacesheep@qq.com");
+}
+const openGithub = () => {
+  window.open("https://github.com/li1553770945");
+
+}
 </script>
     
 <style>
@@ -150,5 +186,9 @@ onMounted(() => {
   margin-bottom: 20px;
   margin-top: 20px;
   margin-right: 20px;
+}
+
+#contact-me {
+  text-align: center;
 }
 </style>
