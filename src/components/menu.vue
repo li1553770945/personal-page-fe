@@ -3,7 +3,7 @@
     <!-- 侧边栏 -->
     <el-aside :width="menuWidth">
       <!-- 侧边栏菜单区域 -->
-      <el-menu default-active="1" id="menu" :collapse="isCollapse" @open="handleOpen" @close="handleClose">
+      <el-menu default-active="home" id="menu" :collapse="isCollapse" @open="handleOpen" @close="handleClose">
         <el-radio-group id="collapse-menu-button" v-model="isCollapse">
           <el-radio-button :label="!isCollapse">|||</el-radio-button>
         </el-radio-group>
@@ -11,7 +11,8 @@
             <el-icon>
               <House />
             </el-icon>
-            主页
+            <template #title>主页
+            </template>
           </el-menu-item></router-link>
         <el-menu-item index="1" @click="openBlogWindow">
           <el-icon>
