@@ -41,6 +41,18 @@ let routes = [
         //使用import可以路由懒加载，如果不使用，太多组件一起加载会造成白屏
         component: () => import('@pages/generateCode.vue')
     },
+    {
+        path: '/message-box',
+        name: 'message-box',
+        //使用import可以路由懒加载，如果不使用，太多组件一起加载会造成白屏
+        component: () => import('@pages/messageBox.vue')
+    },
+    {
+        path: '/appreciate',
+        name: 'appreciate',
+        //使用import可以路由懒加载，如果不使用，太多组件一起加载会造成白屏
+        component: () => import('@pages/appreciate.vue')
+    },
     //{
     //配置404页面
     //path: '/:catchAll(.*)',

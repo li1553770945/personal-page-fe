@@ -69,8 +69,23 @@
             </el-icon>
             <span>Github</span>
           </el-menu-item>
+          <router-link to="/message-box">
+            <el-menu-item index="message-box">
+              <el-icon>
+                <MilkTea />
+              </el-icon>
+              <span>咨询&留言</span>
+            </el-menu-item>
+          </router-link>
         </el-sub-menu>
-
+        <router-link to="/appreciate">
+        <el-menu-item index="appreciate">
+          <el-icon>
+           <Sugar />
+          </el-icon>
+          <template #title>赞赏</template>
+        </el-menu-item>
+      </router-link>
       </el-menu>
 
     </el-aside>
@@ -78,7 +93,7 @@
 </template>
 <script lang="ts" setup>
 import { ref } from "vue";
-import { Notebook, TopRight, User, Tools, Message, House, Comment } from "@element-plus/icons-vue";
+import { Notebook, TopRight, User, Tools, Message, House, Comment,MilkTea,Sugar } from "@element-plus/icons-vue";
 import { useUser } from "../store/user"
 import { storeToRefs } from 'pinia'
 import { logoutAPI, userInfoAPI } from "@/request/api";
