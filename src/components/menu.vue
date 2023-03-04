@@ -25,7 +25,7 @@
         <el-sub-menu index="2">
           <template #title>
             <el-icon>
-              <Tools />
+              <Setting />
             </el-icon>
             <span>常用功能</span>
           </template>
@@ -53,9 +53,9 @@
         <el-sub-menu index="contact">
           <template #title>
             <el-icon>
-              <Comment />
+              <InfoFilled />
             </el-icon>
-            <span>联系方式</span>
+            <span>与我联系</span>
           </template>
           <el-menu-item index="email" @click="openMail">
             <el-icon>
@@ -93,7 +93,7 @@
 </template>
 <script lang="ts" setup>
 import { ref } from "vue";
-import { Notebook, TopRight, User, Tools, Message, House, Comment,MilkTea,Sugar } from "@element-plus/icons-vue";
+import { Notebook, TopRight, User,Setting, Message, House, Comment,MilkTea,Sugar } from "@element-plus/icons-vue";
 import { useUser } from "../store/user"
 import { storeToRefs } from 'pinia'
 import { logoutAPI, userInfoAPI } from "@/request/api";

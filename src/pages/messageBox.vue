@@ -13,10 +13,13 @@
                     placeholder="请输入留言内容"></el-input>
             </el-form-item>
             <el-form-item label="联系方式">
-                <el-input v-model="contact" placeholder="请输入联系方式（请注明QQ、微信、手机号等）"></el-input>
+                <el-input v-model="contact" placeholder="请输入联系方式（请注明是QQ，还是微信、手机号等）"></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click.prevent="submitForm">提交</el-button>
+            </el-form-item>
+            <el-form-item>
+                <router-link to="/appreciate"><h3>如果感觉有帮助，您可以点击这句话赞赏我。</h3></router-link>
             </el-form-item>
         </form>
        
