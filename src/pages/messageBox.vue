@@ -1,30 +1,34 @@
 <template>
     <div class="message-form">
-        <el-form ref="formRef" :model="messageForm" :rules="messageFormRules" label-width="120px">
-            <el-form-item label="问题类别" prop="category_id">
-                <el-select v-model="messageForm.category_id" placeholder="请选择问题类别">
-                    <el-option v-for="category in categories" :label="category.name" :value="category.id"></el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="留言内容" prop="message">
-                <el-input type="textarea" v-model="messageForm.message" :autosize="{ minRows: 4, maxRows: 8 }"
-                    placeholder="请输入留言内容（切换页面时该内容会保存，但是刷新后被清空）"></el-input>
-            </el-form-item>
-            <el-form-item label="署名" prop="name">
-                <el-input v-model="messageForm.name" placeholder="请输入署名"></el-input>
-            </el-form-item>
-            <el-form-item label="联系方式" prop="contact">
-                <el-input v-model="messageForm.contact" placeholder="请输入联系方式（请注明是QQ，还是微信、手机号等）非必填"></el-input>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="primary" @click.prevent="submitForm">提交</el-button>
-            </el-form-item>
-            <el-form-item>
-                <router-link to="/appreciate">
-                    <h3>如果感觉有帮助，您可以点击这句话赞赏我。</h3>
-                </router-link>
-            </el-form-item>
-        </el-form>
+        <el-card class="message-card">
+            <el-form ref="formRef" :model="messageForm" :rules="messageFormRules" label-width="120px">
+                <el-form-item label="问题类别" prop="category_id">
+                    <el-select v-model="messageForm.category_id" placeholder="请选择问题类别">
+                        <el-option v-for="category in categories" :label="category.name" :value="category.id"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="留言内容" prop="message">
+                    <el-input type="textarea" v-model="messageForm.message" :autosize="{ minRows: 4, maxRows: 8 }"
+                        placeholder="请输入留言内容（切换页面时该内容会保存，但是刷新后被清空）"></el-input>
+                </el-form-item>
+                <el-form-item label="署名" prop="name">
+                    <el-input v-model="messageForm.name" placeholder="请输入署名"></el-input>
+                </el-form-item>
+                <el-form-item label="联系方式" prop="contact">
+                    <el-input v-model="messageForm.contact" placeholder="请输入联系方式（请注明是QQ，还是微信、手机号等）非必填"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click.prevent="submitForm">提交</el-button>
+                </el-form-item>
+                <el-form-item>
+                    <router-link to="/appreciate">
+                        <h3>如果感觉有帮助，您可以点击这句话赞赏我。</h3>
+                    </router-link>
+                </el-form-item>
+            </el-form>
+        </el-card>
+        <el-divider />
+
         <!-- <el-card id="reply">
             <template #header>
                 <div class="card-header" style="text-align:center">
@@ -172,10 +176,10 @@ const getReply = async () => {
                 })
             } else {
                 ElNotification({
-                title: '查询成功',
-                message: "该消息已被回复",
-                type: 'success',
-            })
+                    title: '查询成功',
+                    message: "该消息已被回复",
+                    type: 'success',
+                })
                 reply.value = data.data.content;
             }
         }
@@ -207,7 +211,7 @@ onMounted(() => {
                 })
             } else {
                 data = data.data
-                
+
                 categories.splice(0, categories.length, ...data);
             }
         }
@@ -234,23 +238,25 @@ onBeforeRouteLeave(() => {
 
 <style scoped>
 .container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
+
 .card {
-  width: 100%;
+    width: 100%;
 }
+
 .reply {
-  margin-top: 20px;
-  text-align: center;
+    text-align: center;
 }
+
 .reply h2 {
-  font-size: 20px;
+    font-size: 20px;
 }
+
 .reply p {
-  font-size: 16px;
-  margin-top: 10px;
+    font-size: 16px;
 }
 </style>
 
