@@ -93,7 +93,7 @@
 </template>
 <script lang="ts" setup>
 import { ref } from "vue";
-import { Notebook, TopRight, User,Setting, Message, House, Comment,MilkTea,Sugar } from "@element-plus/icons-vue";
+import { Notebook, TopRight, User,Setting, Message, House, Comment,MilkTea,Sugar,InfoFilled } from "@element-plus/icons-vue";
 import { useUser } from "../store/user"
 import { storeToRefs } from 'pinia'
 import { logoutAPI, userInfoAPI } from "@/request/api";

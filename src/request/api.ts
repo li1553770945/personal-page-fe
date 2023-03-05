@@ -9,7 +9,7 @@ export const loginAPI = (data: any) =>
 export const registerAPI = (data: any) =>
   instance.post("/register", data);
 
-  export const  generateCodeAPI = (data: any) =>
+export const generateCodeAPI = (data: any) =>
   instance.post("/generate-activate-code", data);
 
 // post请求 ，没参数，但要路径传参
@@ -22,3 +22,9 @@ export const fileInfoAPI = (fileKey: any) =>
 
 export const deleteFileAPI = (fileKey: any) =>
   instance.delete(`/delete-file?file_key=` + fileKey);
+
+export const allMessageCategoriesAPI = () =>
+  instance.get('/all-message-categories')
+
+export const saveMessageAPI = (data: any) =>
+  instance.post("/message", data);
