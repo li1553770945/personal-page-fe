@@ -5,7 +5,7 @@ export const useMessage = defineStore('message', {
     // 相当于data
     state: () => {
         return {
-            category:0,
+            category:"",
             message:"",
             name:"",
             contact:"",

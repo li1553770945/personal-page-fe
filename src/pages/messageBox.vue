@@ -1,7 +1,7 @@
 <template>
     <div class="message-form">
         <el-form ref="formRef" :model="messageForm" :rules="messageFormRules" label-width="120px">
-            <el-form-item label="问题类别" prop="category">
+            <el-form-item label="问题类别" prop="category_id">
                 <el-select v-model="messageForm.category_id" placeholder="请选择问题类别">
                     <el-option v-for="category in categories" :label="category.name" :value="category.id"></el-option>
                 </el-select>
@@ -31,33 +31,39 @@
 
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
-import { ref, reactive,unref, onMounted } from 'vue';
+import { ref, reactive, unref, onMounted } from 'vue';
 import { onBeforeRouteLeave } from 'vue-router';
-import {useMessage} from "../store/message"
-import {allMessageCategoriesAPI,saveMessageAPI} from "@/request/api";
+import { useMessage } from "../store/message"
+import { allMessageCategoriesAPI, saveMessageAPI } from "@/request/api";
 import { ElNotification } from 'element-plus';
 const messageStore = useMessage();
-const {category,message,contact,name} = storeToRefs(messageStore);
+const { category, message, contact, name } = storeToRefs(messageStore);
 const messageForm = reactive({
-    category_id: 0,
+    category_id: '',
     message: '',
     contact: '',
-    name:'',
+    name: '',
 })
-const  categories =reactive<{ name: string; value: string,id:number }[]>([]);
+const categories = reactive<{ name: string; value: string, id: number }[]>([]);
 
-
+const validateCategoryId = (rule: any, value: string, callback: any) => {
+    if (value === '') {
+        callback(new Error('请选择类别'));
+    } else {
+        callback();
+    }
+};
 // 表单验证规则
 const messageFormRules = reactive({
-    category_id: [{ required: true, message: '请选择类别', trigger: 'blur' }],
+    category_id: [{ required: true, message: '请选择类别', trigger: 'blur' },
+    { validator: validateCategoryId, trigger: 'blur' }],
     message: [{ required: true, message: '请输入留言内容', trigger: 'blur' },
     { min: 10, max: 1000, message: '留言内容在10-1000个字', trigger: 'blur' }],
-    name:[{ required: true, message: '请输入署名', trigger: 'blur' }]
+    name: [{ required: true, message: '请输入署名', trigger: 'blur' }]
 });
 const formRef = ref();
-const submitForm =async () => {
+const submitForm = async () => {
     const form = unref(formRef);
-    console.log(form)
     if (!form) return
     await form.validate((valid: any) => {
         if (valid) {
@@ -80,7 +86,7 @@ const submitForm =async () => {
                         messageForm.message = "";
                         messageForm.contact = "";
                         messageForm.name = "";
-                        
+
                     }
                 }
             ).catch(
@@ -97,42 +103,41 @@ const submitForm =async () => {
         }
     })
     // 提交留言
-  
+
 };
 
 onMounted(() => {
-  messageForm.category_id = category.value;
-  messageForm.message = message.value;
-  messageForm.contact = contact.value;
-  messageForm.name = name.value;
-
-allMessageCategoriesAPI().then(
-    (res) => {
-      let data = res.data;
-      if (data.code != 0) {
-        ElNotification({
-          title: '操作失败',
-          message: data.msg,
-          type: 'error',
-        })
-      } else {
-        data = data.data
-        ElNotification({
-          title: '获取消息类别成功',
-          type: 'success',
-        })
-        categories.splice(0, categories.length, ...data);
-      }
-    }
-  ).catch(
-    err => {
-      ElNotification({
-        title: '请求失败',
-        message: err.message,
-        type: 'error',
-      })
-    }
-  )
+    messageForm.category_id = category.value;
+    messageForm.message = message.value;
+    messageForm.contact = contact.value;
+    messageForm.name = name.value;
+    allMessageCategoriesAPI().then(
+        (res) => {
+            let data = res.data;
+            if (data.code != 0) {
+                ElNotification({
+                    title: '操作失败',
+                    message: data.msg,
+                    type: 'error',
+                })
+            } else {
+                data = data.data
+                ElNotification({
+                    title: '获取消息类别成功',
+                    type: 'success',
+                })
+                categories.splice(0, categories.length, ...data);
+            }
+        }
+    ).catch(
+        err => {
+            ElNotification({
+                title: '请求失败',
+                message: err.message,
+                type: 'error',
+            })
+        }
+    )
 })
 
 onBeforeRouteLeave(() => {
