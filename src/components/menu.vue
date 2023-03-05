@@ -47,6 +47,9 @@
             <div id="generate-code" v-if="role == 'admin'">
               <router-link to="/generate-code"><el-menu-item index="10-12">生成激活码</el-menu-item></router-link>
             </div>
+            <div id="add-reply" v-if="role == 'admin'">
+              <router-link to="/add-reply"><el-menu-item index="add-reply">回复文章</el-menu-item></router-link>
+            </div>
             <el-menu-item index="10-13" @click="logout">登出</el-menu-item>
           </div>
         </el-sub-menu>

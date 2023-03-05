@@ -25,8 +25,53 @@
                 </router-link>
             </el-form-item>
         </el-form>
-
+        <!-- <el-card id="reply">
+            <template #header>
+                <div class="card-header" style="text-align:center">
+                    <h3>回复查询</h3>
+                </div>
+            </template>
+            <el-input v-model="uuid" placeholder="请输入文章uuid"></el-input>
+            <el-button type="primary" @click.prevent="getReply">查询</el-button>
+            {{ reply }}
+        </el-card> -->
+        <div class="container">
+            <el-card class="card">
+                <div class="card-header" style="text-align:center">
+                    <h3>回复查询</h3>
+                </div>
+                <el-form :inline="true">
+                    <el-row>
+                        <el-col :span="20">
+                            <el-form-item label="UUID" style="width: 95%;">
+                                <el-input v-model="uuid" placeholder="请输入UUID" style="width: 100%;"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="4">
+                            <el-form-item>
+                                <el-button type="primary" @click="getReply">查询</el-button>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                </el-form>
+                <div class="reply" v-if="reply">
+                    <h2>回复内容（不支持再次回复内容）</h2>
+                    <p>{{ reply }}</p>
+                </div>
+            </el-card>
+        </div>
     </div>
+
+    <el-dialog v-model="dialogVisible" title="Tips" width="30%">
+        <span>消息ID：{{ messageID }} <br>请记录此ID，该ID是唯一获取回复的方式。该对话框关闭后ID将无法再次查询。</span>
+        <template #footer>
+            <span class="dialog-footer">
+                <el-button type="primary" @click="dialogVisible = false">
+                    确认
+                </el-button>
+            </span>
+        </template>
+    </el-dialog>
 </template>
 
 <script lang="ts" setup>
@@ -34,7 +79,7 @@ import { storeToRefs } from 'pinia';
 import { ref, reactive, unref, onMounted } from 'vue';
 import { onBeforeRouteLeave } from 'vue-router';
 import { useMessage } from "../store/message"
-import { allMessageCategoriesAPI, saveMessageAPI } from "@/request/api";
+import { allMessageCategoriesAPI, saveMessageAPI, getReplyAPI } from "@/request/api";
 import { ElNotification } from 'element-plus';
 const messageStore = useMessage();
 const { category, message, contact, name } = storeToRefs(messageStore);
@@ -45,7 +90,10 @@ const messageForm = reactive({
     name: '',
 })
 const categories = reactive<{ name: string; value: string, id: number }[]>([]);
-
+const uuid = ref("");
+const reply = ref("");
+const dialogVisible = ref(false);
+const messageID = ref("");
 const validateCategoryId = (rule: any, value: string, callback: any) => {
     if (value === '') {
         callback(new Error('请选择类别'));
@@ -86,6 +134,8 @@ const submitForm = async () => {
                         messageForm.message = "";
                         messageForm.contact = "";
                         messageForm.name = "";
+                        messageID.value = data.uuid;
+                        dialogVisible.value = true;
 
                     }
                 }
@@ -106,6 +156,34 @@ const submitForm = async () => {
 
 };
 
+
+
+const getReply = async () => {
+    getReplyAPI(uuid.value).then(
+        (res) => {
+            let data = res.data;
+            if (data.code != 0) {
+                ElNotification({
+                    title: '操作失败',
+                    message: data.msg,
+                    type: 'error',
+                })
+            } else {
+                reply.value = data.data.content;
+            }
+        }
+    ).catch(
+        err => {
+            ElNotification({
+                title: '请求失败',
+                message: err.message,
+                type: 'error',
+            })
+        }
+    )
+};
+
+
 onMounted(() => {
     messageForm.category_id = category.value;
     messageForm.message = message.value;
@@ -116,23 +194,20 @@ onMounted(() => {
             let data = res.data;
             if (data.code != 0) {
                 ElNotification({
-                    title: '操作失败',
+                    title: '获取消息类别失败',
                     message: data.msg,
                     type: 'error',
                 })
             } else {
                 data = data.data
-                ElNotification({
-                    title: '获取消息类别成功',
-                    type: 'success',
-                })
+
                 categories.splice(0, categories.length, ...data);
             }
         }
     ).catch(
         err => {
             ElNotification({
-                title: '请求失败',
+                title: '获取消息类别请求失败',
                 message: err.message,
                 type: 'error',
             })
@@ -148,5 +223,28 @@ onBeforeRouteLeave(() => {
 })
 
 </script>
+
+
+<style scoped>
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.card {
+  width: 100%;
+}
+.reply {
+  margin-top: 20px;
+  text-align: center;
+}
+.reply h2 {
+  font-size: 20px;
+}
+.reply p {
+  font-size: 16px;
+  margin-top: 10px;
+}
+</style>
 
 
