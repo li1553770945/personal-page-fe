@@ -39,7 +39,9 @@
             <el-card class="card">
                 <div class="card-header" style="text-align:center">
                     <h3>回复查询</h3>
+                    <span>目前暂不支持再次回复，但您可以再次提问并注明原消息uuid</span><br>
                 </div>
+                <br>
                 <el-form :inline="true">
                     <el-row>
                         <el-col :span="20">
@@ -55,7 +57,7 @@
                     </el-row>
                 </el-form>
                 <div class="reply" v-if="reply">
-                    <h2>回复内容（不支持再次回复内容）</h2>
+                    <h2>回复内容</h2>
                     <p>{{ reply }}</p>
                 </div>
             </el-card>

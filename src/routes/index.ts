@@ -59,6 +59,12 @@ let routes = [
         //使用import可以路由懒加载，如果不使用，太多组件一起加载会造成白屏
         component: () => import('@pages/addReply.vue')
     },
+    {
+        path: '/open-source',
+        name: 'open-source',
+        //使用import可以路由懒加载，如果不使用，太多组件一起加载会造成白屏
+        component: () => import('@pages/openSource.vue')
+    },
     //{
     //配置404页面
     //path: '/:catchAll(.*)',

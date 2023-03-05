@@ -31,6 +31,14 @@
           </template>
           <router-link to="/file"><el-menu-item index="2-1">临时文件管理</el-menu-item></router-link>
         </el-sub-menu>
+        <router-link to="open-source">
+        <el-menu-item index="open-source">
+          <el-icon>
+           <Star  />
+          </el-icon>
+          <template #title>开源</template>
+        </el-menu-item>
+      </router-link>
         <el-sub-menu index="10">
           <template #title>
             <el-icon>
@@ -96,7 +104,7 @@
 </template>
 <script lang="ts" setup>
 import { ref } from "vue";
-import { Notebook, TopRight, User,Setting, Message, House, Comment,MilkTea,Sugar,InfoFilled } from "@element-plus/icons-vue";
+import { Notebook, TopRight, User,Setting, Message, House, Star,MilkTea,Sugar,InfoFilled } from "@element-plus/icons-vue";
 import { useUser } from "../store/user"
 import { storeToRefs } from 'pinia'
 import { logoutAPI, userInfoAPI } from "@/request/api";

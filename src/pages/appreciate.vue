@@ -3,7 +3,7 @@
         <template #header>
             <div class="card-header" style="text-align:center">
                 <h3>请我喝一杯奶茶</h3>
-                如果你觉得我的网站对你有帮助或者我的咨询对你有帮助，你可以请我喝一杯奶茶，当然金额是无所谓的。
+                如果你觉得我的项目对你有帮助，你可以请我喝一杯奶茶，当然金额是无所谓的。
             </div>
 
         </template>
