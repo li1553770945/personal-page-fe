@@ -169,6 +169,11 @@ const getReply = async () => {
                     type: 'error',
                 })
             } else {
+                ElNotification({
+                title: '查询成功',
+                message: "该消息已被回复",
+                type: 'success',
+            })
                 reply.value = data.data.content;
             }
         }
@@ -200,7 +205,7 @@ onMounted(() => {
                 })
             } else {
                 data = data.data
-
+                
                 categories.splice(0, categories.length, ...data);
             }
         }
