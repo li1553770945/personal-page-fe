@@ -29,8 +29,15 @@ export const allMessageCategoriesAPI = () =>
 export const saveMessageAPI = (data: any) =>
   instance.post("/message", data);
 
-  export const getReplyAPI = (uuid:string) =>
-  instance.get("/reply?uuid="+uuid);
+export const getReplyAPI = (uuid: string) =>
+  instance.get("/reply?uuid=" + uuid);
 
-  export const addReplyAPI = (data: any) =>
+export const addReplyAPI = (data: any) =>
   instance.post("/reply", data);
+
+
+export const getMessageAPI = (uuid: string) =>
+  instance.get("/message?uuid=" + uuid);
+
+export const notReadMessageAPI = () =>
+  instance.get("/not-read-message");
