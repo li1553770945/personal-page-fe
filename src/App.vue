@@ -1,15 +1,13 @@
 <template>
   <el-container>
+    <el-aside width="200px" class="fixed-aside"> <!-- 侧边栏 -->
+      <Menu></Menu>
+    </el-aside>
     <el-container>
-      <el-aside width="200px"> <!-- 侧边栏 -->
-        <Menu></Menu>
-      </el-aside>
-      <el-container>
-        <el-main><router-view></router-view></el-main>
-        <el-footer style="text-align:center">Copyright © 2022-{{year}} PeaceSheep<br>
-          <a id="beian" href="https://beian.miit.gov.cn/" target="_blank">冀ICP备2022004632号-1</a>
-        </el-footer>
-      </el-container>
+      <el-main><router-view></router-view></el-main>
+      <el-footer style="text-align:center">Copyright © 2022-{{ year }} PeaceSheep<br>
+        <a id="beian" href="https://beian.miit.gov.cn/" target="_blank">冀ICP备2022004632号-1</a>
+      </el-footer>
     </el-container>
   </el-container>
 </template>
@@ -24,5 +22,8 @@ const year = timeNow.getFullYear()
 #beian {
   text-decoration: none;
   color: #000;
+}
+.fixed-aside {
+  position: fixed;
 }
 </style>
