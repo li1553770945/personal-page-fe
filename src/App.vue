@@ -1,9 +1,7 @@
 <template>
   <el-container>
     <el-affix>
-      <el-aside :width="asideWidth" class="fixed-aside"> <!-- 侧边栏 -->
         <Menu></Menu>
-      </el-aside>
     </el-affix>
     <el-container class="main-container">
       <el-main class="main-content"><router-view></router-view></el-main>
@@ -18,7 +16,6 @@ import { ref } from "vue";
 import Menu from "./components/menu.vue"
 const timeNow = new Date();
 const year = timeNow.getFullYear();
-const asideWidth = '200px';
 </script>
   
 <style scoped>
