@@ -30,6 +30,7 @@
             <span>常用功能</span>
           </template>
           <router-link to="/file"><el-menu-item index="2-1">临时文件管理</el-menu-item></router-link>
+          <router-link to="/chat"><el-menu-item index="2-2">即时文本传输</el-menu-item></router-link>
         </el-sub-menu>
         <router-link to="open-source">
         <el-menu-item index="open-source">

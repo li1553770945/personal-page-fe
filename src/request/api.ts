@@ -41,3 +41,18 @@ export const getMessageAPI = (uuid: string) =>
 
 export const notReadMessageAPI = () =>
   instance.get("/not-read-message");
+
+  export const newChatAPI = () =>
+  instance.post("/new-chat");
+
+  export const joinChatAPI = (data:any) =>
+  instance.post("/join-chat",data);
+
+  export const sendChatMessageAPI = (data:any) =>
+  instance.post("/chat-message",data);
+
+  export const getChatMessageAPI = (chatID:string,clientID:string) =>
+  instance.get("/chat-message?chat_id="+chatID+"&client_id="+clientID);
+
+  export const closeChatAPI = (data:any) =>
+  instance.get("/close-chat",data);
