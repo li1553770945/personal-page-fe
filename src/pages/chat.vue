@@ -85,11 +85,11 @@ const handleMessage = (e: MessageEvent) => {
 
 }
 const createChat = () => {
-    globalWs = new WebSocket('ws://' + window.location.host + "/socket/new-chat")
+    globalWs = new WebSocket('wss://' + window.location.host + "/socket/new-chat")
     initWs(globalWs)
 }
 const joinChat = () => {
-    globalWs = new WebSocket('ws://' + window.location.host + "/socket/join-chat?chat_id=" + inputChatID.value)
+    globalWs = new WebSocket('wss://' + window.location.host + "/socket/join-chat?chat_id=" + inputChatID.value)
     initWs(globalWs)
 }
 const sendMessage = () => {

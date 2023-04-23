@@ -34,7 +34,7 @@ export default defineConfig({
         },
         '/socket': { // 匹配请求路径，
           ws:true,
-          target: 'ws://localhost:8000/', // 代理的目标地址
+          target: 'wss://localhost:8000/', // 代理的目标地址
           changeOrigin: true,
       }
     }
