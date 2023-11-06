@@ -35,7 +35,7 @@ jobs:
     - name: push
       uses: wlixcc/SFTP-Deploy-Action@v1.2.4
       with:
-        username: 'git'
+        username: 'ubuntu'
         server: '${{secrets.REMOTE_ADDRESS}}'
         ssh_private_key: ${{ secrets.GIT_SSH_KEY }} 
         local_path: './dist/*'
