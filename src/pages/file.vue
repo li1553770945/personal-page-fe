@@ -11,7 +11,6 @@
                     :auto-upload="false" :data="fileForm" :on-success="handleSuccess" :on-error="handleError">
                     <template #trigger>
                         <el-button type="primary">选择文件</el-button>
-
                     </template>
                     <template #tip>
                         <div class="el-upload__tip text-red">
