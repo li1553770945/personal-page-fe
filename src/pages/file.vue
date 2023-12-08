@@ -104,6 +104,7 @@ const fileForm = reactive({
 })
 const dialogVisible = ref(false);
 const deleteFileName = ref("");
+const deleteFileID = ref(0);
 const uploadFileName = ref("");
 const uploadFileKey = ref("");
 const downloadForm = reactive({
@@ -133,7 +134,7 @@ const downloadSubmit = () => {
                     type: 'error',
                 })
             } else {
-                window.open(`/api/files/${downloadForm.file_key}`);
+                window.open(`/api/files?file-key=${downloadForm.file_key}`);
 
             }
         }
@@ -160,8 +161,8 @@ const deleteSubmit = () => {
                 })
             } else {
                 console.log(dialogVisible)
-
                 deleteFileName.value = data.data.file_name;
+                deleteFileID.value = data.data.id;
                 dialogVisible.value = true;
 
             }
@@ -178,7 +179,7 @@ const deleteSubmit = () => {
 }
 
 const deleteFile = () => {
-    deleteFileAPI(deleteForm.file_key).then(
+    deleteFileAPI(deleteFileID.value).then(
         (res) => {
             let data = res.data;
             if (data.code != 0) {

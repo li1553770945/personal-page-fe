@@ -1,6 +1,6 @@
 import instance from "./request";
 
-export const logoutAPI = () => instance.get("/logout");
+export const logoutAPI = () => instance.get("/users/logout");
 
 // post请求，有参数
 export const loginAPI = (data: any) =>
@@ -19,8 +19,8 @@ export const userInfoAPI = () =>
 export const fileInfoAPI = (fileKey: any) =>
   instance.get(`/files/info?file-key=${fileKey}`);
 
-export const deleteFileAPI = (fileKey: any) =>
-  instance.delete(`/file/${fileKey}`);
+export const deleteFileAPI = (fileID: number) =>
+  instance.delete(`/files/${fileID}`);
 
 export const allMessageCategoriesAPI = () =>
   instance.get('/messages/categories')
