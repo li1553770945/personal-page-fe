@@ -54,10 +54,16 @@ let routes = [
         component: () => import('@pages/appreciate.vue')
     },
     {
-        path: '/add-reply',
-        name: 'add-reply',
+        path: '/unread-msg',
+        name: 'unread-msg',
         //使用import可以路由懒加载，如果不使用，太多组件一起加载会造成白屏
-        component: () => import('@pages/addReply.vue')
+        component: () => import('@pages/unreadMsg.vue')
+    },
+    {
+        path: '/read-msg/:uuid',
+        name: 'read-msg',
+        //使用import可以路由懒加载，如果不使用，太多组件一起加载会造成白屏
+        component: () => import('@pages/readMsg.vue')
     },
     {
         path: '/open-source',

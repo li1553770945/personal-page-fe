@@ -1,7 +1,6 @@
 <template>
     <el-tabs v-model="tab.activeName.value" class="demo-tabs" @tab-click="tab.handleClick">
         <el-tab-pane label="提建议" name="message"></el-tab-pane>
-        <el-tab-pane label="建议查询" name="query-message"></el-tab-pane>
         <el-tab-pane label="回复查询" name="reply"></el-tab-pane>
     </el-tabs>
     <div class="message" v-if="tab.activeName.value == 'message'">
@@ -11,6 +10,9 @@
                     <el-option v-for="category in message.categories" :label="category.name"
                         :value="category.id"></el-option>
                 </el-select>
+            </el-form-item>
+            <el-form-item label="标题" prop="title">
+                <el-input v-model="message.messageForm.title" placeholder="请输入标题"></el-input>
             </el-form-item>
             <el-form-item label="留言内容" prop="message">
                 <el-input type="textarea" v-model="message.messageForm.message" :autosize="{ minRows: 4, maxRows: 8 }"
@@ -34,55 +36,26 @@
     </div>
 
     <div class="reply" v-if="tab.activeName.value == 'reply'">
-
         <br>
         <el-form :inline="true">
             <el-row>
                 <el-col :span="20">
                     <el-form-item label="UUID" style="width: 95%;">
-                        <el-input v-model="reply.replyUUID.value" placeholder="请输入UUID" style="width: 100%;"></el-input>
+                        <el-input v-model="replyUUID" placeholder="请输入UUID" style="width: 100%;"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="4">
                     <el-form-item>
-                        <el-button type="primary" @click="reply.getReply">查询</el-button>
+                        <el-button type="primary" @click="NavigateToReply">查询</el-button>
                     </el-form-item>
                 </el-col>
             </el-row>
         </el-form>
-        <div class="reply" v-if="reply.replyContent">
-            <h2>回复内容</h2>
-            <p>{{ reply.replyContent.value }}</p>
-        </div>
     </div>
 
-    <div class="article-container" v-if="tab.activeName.value == 'query-message'">
-        <el-form :inline="true">
-            <el-row>
-                <el-col :span="20">
-                    <el-form-item label="UUID" style="width: 95%;">
-                        <el-input v-model="getMessage.getMessageUUID.value" placeholder="请输入UUID" style="width: 100%;"></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="4">
-                    <el-form-item>
-                        <el-button type="primary" @click="getMessage.getMessage()">查询</el-button>
-                    </el-form-item>
-                </el-col>
-            </el-row>
-        </el-form>
-        <div class="article-header">
-            <div class="article-info">
-                <span>署名：{{ getMessage.message.name }}</span> <br>
-                <span>联系方式：{{ getMessage.message.contact }}</span>
-            </div>
-        </div>
-        <div class="article-content">
-            <div v-html="getMessage.message.content"></div>
-        </div>
-    </div>
+
     <el-dialog v-model="message.dialogVisible.value" title="提示">
-        <span>消息ID：{{ message.submitMessageID }} <br>请记录此ID，该ID是唯一获取回复的方式。该对话框关闭后ID将无法再次查询。</span>
+        <span>消息ID：{{ message.submitMessageID }} <br>请记录此ID，该ID是唯一获取回复的方式。该对话框关闭后ID将无法再次查询。请勿泄露，任何拥有此UUID的人都可以看到建议及回复</span>
         <template #footer>
             <span class="dialog-footer">
                 <el-button type="primary" @click="message.dialogVisible.value = false">
@@ -100,8 +73,9 @@ import { onBeforeRouteLeave } from 'vue-router';
 import { useMessage } from "../store/message"
 import { allMessageCategoriesAPI, saveMessageAPI, getReplyAPI, getMessageAPI } from "@/request/api";
 import { ElNotification, TabsPaneContext } from 'element-plus';
+import router from '@/routes';
 const messageFormRef = ref();
-
+const replyUUID = ref("");
 class Tab {
     activeName = ref("message");
     handleClick = (tab: TabsPaneContext, event: Event) => {
@@ -115,6 +89,7 @@ class Message {
         message: '',
         contact: '',
         name: '',
+        title: '',
     })
     validateCategoryId = (rule: any, value: string, callback: any) => {
         if (value === '') {
@@ -128,7 +103,8 @@ class Message {
         { validator: this.validateCategoryId, trigger: 'blur' }],
         message: [{ required: true, message: '请输入留言内容', trigger: 'blur' },
         { min: 10, max: 1000, message: '留言内容在10-1000个字', trigger: 'blur' }],
-        name: [{ required: true, message: '请输入署名', trigger: 'blur' }]
+        name: [{ required: true, message: '请输入署名', trigger: 'blur' }],
+        title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
     });
 
     dialogVisible = ref(false);
@@ -227,92 +203,12 @@ class Message {
 
 
 
-class Reply {
-    replyUUID = ref("");
-    replyContent = ref("");
-    
-    validateCategoryId = (rule: any, value: string, callback: any) => {
-        if (value === '') {
-            callback(new Error('请选择类别'));
-        } else {
-            callback();
-        }
-    };
-    getReply = async () => {
-        getReplyAPI(this.replyUUID.value).then(
-            (res) => {
-                let data = res.data;
-                if (data.code != 0) {
-                    ElNotification({
-                        title: '操作失败',
-                        message: data.msg,
-                        type: 'error',
-                    })
-                } else {
-                    ElNotification({
-                        title: '查询成功',
-                        message: "该消息已被回复",
-                        type: 'success',
-                    })
-                    this.replyContent.value = data.data.content;
-                }
-            }
-        ).catch(
-            err => {
-                ElNotification({
-                    title: '请求失败',
-                    message: err.message,
-                    type: 'error',
-                })
-            }
-        )
-    };
+const NavigateToReply = () =>{
+    router.push(`/read-msg/${replyUUID.value}`)
 }
 
-class GetMessage {
-    getMessageUUID = ref("");
-    message = reactive({
-        content: "",
-        name: "",
-        contact: "",
-    });
-    getMessage = async () => {
-        getMessageAPI(this.getMessageUUID.value).then(
-            (res) => {
-                let data = res.data;
-                if (data.code != 0) {
-                    ElNotification({
-                        title: '操作失败',
-                        message: data.msg,
-                        type: 'error',
-                    })
-                } else {
-                    ElNotification({
-                        title: '查询成功',
-                        type: 'success',
-                    })
-                    data = data.data;
-                    this.message.content = data.message;
-                    this.message.name = data.name;
-                    this.message.contact = data.contact;
-                    console.log(this.message)
-                }
-            }
-        ).catch(
-            err => {
-                ElNotification({
-                    title: '请求失败',
-                    message: err.message,
-                    type: 'error',
-                })
-            }
-        )
-    };
-}
 
 const message = new Message();
-const reply = new Reply();
-const getMessage = new GetMessage();
 const tab = new Tab();
 
 
@@ -329,11 +225,7 @@ onBeforeRouteLeave(() => {
 
 
 <style scoped>
-.container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+
 
 .card {
     width: 100%;
@@ -374,4 +266,3 @@ onBeforeRouteLeave(() => {
 </style>
 
 
-我正在使用vue3的组合式API和element-plus实现一个查询未读消息列表页面，现在已经实现了一个函数用于获取未读消息列表数据，你可以使用import { unreadMessageAPI } from "@/request/api";来使用，他会返回一个列表，内容样例为：[{name:"张三",message:"测试"},{name:"李四",message:"测试"}]。现在，请你帮我完成整个前端页面。

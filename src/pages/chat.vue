@@ -67,7 +67,6 @@ import { reactive, ref, nextTick } from 'vue';
 import { ElNotification } from 'element-plus';
 import { stringify } from 'querystring';
 import useClipboard from 'vue-clipboard3'
-
 const { toClipboard } = useClipboard()
 interface ClientMessage {
     id: string;
