@@ -22,11 +22,14 @@
 
         <el-button type="primary" @click.prevent="notReadMessage.getNotReadMessage()">刷新</el-button>
         <el-table :data="notReadMessage.tableData.value" style="width: 100%">
-            <el-table-column prop="ID" label="消息id" />
-            <el-table-column prop="CreatedAt" label="创建时间" />
-            <el-table-column prop="name" label="署名"  />
-            <el-table-column prop="contact" label="联系方式" />
-            <el-table-column prop="message" label="内容" />
+            <el-table-column prop="id" label="消息id" />
+            <el-table-column label="创建时间">
+            <template v-slot="{ row }">
+                {{ formatDate(row.created_at) }}
+            </template>
+            </el-table-column>
+            <el-table-column prop="name" label="署名" />
+            <el-table-column prop="title" label="标题" />
         </el-table>
     </div>
 </template>
@@ -34,6 +37,7 @@
 <script lang="ts" setup>
 import { ref, reactive, unref, onMounted } from 'vue';
 import { addReplyAPI, notReadMessageAPI } from "@/request/api";
+import { formatDate } from "@/utils/dataUtils";
 import { ElNotification, TabsPaneContext } from 'element-plus';
 const formRef = ref();
 
@@ -120,7 +124,6 @@ class NotReadMessage {
                         type: 'success',
                     })
                     this.tableData.value = data;
-                    console.log(this.tableData)
                 }
             }
         ).catch(
@@ -146,3 +149,4 @@ onMounted(() => {
 </script>
 
 
+@/utils/dataUtils

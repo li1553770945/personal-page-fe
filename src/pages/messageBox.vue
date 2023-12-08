@@ -12,6 +12,9 @@
                         :value="category.id"></el-option>
                 </el-select>
             </el-form-item>
+            <el-form-item label="标题" prop="title">
+                <el-input v-model="message.messageForm.title" placeholder="请输入标题"></el-input>
+            </el-form-item>
             <el-form-item label="留言内容" prop="message">
                 <el-input type="textarea" v-model="message.messageForm.message" :autosize="{ minRows: 4, maxRows: 8 }"
                     placeholder="请输入留言内容（切换页面时该内容会保存，但是刷新后被清空）"></el-input>
@@ -115,6 +118,7 @@ class Message {
         message: '',
         contact: '',
         name: '',
+        title: '',
     })
     validateCategoryId = (rule: any, value: string, callback: any) => {
         if (value === '') {
@@ -128,7 +132,8 @@ class Message {
         { validator: this.validateCategoryId, trigger: 'blur' }],
         message: [{ required: true, message: '请输入留言内容', trigger: 'blur' },
         { min: 10, max: 1000, message: '留言内容在10-1000个字', trigger: 'blur' }],
-        name: [{ required: true, message: '请输入署名', trigger: 'blur' }]
+        name: [{ required: true, message: '请输入署名', trigger: 'blur' }],
+        title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
     });
 
     dialogVisible = ref(false);

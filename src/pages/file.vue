@@ -7,7 +7,7 @@
         </template>
         <el-form :model="fileForm" label-width="120px">
             <el-form-item label="选择文件">
-                <el-upload ref="upload" class="upload-demo" action="/api/upload-file" :limit="1" :on-exceed="handleExceed"
+                <el-upload ref="upload" class="upload-demo" action="/api/files" :limit="1" :on-exceed="handleExceed"
                     :auto-upload="false" :data="fileForm" :on-success="handleSuccess" :on-error="handleError">
                     <template #trigger>
                         <el-button type="primary">选择文件</el-button>
@@ -134,7 +134,7 @@ const downloadSubmit = () => {
                     type: 'error',
                 })
             } else {
-                window.open("/api/download-file?file_key=" + downloadForm.file_key);
+                window.open(`/api/files/${downloadForm.file_key}`);
 
             }
         }
