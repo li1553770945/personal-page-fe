@@ -273,7 +273,6 @@ function handleClose(e: CloseEvent) {
 
 }
 function handleError(e: Event) {
-
     ElNotification({
         title: '请求失败',
         message: "websocket连接失败",

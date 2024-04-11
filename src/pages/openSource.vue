@@ -1,6 +1,7 @@
 <template>
-  <div class="project-list">
-    <el-scrollbar class="scrollbar">
+  <div class="open-source">
+    <div class="project-list">
+
       <div v-for="project in projects" :key="project.id" class="project-item">
         <div class="project-header">
           <h2>{{ project.name }}</h2>
@@ -16,11 +17,14 @@
           </a>
         </div>
       </div>
-    </el-scrollbar>
 
 
-    <el-pagination v-model:current-page="currentPage" :page-size="pageSize" layout="total, prev, pager, next, jumper"
-      :total="totalItems" @current-change="handleCurrentChange" />
+
+      <div class="pagination-container">
+        <el-pagination v-model:current-page="currentPage" :page-size="pageSize"
+          layout="total, prev, pager, next, jumper" :total="totalItems" @current-change="handleCurrentChange" />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -93,6 +97,7 @@ const projects = reactive(
 
 <style scoped>
 
+
 .project-item {
   border: 1px solid #ccc;
   padding: 20px;
@@ -118,8 +123,9 @@ const projects = reactive(
   text-align: center;
 }
 
-.scrollbar{
-  height: 100vh;
-  overflow: auto;
+
+.pagination-container {
+  display: flex;
+  justify-content: center;
 }
 </style>
