@@ -23,4 +23,14 @@ const year = timeNow.getFullYear();
   text-decoration: none;
   color: #000;
 }
+
+.main-container {
+  flex-direction: column; /* 子元素垂直排列 */
+  justify-content: center; /* 垂直居中 */
+  align-items: center; /* 水平居中 */
+  height: 100vh; /* 使容器高度充满视窗 */
+  text-align: center; /* 将文本内容水平居中 */
+  width: 1200px; /* 限制容器宽度 */
+}
+
 </style>
