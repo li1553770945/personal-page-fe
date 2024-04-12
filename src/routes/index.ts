@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 
 
 let routes = [
+     //使用import可以路由懒加载，如果不使用，太多组件一起加载会造成白屏
     {
         // /search/screens -> /search?q=screens
         path: '/',
@@ -14,67 +15,64 @@ let routes = [
     {
         path: '/home',
         name: 'home',
-        //使用import可以路由懒加载，如果不使用，太多组件一起加载会造成白屏
+
         component: () => import('@pages/home.vue')
     },
     {
         path: '/login',
         name: 'login',
-        //使用import可以路由懒加载，如果不使用，太多组件一起加载会造成白屏
+
         component: () => import('@pages/login.vue')
     },
     {
         path: '/register',
         name: 'register',
-        //使用import可以路由懒加载，如果不使用，太多组件一起加载会造成白屏
+
         component: () => import('@pages/register.vue')
     },
     {
         path: '/file',
         name: 'file',
-        //使用import可以路由懒加载，如果不使用，太多组件一起加载会造成白屏
+
         component: () => import('@pages/file.vue')
     },
     {
         path: '/generate-code',
         name: 'generate-code',
-        //使用import可以路由懒加载，如果不使用，太多组件一起加载会造成白屏
+
         component: () => import('@pages/generateCode.vue')
     },
     {
         path: '/message-box',
         name: 'message-box',
-        //使用import可以路由懒加载，如果不使用，太多组件一起加载会造成白屏
+
         component: () => import('@pages/messageBox.vue')
     },
     {
         path: '/appreciate',
         name: 'appreciate',
-        //使用import可以路由懒加载，如果不使用，太多组件一起加载会造成白屏
+
         component: () => import('@pages/appreciate.vue')
     },
     {
         path: '/unread-msg',
         name: 'unread-msg',
-        //使用import可以路由懒加载，如果不使用，太多组件一起加载会造成白屏
+
         component: () => import('@pages/unreadMsg.vue')
     },
     {
         path: '/read-msg/:uuid',
         name: 'read-msg',
-        //使用import可以路由懒加载，如果不使用，太多组件一起加载会造成白屏
         component: () => import('@pages/readMsg.vue')
     },
     {
-        path: '/open-source',
-        name: 'open-source',
-        //使用import可以路由懒加载，如果不使用，太多组件一起加载会造成白屏
-        component: () => import('@pages/openSource.vue')
+        path: '/projects',
+        name: 'projects',
+        component: () => import('@pages/projects.vue')
     },
     {
         path: '/chat',
         name: 'chat',
-        //使用import可以路由懒加载，如果不使用，太多组件一起加载会造成白屏
         component: () => import('@pages/chat.vue')
     },
     //{

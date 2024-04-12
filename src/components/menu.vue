@@ -32,12 +32,12 @@
           <router-link to="/file"><el-menu-item index="2-1">临时文件管理</el-menu-item></router-link>
           <router-link to="/chat"><el-menu-item index="2-2">即时文本传输</el-menu-item></router-link>
         </el-sub-menu>
-        <router-link to="open-source">
-        <el-menu-item index="open-source">
+        <router-link to="projects">
+        <el-menu-item index="projects">
           <el-icon>
            <Star  />
           </el-icon>
-          <template #title>开源</template>
+          <template #title>项目</template>
         </el-menu-item>
       </router-link>
         <el-sub-menu index="10">
@@ -115,12 +115,12 @@ import { Github } from '@icon-park/vue-next';
 const userStore = useUser()
 const { isLogined, username, nickname, role } = storeToRefs(userStore)
 const isCollapse = ref(false);
-let menuWidth = ref(64);
+let menuWidth = ref("64");
 const handleOpen = (key: string, keyPath: string[]) => {
-  menuWidth = ref(200);
+  menuWidth = ref("200");
 };
 const handleClose = (key: string, keyPath: string[]) => {
-  menuWidth = ref(64);
+  menuWidth = ref("64");
 };
 
 const openBlogWindow = () => {
