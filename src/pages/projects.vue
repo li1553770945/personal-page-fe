@@ -1,12 +1,13 @@
 <template>
   <div class="projects">
     <div class="project-list">
-      <el-button v-if="isLogined" type="primary" @click="projectsPage.addProjectDialogVisible.value = true">添加项目</el-button>
+      <el-button v-if="role == 'admin'" type="primary"
+        @click="addProjectDialogVisible = true">添加项目</el-button>
       <div v-for="project in projectsPage.projects" :key="project.id" class="project-item">
         <div class="project-header">
           <h2>{{ project.name }}</h2>
           {{ project.period }}
-          <el-button  v-if="isLogined" type="danger" @click="projectsPage.deleteProject(project.id)">删除</el-button>
+          <el-button v-if="role == 'admin'" type="danger" @click="projectsPage.deleteProject(project.id)">删除</el-button>
         </div>
         <div class="project-divider"></div>
         <div class="project-description">
@@ -27,7 +28,7 @@
     </div>
   </div>
   <div>
-    <el-dialog title="添加项目" :visible.sync="projectsPage.addProjectDialogVisible" @confirm="projectsPage.addProject">
+    <el-dialog v-model="addProjectDialogVisible" title="添加项目">
       <el-form :model="projectsPage.newProject">
         <el-form-item label="项目名称">
           <el-input v-model="projectsPage.newProject.name"></el-input>
@@ -40,7 +41,7 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="projectsPage.addProjectDialogVisible.value = false">取消</el-button>
+        <el-button @click="addProjectDialogVisible = false">取消</el-button>
         <el-button type="primary" @click="projectsPage.addProject">确定</el-button>
       </span>
     </el-dialog>
@@ -59,6 +60,7 @@ import { useUser } from "../store/user"
 import { storeToRefs } from 'pinia'
 const userStore = useUser()
 const { isLogined, username, nickname, role } = storeToRefs(userStore)
+const addProjectDialogVisible = ref(false);
 
 
 
@@ -74,7 +76,6 @@ class ProjectsPage {
   projectsNum = ref(0);
   pageSize = ref(2);
   currentPage = ref(1);
-  addProjectDialogVisible = ref(false);
   newProject = reactive({
     name: '',
     desc: '',
@@ -96,7 +97,7 @@ class ProjectsPage {
             message: '添加项目成功',
             type: 'success',
           });
-          this.addProjectDialogVisible.value = false;
+          addProjectDialogVisible.value = false;
           this.getProjectsNum();
           this.getProjects();
         }
@@ -220,9 +221,10 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.projects{
+.projects {
   height: 90vh;
 }
+
 .project-item {
   border: 1px solid #ccc;
   padding: 20px;
