@@ -41,6 +41,18 @@ export const getMessageAPI = (uuid: string) =>
 export const notReadMessageAPI = () =>
   instance.get("/messages?unread=true");
 
+export const getProjectsNumAPI = () =>
+  instance.get("/projects/num");
+
+export const getProjectsAPI = (start:number,end:number) =>
+  instance.get("/projects?start="+start+"&end="+end);
+
+export const addProjectAPI = (data:any) =>
+  instance.post("/projects",data);
+
+export const deleteProjectAPI = (id:number) =>
+  instance.delete("/projects/"+id);
+
 
 
 

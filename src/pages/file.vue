@@ -162,7 +162,6 @@ const deleteSubmit = () => {
                     type: 'error',
                 })
             } else {
-                console.log(dialogVisible)
                 deleteFileName.value = data.data.file_name;
                 deleteFileID.value = data.data.id;
                 dialogVisible.value = true;

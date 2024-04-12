@@ -7,11 +7,11 @@
       <el-main class="main-content">
         <el-scrollbar>
           <router-view></router-view>
+          <el-footer class="footer" style="text-align:center">Copyright © 2022-{{ year }} PeaceSheep<br>
+            <a id="beian" href="https://beian.miit.gov.cn/" target="_blank">冀ICP备2022004632号-1</a>
+          </el-footer>
         </el-scrollbar>
       </el-main>
-      <el-footer style="text-align:center">Copyright © 2022-{{ year }} PeaceSheep<br>
-        <a id="beian" href="https://beian.miit.gov.cn/" target="_blank">冀ICP备2022004632号-1</a>
-      </el-footer>
     </el-container>
   </el-container>
 </template>
@@ -23,6 +23,9 @@ const year = timeNow.getFullYear();
 </script>
 
 <style scoped>
+.footer {
+  margin-top: 20px;
+}
 #beian {
   text-decoration: none;
   color: #000;
