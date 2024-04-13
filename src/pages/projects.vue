@@ -454,4 +454,8 @@ h2 {
 .sort-select {
   max-width: 200px;
 }
+.project-description p {
+  text-align: left; /* 确保文本左对齐 */
+}
+
 </style>
