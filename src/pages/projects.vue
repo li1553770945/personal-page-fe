@@ -13,6 +13,7 @@
     </div>
     <div class="project-list">
       <div v-for="project in projectsPage.projects" :key="project.id" class="project-item">
+
         <div class="project-header">
           <div class="project-title">
             <h2>{{ project.name }}</h2>
@@ -21,30 +22,34 @@
               class="status-tag">
               {{ project.status == 1 ? '开发中' : project.status == 2 ? '已完成' : '已废弃' }}
             </el-tag>
-          </div>
+            <div class="spacer"></div> <!-- 占位元素 -->
 
-          <div class="project-info">
-            <span class="project-dates">{{ formatDate(project.start_date) }} - {{ project.status != 1 ?
-              formatDate(project.end_date) : '现在' }}</span>
-
-            <div class="project-ratings">
-              工作量：<el-rate v-model="project.volume_of_work" disabled />
-              难度：<el-rate v-model="project.difficulty" disabled />
-            </div>
-            <el-button v-if="role == 'admin'" type="danger"
+            <el-button class="delete-button" v-if="role == 'admin'" type="danger"
               @click="projectsPage.deleteProject(project.id)">删除</el-button>
           </div>
+
         </div>
-        <div class="project-divider"></div>
+        <div class="project-info">
+          <span class="project-dates">{{ formatDate(project.start_date) }} - {{ project.status != 1 ?
+            formatDate(project.end_date) : '现在' }}</span>
+          <div class="vertical-devide">|</div>
+          工作量：<el-rate v-model="project.volume_of_work" disabled />
+          <div class="vertical-devide">|</div>
+          难度：<el-rate v-model="project.difficulty" disabled />
+          <div class="vertical-devide">|</div>
+          <div class="project-link">
+            <a :href="project.link" target="_blank">
+              <github theme="outline" size="24" fill="#333" />
+            </a>
+          </div>
+
+        </div>
         <div class="project-description">
           <p>{{ project.desc }}</p>
         </div>
-        <div class="project-divider"></div>
-        <div class="project-link">
-          <a :href="project.link" target="_blank">
-            <github theme="outline" size="24" fill="#333" />
-          </a>
-        </div>
+
+
+
       </div>
       <div class="pagination-container">
         <el-pagination v-model:current-page="projectsPage.currentPage.value" :page-size="projectsPage.pageSize.value"
@@ -317,8 +322,8 @@ const statusClass = (status: number) => {
 
 <style scoped>
 .projects {
-  height: 90vh;
   font-family: 'Arial', sans-serif;
+  min-height: 90vh;
 }
 
 .project-item {
@@ -326,15 +331,27 @@ const statusClass = (status: number) => {
   padding: 20px;
   border-radius: 4px;
   margin: 20px;
-  background-color: #f9f9f9;
+  background-color: #fafafa;
 }
 
 .project-title {
   display: flex;
   align-items: center;
   /* Aligns items vertically in the center */
-  flex-wrap: wrap;
-  /* Allows items to wrap if needed */
+  justify-content: space-between;
+  margin-top: 0;
+  margin-bottom: 0;
+
+}
+
+.project-info {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.spacer {
+  flex-grow: 1;
 }
 
 h2 {
@@ -342,7 +359,8 @@ h2 {
   /* Adds some space between the title and the tag */
   display: inline-block;
   vertical-align: middle;
-  /* Vertically aligns the title with the tag */
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .project-filter>* {
@@ -366,11 +384,11 @@ h2 {
   display: flex;
   flex-direction: column;
   /* Stack children vertically */
-  align-items: center;
+  align-items: left;
   /* Center-align items horizontally */
-  justify-content: center;
+  justify-content: left;
   /* Center-align items vertically */
-  text-align: center;
+  text-align: left;
   /* Ensures text within each child is also centered */
   margin-bottom: 10px;
   /* Maintain bottom margin for spacing */
@@ -378,11 +396,7 @@ h2 {
   /* Ensure it spans the full width */
 }
 
-.project-info {
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 5px;
-}
+
 
 .project-ratings {
   margin-bottom: 10px;
@@ -413,8 +427,8 @@ h2 {
 }
 
 .project-link {
-  text-align: center;
-  margin-top: 10px;
+  text-align: left;
+  margin-left: 10px;
 }
 
 .pagination-container {
@@ -426,13 +440,8 @@ h2 {
   color: #666;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  max-width: 600px;
 }
 
-.project-dates {
-  margin-right: 20px;
-}
 
 .project-status {
   white-space: nowrap;
@@ -451,11 +460,22 @@ h2 {
 .filter-select {
   max-width: 150px;
 }
+
 .sort-select {
   max-width: 200px;
 }
+
 .project-description p {
-  text-align: left; /* 确保文本左对齐 */
+  text-align: left;
+  /* 确保文本左对齐 */
 }
 
+.delete-button {
+  margin-left: 10px;
+}
+
+.vertical-devide{
+  margin-left: 10px;
+  margin-right: 10px;
+}
 </style>
