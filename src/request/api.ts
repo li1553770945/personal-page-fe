@@ -44,8 +44,8 @@ export const notReadMessageAPI = () =>
 export const getProjectsNumAPI = () =>
   instance.get("/projects/num");
 
-export const getProjectsAPI = (start:number,end:number) =>
-  instance.get("/projects?start="+start+"&end="+end);
+export const getProjectsAPI = (start:number,end:number,status:number,order:string) =>
+  instance.get("/projects?start="+start+"&end="+end+"&status="+status+"&order="+order);
 
 export const addProjectAPI = (data:any) =>
   instance.post("/projects",data);
