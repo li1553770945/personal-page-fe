@@ -145,8 +145,8 @@ class ProjectsPage {
   status_filter = ref(0);
 
   order_method_list = [
-    { label: '工作量升序', value: "work_of_volume_asc" },
-    { label: '工作量降序', value: "work_of_volume_desc" },
+    { label: '工作量升序', value: "volume_of_work_asc" },
+    { label: '工作量降序', value: "volume_of_work_desc" },
     { label: '难度升序', value: "difficulty_asc" },
     { label: '难度降序', value: "difficulty_desc" },
     { label: '开始时间最新', value: "start_date_desc" },
