@@ -66,24 +66,22 @@
             <el-input v-model="projectsPage.newProject.link"></el-input>
           </el-form-item>
           <el-form-item label="状态">
-            <el-input v-model="projectsPage.newProject.status">
-            </el-input>
+            <el-select v-model="projectsPage.newProject.status" placeholder="请选择项目状态">
+              <el-option v-for="status in projectsPage.new_status_list" :label="status.label"
+                :value="status.value"></el-option>
+            </el-select>
           </el-form-item>
           <el-form-item label="工作量">
-            <el-input v-model="projectsPage.newProject.volume_of_work">
-            </el-input>
+            <el-rate v-model="projectsPage.newProject.volume_of_work" />
           </el-form-item>
           <el-form-item label="难度">
-            <el-input v-model="projectsPage.newProject.difficulty">
-            </el-input>
+            <el-rate v-model="projectsPage.newProject.difficulty" />
           </el-form-item>
           <el-form-item label="开始日期">
-            <el-input v-model="projectsPage.newProject.start_date">
-            </el-input>
+            <el-date-picker v-model="projectsPage.newProject.start_date" type="date" placeholder="选择开始日期" />
           </el-form-item>
           <el-form-item label="结束日期">
-            <el-input v-model="projectsPage.newProject.end_date">
-            </el-input>
+            <el-date-picker v-model="projectsPage.newProject.end_date" type="date" placeholder="选择结束日期" />
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
@@ -132,9 +130,9 @@ class ProjectsPage {
     name: "",
     desc: "",
     link: "",
-    status: 0,
-    volume_of_work: 0,
-    difficulty: 0,
+    status: 1,
+    volume_of_work: 1,
+    difficulty: 1,
     start_date: "",
     end_date: "",
   });
@@ -156,7 +154,11 @@ class ProjectsPage {
   ]
   order = ref("start_date_desc");
 
-
+  new_status_list = [
+    { label: '开发中', value: 1 },
+    { label: '已完成', value: 2 },
+    { label: '已废弃', value: 3 },
+  ]
   addProject = () => {
     addProjectAPI(this.newProject).then(
       (res) => {
@@ -343,13 +345,16 @@ h2 {
   /* Vertically aligns the title with the tag */
 }
 
-.project-filter > * {
-  margin-right: 10px; /* 右边距 */
+.project-filter>* {
+  margin-right: 10px;
+  /* 右边距 */
 }
 
-.project-filter > :last-child {
-  margin-right: 0; /* 最后一个元素不需要右边距 */
+.project-filter> :last-child {
+  margin-right: 0;
+  /* 最后一个元素不需要右边距 */
 }
+
 .status-tag {
   margin-top: -2px;
   /* Adjusts the vertical position to appear as a superscript */
