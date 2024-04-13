@@ -123,7 +123,7 @@ class ProjectsPage {
     end_date: string;
   }[]>([]);
   projectsNum = ref(0);
-  pageSize = ref(2);
+  pageSize = ref(10);
   currentPage = ref(1);
   newProject = reactive({
     id: 0,
