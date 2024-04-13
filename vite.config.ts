@@ -5,6 +5,7 @@ import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import { resolve } from "path";
 import { visualizer } from "rollup-plugin-visualizer";
+import viteCompression from 'vite-plugin-compression';
 
 export default defineConfig({
   plugins: [
@@ -16,6 +17,10 @@ export default defineConfig({
       filename: "test.html", //分析图生成的文件名
       open: true //如果存在本地服务端口，将在打包后自动展示
     }) as PluginOption,
+    viteCompression({
+      algorithm	: 'brotliCompress',
+      threshold: 1024,
+    }),
     AutoImport({
       resolvers: [ElementPlusResolver()],
     }),
