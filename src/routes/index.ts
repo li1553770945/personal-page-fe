@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-
+import { ElLoading } from 'element-plus';
 
 let routes = [
      //使用import可以路由懒加载，如果不使用，太多组件一起加载会造成白屏
@@ -88,4 +88,50 @@ const router = createRouter({
     routes
 })
 // 导出
-export default router 
+
+
+
+let loadingInstance:any = null;
+let showTimer:any = null;
+let startTime:any = null;
+
+const showDelay = 200; // 延迟显示加载动画的时间（0.2秒）
+const minimumDisplayTime = 300; // 加载动画的最小显示时间（0.3秒）
+
+
+
+router.beforeEach((to, from, next) => {
+    clearTimeout(showTimer);
+    startTime = null;
+
+    // 延迟显示加载动画
+    showTimer = setTimeout(() => {
+        loadingInstance = ElLoading.service({
+            lock: true,
+            text: 'Loading...',
+            background: 'rgba(0, 0, 0, 0.7)'
+        });
+        startTime = Date.now(); // 记录开始显示加载动画的时间
+    }, showDelay);
+
+    next();
+});
+
+router.afterEach(() => {
+    clearTimeout(showTimer);
+
+    if (loadingInstance) {
+        const elapsedTime = Date.now() - startTime;
+        if (elapsedTime < minimumDisplayTime) {
+            // 如果显示时间不足最小显示时间，则延迟关闭
+            setTimeout(() => {
+                loadingInstance.close();
+            }, minimumDisplayTime - elapsedTime);
+        } else {
+            // 如果已经超过最小显示时间，立即关闭
+            loadingInstance.close();
+        }
+    }
+});
+
+export default router;
