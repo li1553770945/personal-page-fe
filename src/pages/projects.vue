@@ -11,9 +11,8 @@
       <el-button type="primary" @click="projectsPage.getProjects">查询</el-button>
       <el-button v-if="role == 'admin'" type="primary" @click="addProjectDialogVisible = true">添加项目</el-button>
     </div>
-    <div class="project-list">
+    <div class="project-list" v-if="!projectsPage.loading.value">
       <div v-for="project in projectsPage.projects" :key="project.id" class="project-item">
-
         <div class="project-header">
           <div class="project-title">
             <h2>{{ project.name }}</h2>
@@ -51,13 +50,18 @@
 
 
       </div>
-      <div class="pagination-container">
-        <el-pagination v-model:current-page="projectsPage.currentPage.value" :page-size="projectsPage.pageSize.value"
-          layout="total, prev, pager, next, jumper" :total="projectsPage.projectsNum.value"
-          @update:current-page="projectsPage.handleCurrentChange" />
-      </div>
-    </div>
 
+    </div>
+    <el-skeleton
+      :loading="projectsPage.loading.value"
+      animated
+      :throttle="200"
+    ></el-skeleton>
+    <div class="pagination-container">
+      <el-pagination v-model:current-page="projectsPage.currentPage.value" :page-size="projectsPage.pageSize.value"
+        layout="total, prev, pager, next, jumper" :total="projectsPage.projectsNum.value"
+        @update:current-page="projectsPage.handleCurrentChange" />
+    </div>
     <div>
       <el-dialog v-model="addProjectDialogVisible" title="添加项目">
         <el-form :model="projectsPage.newProject" label-width="auto">
@@ -164,6 +168,8 @@ class ProjectsPage {
     { label: '已完成', value: 2 },
     { label: '已废弃', value: 3 },
   ]
+  loading = ref(false);
+
   addProject = () => {
     addProjectAPI(this.newProject).then(
       (res) => {
@@ -223,10 +229,12 @@ class ProjectsPage {
   }
 
   getProjects = () => {
+    projectsPage.loading = ref(true);
     const start: number = (this.currentPage.value - 1) * this.pageSize.value;
     const end: number = this.currentPage.value * this.pageSize.value;
     getProjectsAPI(start, end, this.status_filter.value, this.order.value).then(
       (res) => {
+        projectsPage.loading = ref(false);
         let data = res.data;
         if (data.code != 0) {
           ElNotification({
@@ -241,6 +249,7 @@ class ProjectsPage {
       }
     ).catch(
       err => {
+        projectsPage.loading = ref(false);
         ElNotification({
           title: '获取项目列表失败',
           message: err.message,
@@ -297,8 +306,10 @@ class ProjectsPage {
 const projectsPage = new ProjectsPage();
 
 onMounted(() => {
+  projectsPage.loading = ref(true);
   projectsPage.getProjectsNum();
   projectsPage.getProjects();
+  projectsPage.loading = ref(false);
 })
 
 const formatDate = (date: string) => {
@@ -474,7 +485,7 @@ h2 {
   margin-left: 10px;
 }
 
-.vertical-devide{
+.vertical-devide {
   margin-left: 10px;
   margin-right: 10px;
 }
