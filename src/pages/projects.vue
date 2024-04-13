@@ -44,24 +44,20 @@
                 <el-button class="delete-button" v-if="role == 'admin'" type="danger"
                   @click="projectsPage.deleteProject(project.id)">删除</el-button>
               </div>
-
-
-
             </div>
             <div class="project-info">
               <span class="project-dates">{{ formatDate(project.start_date) }} - {{ project.status != 1 ?
                 formatDate(project.end_date) : '现在' }}</span>
-              <div class="vertical-devide">|</div>
+              <el-divider class="vertical-devider" direction="vertical"  border-style="solid" style="border-color: #666666; border-width: 1px; height: 1.5em;"/>
               工作量：<el-rate v-model="project.volume_of_work" disabled />
-              <div class="vertical-devide">|</div>
+              <el-divider class="vertical-devider" direction="vertical"  border-style="solid" style="border-color: #666666; border-width: 1px; height: 1.5em;"/>
               难度：<el-rate v-model="project.difficulty" disabled />
-              <div class="vertical-devide">|</div>
+              <el-divider class="vertical-devider" direction="vertical"  border-style="solid" style="border-color: #666666; border-width: 1px; height: 1.5em;"/>
               <div class="project-link">
                 <a :href="project.link" target="_blank">
                   <github theme="outline" size="24" fill="#333" />
                 </a>
               </div>
-
             </div>
             <div class="project-description">
               <p>{{ project.desc }}</p>
@@ -503,8 +499,5 @@ h2 {
   margin-left: 10px;
 }
 
-.vertical-devide {
-  margin-left: 10px;
-  margin-right: 10px;
-}
+
 </style>
