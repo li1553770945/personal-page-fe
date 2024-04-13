@@ -1,10 +1,10 @@
 <template>
   <div class="projects">
     <div class="project-filter">
-      <el-select v-model="projectsPage.status_filter.value" placeholder="请选择项目状态">
+      <el-select class="filter-select" v-model="projectsPage.status_filter.value" placeholder="请选择项目状态">
         <el-option v-for="status in projectsPage.status_list" :label="status.label" :value="status.value"></el-option>
       </el-select>
-      <el-select v-model="projectsPage.order.value" placeholder="请选择排序方式">
+      <el-select class="sort-select" v-model="projectsPage.order.value" placeholder="请选择排序方式">
         <el-option v-for="order in projectsPage.order_method_list" :label="order.label"
           :value="order.value"></el-option>
       </el-select>
@@ -447,4 +447,15 @@ h2 {
   padding: 10px 0;
   /* Optional: Adds vertical padding */
 }
+
+.filter-select {
+  max-width: 150px;
+}
+.sort-select {
+  max-width: 200px;
+}
+.project-description p {
+  text-align: left; /* 确保文本左对齐 */
+}
+
 </style>
