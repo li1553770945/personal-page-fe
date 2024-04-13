@@ -11,52 +11,69 @@
       <el-button type="primary" @click="projectsPage.getProjects">查询</el-button>
       <el-button v-if="role == 'admin'" type="primary" @click="addProjectDialogVisible = true">添加项目</el-button>
     </div>
-    <div class="project-list" v-if="!projectsPage.loading.value">
-      <div v-for="project in projectsPage.projects" :key="project.id" class="project-item">
-        <div class="project-header">
-          <div class="project-title">
-            <h2>{{ project.name }}</h2>
-            <el-tag :key="project.status == 1 ? '开发中' : project.status == 2 ? '已完成' : '已废弃'"
-              :type="project.status == 1 ? 'primary' : project.status == 2 ? 'success' : 'danger'" effect="dark"
-              class="status-tag">
-              {{ project.status == 1 ? '开发中' : project.status == 2 ? '已完成' : '已废弃' }}
-            </el-tag>
-            <div class="spacer"></div> <!-- 占位元素 -->
-
-            <el-button class="delete-button" v-if="role == 'admin'" type="danger"
-              @click="projectsPage.deleteProject(project.id)">删除</el-button>
+    <div class="project-list">
+      <el-skeleton :loading="projectsPage.loading.value" animated :throttle="100">
+        <template #template>
+          <div v-for="index in projectsPage.projectsNum" :key="index.toString()" class="project-item">
+            <div class="project-header">
+              <div class="project-title">
+                <el-skeleton-item variant="h2" />
+              </div>
+            </div>
+            <div class="project-info">
+              <el-skeleton-item variant="text" />
+            </div>
+            <div class="project-description">
+              <el-skeleton-item variant="text" />
+              <el-skeleton-item variant="text" />
+              <el-skeleton-item variant="text" />
+            </div>
           </div>
+        </template>
+        <template #default>
+          <div v-for="project in projectsPage.projects" :key="project.id" class="project-item">
+            <div class="project-header">
+              <div class="project-title">
+                <h2>{{ project.name }}</h2>
+                <el-tag :key="project.status == 1 ? '开发中' : project.status == 2 ? '已完成' : '已废弃'"
+                  :type="project.status == 1 ? 'primary' : project.status == 2 ? 'success' : 'danger'" effect="dark"
+                  class="status-tag">
+                  {{ project.status == 1 ? '开发中' : project.status == 2 ? '已完成' : '已废弃' }}
+                </el-tag>
+                <div class="spacer"></div> <!-- 占位元素 -->
+                <el-button class="delete-button" v-if="role == 'admin'" type="danger"
+                  @click="projectsPage.deleteProject(project.id)">删除</el-button>
+              </div>
 
-        </div>
-        <div class="project-info">
-          <span class="project-dates">{{ formatDate(project.start_date) }} - {{ project.status != 1 ?
-            formatDate(project.end_date) : '现在' }}</span>
-          <div class="vertical-devide">|</div>
-          工作量：<el-rate v-model="project.volume_of_work" disabled />
-          <div class="vertical-devide">|</div>
-          难度：<el-rate v-model="project.difficulty" disabled />
-          <div class="vertical-devide">|</div>
-          <div class="project-link">
-            <a :href="project.link" target="_blank">
-              <github theme="outline" size="24" fill="#333" />
-            </a>
+
+
+            </div>
+            <div class="project-info">
+              <span class="project-dates">{{ formatDate(project.start_date) }} - {{ project.status != 1 ?
+                formatDate(project.end_date) : '现在' }}</span>
+              <div class="vertical-devide">|</div>
+              工作量：<el-rate v-model="project.volume_of_work" disabled />
+              <div class="vertical-devide">|</div>
+              难度：<el-rate v-model="project.difficulty" disabled />
+              <div class="vertical-devide">|</div>
+              <div class="project-link">
+                <a :href="project.link" target="_blank">
+                  <github theme="outline" size="24" fill="#333" />
+                </a>
+              </div>
+
+            </div>
+            <div class="project-description">
+              <p>{{ project.desc }}</p>
+            </div>
           </div>
-
-        </div>
-        <div class="project-description">
-          <p>{{ project.desc }}</p>
-        </div>
+        </template>
 
 
 
-      </div>
-
+      </el-skeleton>
     </div>
-    <el-skeleton
-      :loading="projectsPage.loading.value"
-      animated
-      :throttle="200"
-    ></el-skeleton>
+
     <div class="pagination-container">
       <el-pagination v-model:current-page="projectsPage.currentPage.value" :page-size="projectsPage.pageSize.value"
         layout="total, prev, pager, next, jumper" :total="projectsPage.projectsNum.value"
@@ -115,9 +132,6 @@ import { storeToRefs } from 'pinia'
 const userStore = useUser()
 const { isLogined, username, nickname, role } = storeToRefs(userStore)
 const addProjectDialogVisible = ref(false);
-
-
-
 
 class ProjectsPage {
   projects = reactive<{
@@ -229,34 +243,39 @@ class ProjectsPage {
   }
 
   getProjects = () => {
-    projectsPage.loading = ref(true);
-    const start: number = (this.currentPage.value - 1) * this.pageSize.value;
-    const end: number = this.currentPage.value * this.pageSize.value;
-    getProjectsAPI(start, end, this.status_filter.value, this.order.value).then(
-      (res) => {
-        projectsPage.loading = ref(false);
-        let data = res.data;
-        if (data.code != 0) {
+    projectsPage.loading.value = true;
+    // 延迟一秒
+    setTimeout(() => {
+      const start: number = (this.currentPage.value - 1) * this.pageSize.value;
+      const end: number = this.currentPage.value * this.pageSize.value;
+      getProjectsAPI(start, end, this.status_filter.value, this.order.value).then(
+        (res) => {
+          projectsPage.loading.value = false;
+          let data = res.data;
+          if (data.code != 0) {
+            ElNotification({
+              title: '获取项目列表失败',
+              message: data.msg,
+              type: 'error',
+            })
+          } else {
+            data = data.data
+            this.projects.splice(0, this.projects.length, ...data);
+          }
+        }
+      ).catch(
+        err => {
+          projectsPage.loading.value = false;
           ElNotification({
             title: '获取项目列表失败',
-            message: data.msg,
+            message: err.message,
             type: 'error',
           })
-        } else {
-          data = data.data
-          this.projects.splice(0, this.projects.length, ...data);
         }
-      }
-    ).catch(
-      err => {
-        projectsPage.loading = ref(false);
-        ElNotification({
-          title: '获取项目列表失败',
-          message: err.message,
-          type: 'error',
-        })
-      }
-    )
+      )
+    }
+      , 1000);
+
   }
 
   deleteProject = (id: number) => {
@@ -306,10 +325,9 @@ class ProjectsPage {
 const projectsPage = new ProjectsPage();
 
 onMounted(() => {
-  projectsPage.loading = ref(true);
+  projectsPage.loading.value = true;
   projectsPage.getProjectsNum();
   projectsPage.getProjects();
-  projectsPage.loading = ref(false);
 })
 
 const formatDate = (date: string) => {
