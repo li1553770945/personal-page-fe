@@ -53,6 +53,8 @@
 
     </div>
     <el-skeleton
+    v-for="index in Math.min(projectsPage.projectsNum.value, projectsPage.pageSize.value)"
+      class="skeleton"
       :loading="projectsPage.loading.value"
       animated
       :throttle="200"
@@ -131,7 +133,7 @@ class ProjectsPage {
     start_date: string;
     end_date: string;
   }[]>([]);
-  projectsNum = ref(0);
+  projectsNum = ref(3);
   pageSize = ref(10);
   currentPage = ref(1);
   newProject = reactive({
@@ -309,7 +311,6 @@ onMounted(() => {
   projectsPage.loading = ref(true);
   projectsPage.getProjectsNum();
   projectsPage.getProjects();
-  projectsPage.loading = ref(false);
 })
 
 const formatDate = (date: string) => {
@@ -488,5 +489,10 @@ h2 {
 .vertical-devide {
   margin-left: 10px;
   margin-right: 10px;
+}
+.skeleton{
+  margin-top: 30px;
+  margin-bottom: 30px;
+  text-align: left;
 }
 </style>
