@@ -33,13 +33,13 @@
           <router-link to="/chat"><el-menu-item index="2-2">即时文本传输</el-menu-item></router-link>
         </el-sub-menu>
         <router-link to="projects">
-        <el-menu-item index="projects">
-          <el-icon>
-           <Star  />
-          </el-icon>
-          <template #title>项目</template>
-        </el-menu-item>
-      </router-link>
+          <el-menu-item index="projects">
+            <el-icon>
+              <Star />
+            </el-icon>
+            <template #title>项目</template>
+          </el-menu-item>
+        </router-link>
         <el-sub-menu index="10">
           <template #title>
             <el-icon>
@@ -73,13 +73,15 @@
             <el-icon>
               <Message />
             </el-icon>
-            <span>邮箱</span>
+            <span>邮箱 <el-icon>
+                <top-right /> </el-icon></span>
           </el-menu-item>
           <el-menu-item index="github" @click="openGithub">
             <el-icon>
               <github theme="outline" size="24" fill="#333" />
             </el-icon>
-            <span>Github</span>
+            <span>Github <el-icon>
+                <top-right /> </el-icon></span>
           </el-menu-item>
           <router-link to="/message-box">
             <el-menu-item index="message-box">
@@ -91,13 +93,13 @@
           </router-link>
         </el-sub-menu>
         <router-link to="/appreciate">
-        <el-menu-item index="appreciate">
-          <el-icon>
-           <Sugar />
-          </el-icon>
-          <template #title>赞赏</template>
-        </el-menu-item>
-      </router-link>
+          <el-menu-item index="appreciate">
+            <el-icon>
+              <Sugar />
+            </el-icon>
+            <template #title>赞赏</template>
+          </el-menu-item>
+        </router-link>
       </el-menu>
 
     </el-aside>
@@ -105,7 +107,7 @@
 </template>
 <script lang="ts" setup>
 import { ref } from "vue";
-import { Notebook, TopRight, User,Setting, Message, House, Star,MilkTea,Sugar,InfoFilled } from "@element-plus/icons-vue";
+import { Notebook, TopRight, User, Setting, Message, House, Star, MilkTea, Sugar, InfoFilled } from "@element-plus/icons-vue";
 import { useUser } from "../store/user"
 import { storeToRefs } from 'pinia'
 import { logoutAPI, userInfoAPI } from "@/request/api";
@@ -202,7 +204,7 @@ const openGithub = () => {
 
 }
 </script>
-    
+
 <style>
 #menu {
   min-height: 100vh;

@@ -59,9 +59,15 @@
           <el-row class="item-name">
             <h3>技能</h3>
           </el-row>
-          <div v-for="item in skills" class="skill-item"><span class="skill-icon"
-              :style="{ backgroundImage: 'url(' + item.icon + ')' }" />
-            {{ item.name }}
+          <div v-for="item in skills" class="skill-item">
+
+            <div class="skill-content"><span class="skill-icon"
+                :style="{ backgroundImage: 'url(' + item.icon + ')' }" />
+              <el-badge :value="badge_name[item.type]" :type="badge_type[item.type]" :offset="[5,-5]">
+                {{ item.name }}
+              </el-badge>
+            </div>
+
           </div>
         </el-main>
       </el-container>
@@ -128,30 +134,49 @@ const education = [
   }
 ]
 
+const badge_type = [
+  
+  'info',
+  'warning',
+  'primary',
+  'success',
+]
+const badge_name = [
+  '了解',
+  '熟悉',
+  '掌握',
+  '熟练',
+]
 const skills = [
   {
     'name': 'C++',
     'icon': cppIcon,
+    'type': 3,
   },
   {
     'name': 'Golang',
     'icon': golangIcon,
+    'type': 2,
   },
   {
     'name': 'Python',
     'icon': pythonIcon,
-  },
-  {
-    'name': 'Java',
-    'icon': javaIcon,
+    'type': 2,
   },
   {
     'name': 'Vue',
     'icon': vueIcon,
+    'type': 2,
+  },
+  {
+    'name': 'Java',
+    'icon': javaIcon,
+    'type': 1,
   },
   {
     'name': 'Lua',
     'icon': luaIcon,
+    'type': 0,
   },
 ]
 
@@ -222,6 +247,12 @@ const skills = [
 }
 
 .skill-item {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 1em;
+}
+
+.skill-content {
   border: 1.5px solid var(--el-border-color);
   border-radius: 5px;
   padding-top: 5px;
@@ -240,6 +271,6 @@ const skills = [
   background-size: contain;
   background-repeat: no-repeat;
   vertical-align: middle;
-  margin-right: 5px;  
+  margin-right: 5px;
 }
 </style>
