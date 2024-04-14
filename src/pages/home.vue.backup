@@ -1,0 +1,157 @@
+<template>
+  <div class="home">
+    <div class="resume">
+      <el-container class="info">
+        <!-- <el-aside width="200px">Aside</el-aside> -->
+        <el-main>
+          <el-row class="name">
+            <h2>李亚宁</h2>
+          </el-row>
+          <el-row class="education-info">
+            东南大学 硕士 电子信息
+          </el-row>
+        </el-main>
+      </el-container>
+      <el-container class="education">
+        <el-main>
+          <el-row class="item-name">
+            <h3>教育经历</h3>
+          </el-row>
+          <el-divider class="divider" border-style="solid" style="border-color: #000000; border-width: 3px; " />
+          <div class="education-experience" v-for="item in education" :key="item.id">
+            <div class="education-experience-header">
+              <span class="school"><b>{{ item.school }}</b></span>
+              <span class="college"><b>{{ item.college }}</b></span>
+              <span class="major"><b>{{ item.major }}</b></span>
+              <span class="degree"><b>{{ item.degree }}</b></span>
+              <span class="city"><b>{{ item.city }}</b></span>
+              <span class="time"><b>{{ item.time }}</b></span>
+            </div>
+            <div class="education-experience-body">
+              <b>主修课程:</b><div>{{ item.course }}</div>
+              <br>
+              <b>荣誉奖项:</b>
+              <div>{{ item.reward }}</div>
+            </div>
+          </div>
+        </el-main>
+      </el-container>
+      <el-container class="work">
+        <el-main>
+          <el-row class="item-name">
+            <h3>工作/实习经历</h3>
+          </el-row>
+          
+          <div class="work-experience" v-for="item in work" :key="item.company">
+            <div class="work-experience-header">
+              <span class="compny"><b>{{ item.company }}</b></span>
+              <span class="department"><b>{{ item.department }}</b></span>
+              <span class="position"><b>{{ item.position }}</b></span>
+              <div class="spacer"></div>
+              <span class="city"><b>{{ item.city }}</b></span>
+              <span class="time"><b>{{ item.time }}</b></span>
+            </div>
+            <div class="work-experience-body">
+              <div>{{ item.description }}</div>
+            </div>
+          </div>
+        </el-main>
+      </el-container>
+
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+const work = [
+  {
+    id: 0,
+    company: '深圳市腾讯计算机系统有限公司',
+    city: '深圳',
+    department: '魔方工作室',
+    position: '后台开发',
+    time: '2022年7月-2022年8月',
+    description: '使用 C++语言，设计开发一款对象存储系统。项目使用分布式架构，支持多租户隔离，支持百万级文件存储，利用 epoll 的 IO 多路复用机制，综合使用 TCP 和 UDP 协议，具有高性能、高可用等特点'
+  }
+]
+const education = [
+  {
+    id: 0,
+    school: '东南大学',
+    degree: '硕士',
+    major: '电子信息',
+    city: "南京",
+    college: "计算机科学与工程学院",
+    time: '2023年9月-2026年9月',
+    course: "软件开发方法与技术（92 分）、算法设计与分析（91 分）、计算机网络体系结构、人工智能",
+    reward: "新生奖学金三等奖",
+  }
+]
+
+</script>
+
+<style scoped>
+.home {
+  width: 100%;
+  text-align: left;
+  display: flex;
+  justify-content: center
+}
+
+.resume {
+  flex: 0 0 900px;
+  /* This means no grow, no shrink, and a base width of 800px */
+  max-width: 900px;
+  /* This ensures the width doesn't grow larger than 800px */
+  min-width: 900px;
+  /* This ensures the width doesn't get smaller than 800px */
+}
+
+.subtile {
+  font-size: 20px;
+  color: aqua;
+}
+
+.work-experience {
+  border-top: 1px solid #eee;
+  padding: 10px 0;
+}
+
+.work-experience-header {
+  display: flex;
+  justify-content: left;
+  padding-bottom: 5px;
+}
+
+.work-experience-body {
+  padding-top: 5px;
+}
+
+.spacer {
+  flex-grow: 1;
+}
+
+.department {
+  margin-left: 2em;
+}
+
+.city {
+  margin-right: 2em;
+}
+
+.position {
+  margin-left: 2em;
+}
+
+.resume {
+  border: 2px solid #000000;
+}
+
+.divider {
+  margin: 0;
+}
+
+.item {
+  margin: 0;
+}
+</style>

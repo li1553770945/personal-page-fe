@@ -11,7 +11,7 @@
             <el-icon>
               <House />
             </el-icon>
-            <template #title>主页
+            <template #title>首页
             </template>
           </el-menu-item></router-link>
         <el-menu-item index="1" @click="openBlogWindow">
