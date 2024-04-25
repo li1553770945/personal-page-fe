@@ -84,6 +84,10 @@ import luaIcon from '@/assets/icons/home/lua.svg';
 import golangIcon from '@/assets/icons/home/golang.svg';
 import pythonIcon from '@/assets/icons/home/python.svg';
 import javaIcon from '@/assets/icons/home/java.svg';
+import gitIcon from '@/assets/icons/home/git.svg';
+import cmakeIcon from '@/assets/icons/home/cmake.svg';
+import DockerIcon from '@/assets/icons/home/Docker.svg';
+import K8sIcon from '@/assets/icons/home/K8s.svg';
 
 const work = [
   {
@@ -154,6 +158,11 @@ const skills = [
     'type': 3,
   },
   {
+    'name': 'git',
+    'icon': gitIcon,
+    'type': 3,
+  },
+  {
     'name': 'Golang',
     'icon': golangIcon,
     'type': 2,
@@ -169,8 +178,23 @@ const skills = [
     'type': 2,
   },
   {
+    'name': 'Docker',
+    'icon': DockerIcon,
+    'type': 2,
+  },
+  {
+    'name': 'k8s',
+    'icon': K8sIcon,
+    'type': 1,
+  },
+  {
     'name': 'Java',
     'icon': javaIcon,
+    'type': 1,
+  },
+  {
+    'name':'cmake',
+    'icon': cmakeIcon,
     'type': 1,
   },
   {
