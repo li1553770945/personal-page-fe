@@ -54,6 +54,22 @@
           </el-timeline>
         </el-main>
       </el-container>
+      <el-container class="papers">
+        <el-main>
+          <el-row class="item-name">
+            <h3>论文发表</h3>
+            <div class="paper-content">
+              <ul>
+                <li v-for="item in papers" class="paper-li">
+                  <span class="paper-content" v-html="item.content"></span>
+                  <span class="paper-level">({{ item.level }})</span>
+                </li>
+
+              </ul>
+            </div>
+          </el-row>
+        </el-main>
+      </el-container>
       <el-container class="skill">
         <el-main>
           <el-row class="item-name">
@@ -63,7 +79,7 @@
 
             <div class="skill-content"><span class="skill-icon"
                 :style="{ backgroundImage: 'url(' + item.icon + ')' }" />
-              <el-badge :value="badge_name[item.type]" :type="badge_type[item.type]" :offset="[5,-5]">
+              <el-badge :value="badge_name[item.type]" :type="badge_type[item.type]" :offset="[5, -5]">
                 {{ item.name }}
               </el-badge>
             </div>
@@ -138,8 +154,16 @@ const education = [
   }
 ]
 
+const papers = [
+  {
+
+    content: 'Jinghui Zhang; Jiawei Wang; <b>Yaning Li</b>; Fa Xin; Fang Dong; Junzhou Luo; Zhihua Wu; Addressing Heterogeneity in Federated Learning with Client Selection via Submodular Optimization, ACM Transactions on Sensor Networks, 2024, Volume 20, Issue 2, Article No.:48, pp 1–32 ',
+    level: 'CCF-B',
+  }
+]
+
 const badge_type = [
-  
+
   'info',
   'warning',
   'primary',
@@ -193,7 +217,7 @@ const skills = [
     'type': 1,
   },
   {
-    'name':'cmake',
+    'name': 'cmake',
     'icon': cmakeIcon,
     'type': 1,
   },
@@ -269,6 +293,14 @@ const skills = [
 .item {
   margin: 0;
 }
+
+
+
+.paper-level {
+  color: red;
+}
+
+
 
 .skill-item {
   display: inline-block;
