@@ -103,7 +103,7 @@ import javaIcon from '@/assets/icons/home/java.svg';
 import gitIcon from '@/assets/icons/home/git.svg';
 import cmakeIcon from '@/assets/icons/home/cmake.svg';
 import DockerIcon from '@/assets/icons/home/Docker.svg';
-import K8sIcon from '@/assets/icons/home/K8s.svg';
+import K8sIcon from '@/assets/icons/home/k8s.svg';
 
 const work = [
   {
