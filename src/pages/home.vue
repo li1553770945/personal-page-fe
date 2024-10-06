@@ -54,20 +54,33 @@
           </el-timeline>
         </el-main>
       </el-container>
+      <el-container class="contests">
+        <el-main>
+          <el-row class="item-name">
+            <h3>竞赛获奖</h3>
+          </el-row>
+          <div class="paper-content">
+              <ul>
+                <li v-for="item in contests" class="contests-li">
+                    {{ item.name }} - {{ item.level }}
+                </li>
+              </ul>
+            </div>
+        </el-main>
+      </el-container>
       <el-container class="papers">
         <el-main>
           <el-row class="item-name">
             <h3>论文发表</h3>
-            <div class="paper-content">
+          </el-row>
+          <div class="paper-content">
               <ul>
                 <li v-for="item in papers" class="paper-li">
                   <span class="paper-content" v-html="item.content"></span>
                   <span class="paper-level">({{ item.level }})</span>
                 </li>
-
               </ul>
             </div>
-          </el-row>
         </el-main>
       </el-container>
       <el-container class="skill">
@@ -76,7 +89,6 @@
             <h3>技能</h3>
           </el-row>
           <div v-for="item in skills" class="skill-item">
-
             <div class="skill-content"><span class="skill-icon"
                 :style="{ backgroundImage: 'url(' + item.icon + ')' }" />
               <el-badge :value="badge_name[item.type]" :type="badge_type[item.type]" :offset="[5, -5]">
@@ -177,57 +189,71 @@ const badge_name = [
 ]
 const skills = [
   {
-    'name': 'C++',
-    'icon': cppIcon,
-    'type': 3,
+  name: 'C++',
+  icon: cppIcon,
+  type: 3,
   },
   {
-    'name': 'git',
-    'icon': gitIcon,
-    'type': 3,
+  name: 'git',
+  icon: gitIcon,
+  type: 3,
   },
   {
-    'name': 'Golang',
-    'icon': golangIcon,
-    'type': 2,
+  name: 'Golang',
+  icon: golangIcon,
+  type: 2,
   },
   {
-    'name': 'Python',
-    'icon': pythonIcon,
-    'type': 2,
+  name: 'Python',
+  icon: pythonIcon,
+  type: 2,
   },
   {
-    'name': 'Vue',
-    'icon': vueIcon,
-    'type': 2,
+  name: 'Vue',
+  icon: vueIcon,
+  type: 2,
   },
   {
-    'name': 'Docker',
-    'icon': DockerIcon,
-    'type': 2,
+  name: 'Docker',
+  icon: DockerIcon,
+  type: 2,
   },
   {
-    'name': 'k8s',
-    'icon': K8sIcon,
-    'type': 1,
+  name: 'k8s',
+  icon: K8sIcon,
+  type: 1,
   },
   {
-    'name': 'Java',
-    'icon': javaIcon,
-    'type': 1,
+  name: 'Java',
+  icon: javaIcon,
+  type: 1,
   },
   {
-    'name': 'cmake',
-    'icon': cmakeIcon,
-    'type': 1,
+  name: 'cmake',
+  icon: cmakeIcon,
+  type: 1,
   },
   {
-    'name': 'Lua',
-    'icon': luaIcon,
-    'type': 0,
+  name: 'Lua',
+  icon: luaIcon,
+  type: 0,
   },
 ]
 
+const contests = [
+  {
+    name: '全国研究生数学建模竞赛',
+    level: '国家二等奖',
+  },
+  {
+    name:'ICPC国际大学生程序设计竞赛亚洲区域赛',
+    level: '银奖',
+  },
+  {
+    name: '江苏省大学生程序设计竞赛',
+    level: '金奖',
+  }
+]
 </script>
 
 <style scoped>
