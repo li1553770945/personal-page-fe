@@ -16,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [20.12.2]
+        node-version: [22.9.0]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
@@ -32,14 +32,14 @@ jobs:
         npm install -g yarn
         yarn install
         yarn build
-    - name: push
-      uses: wlixcc/SFTP-Deploy-Action@v1.2.4
-      with:
-        username: 'ubuntu'
-        server: '${{secrets.REMOTE_ADDRESS}}'
-        ssh_private_key: ${{ secrets.GIT_SSH_KEY }} 
-        local_path: './dist/*'
-        remote_path: '/srv/personal-page-fe/'
+    # - name: push
+    #   uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+    #   with:
+    #     username: 'ubuntu'
+    #     server: '${{secrets.REMOTE_ADDRESS}}'
+    #     ssh_private_key: ${{ secrets.GIT_SSH_KEY }} 
+    #     local_path: './dist/*'
+    #     remote_path: '/srv/personal-page-fe/'
 
 
 
