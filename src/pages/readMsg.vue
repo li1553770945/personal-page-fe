@@ -56,7 +56,7 @@
                     :autosize="{ minRows: 4, maxRows: 8 }"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" @click="reply.addReply(formRef, msg.messageData.id)">提交</el-button>
+                <el-button type="primary" @click="reply.addReply(msg.messageData.id)">提交</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -65,7 +65,7 @@
 
 <script setup lang="ts">
 import { UserFilled, PhoneFilled, List } from "@element-plus/icons-vue";
-import { ref, reactive, onMounted } from 'vue';
+import { ref, reactive, onMounted, unref } from 'vue';
 import { useRoute } from 'vue-router';
 import { getMessageAPI, getReplyAPI, addReplyAPI } from '@/request/api';
 import { ElNotification } from 'element-plus'
@@ -81,7 +81,7 @@ const route = useRoute();
 const uuid = ref(route.params.uuid as string);
 const isReplid = ref(false);
 const isFind = ref(false);
-const formRef = ref<FormInstance>()
+const formRef = ref()
 
 class Message {
     messageData = reactive({
@@ -172,11 +172,12 @@ class Reply {
         content: [{ required: true, message: '请输入回复内容', trigger: 'blur' },
         { min: 10, max: 1000, message: '回复内容在10-1000个字', trigger: 'blur' }],
     });
-    addReply = (replyForm: FormInstance | undefined, id: string) => {
+    addReply = async (id:string) => {
+        const replyForm = unref(formRef);
         if (!replyForm) {
             return;
         }
-        replyForm.validate((valid) => {
+        replyForm.validate((valid:boolean) => {
             if (valid) {
                 this.replyForm.message_id = id;
                 addReplyAPI(this.replyForm).then(
