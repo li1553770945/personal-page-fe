@@ -1,64 +1,68 @@
 <template>
-    <el-card class="message-card">
-        <template #header>
-            <div class="message-title">
-                <h2> {{ msg.messageData.title }}</h2>
-            </div>
-            <div class="author-contact-container">
-                <div class="author">
-                    <el-icon>
-                        <UserFilled />
-                    </el-icon> {{ msg.messageData.name }}
+    <h1 v-if="!isFind">未找到该留言</h1>
+    <div v-if="isFind"> <el-card class="message-card">
+            <template #header>
+                <div class="message-title">
+                    <h2> {{ msg.messageData.title }}</h2>
                 </div>
-                <div class="contact">
-                    <el-icon>
-                        <PhoneFilled />
-                    </el-icon> {{ msg.messageData.contact }}
+                <div class="author-contact-container">
+                    <div class="author">
+                        <el-icon>
+                            <UserFilled />
+                        </el-icon> {{ msg.messageData.name }}
+                    </div>
+                    <div class="contact">
+                        <el-icon>
+                            <PhoneFilled />
+                        </el-icon> {{ msg.messageData.contact }}
+                    </div>
+                    <div class="category">
+                        <el-icon>
+                            <List />
+                        </el-icon> {{ msg.messageData.category.name }}
+                    </div>
                 </div>
-                <div class="category">
-                    <el-icon>
-                        <List />
-                    </el-icon> {{ msg.messageData.category.name }}
-                </div>
-            </div>
-        </template>
-        <div class="message-content">{{ msg.messageData.message }}</div>
-        <template #footer>
-            发表于{{ formatDate(msg.messageData.created_at) }}
-        </template>
-    </el-card>
+            </template>
+            <div class="message-content">{{ msg.messageData.message }}</div>
+            <template #footer>
+                发表于{{ formatDate(msg.messageData.created_at) }}
+            </template>
+        </el-card>
 
-    <el-card class="reply-card" v-if="isReplid">
-        <template #header>
-            <div class="message-title">
-                <h2>回复</h2>
-            </div>
-        </template>
-        <div class="message-content">{{ msg.replyData.content }}</div>
-        <template #footer>
-            回复于{{ formatDate(msg.replyData.created_at) }}
-        </template>
-    </el-card>
-    <el-card class="not-reply-card" v-if="!isReplid && role != 'admin'">
-        <template #header>
-            <div class="message-title">
-                <h2>文章暂未回复</h2>
-            </div>
-        </template>
-        <el-empty description="文章暂未回复" />
-    </el-card>
+        <el-card class="reply-card" v-if="isReplid">
+            <template #header>
+                <div class="message-title">
+                    <h2>回复</h2>
+                </div>
+            </template>
+            <div class="message-content">{{ msg.replyData.content }}</div>
+            <template #footer>
+                回复于{{ formatDate(msg.replyData.created_at) }}
+            </template>
+        </el-card>
+        <el-card class="not-reply-card" v-if="!isReplid && role != 'admin'">
+            <template #header>
+                <div class="message-title">
+                    <h2>文章暂未回复</h2>
+                </div>
+            </template>
+            <el-empty description="文章暂未回复" />
+        </el-card>
 
-    <el-form ref="formRef" :model="reply.replyForm" :rules="reply.replyRules" v-if="!isReplid && role == 'admin'"
-        label-position="top">
-        <el-form-item prop="content">
-            <el-input type="textarea" v-model="reply.replyForm.content" :autosize="{ minRows: 4, maxRows: 8 }"></el-input>
-        </el-form-item>
-        <el-form-item>
-            <el-button type="primary" @click="reply.addReply(formRef, msg.messageData.id)">提交</el-button>
-        </el-form-item>
-    </el-form>
+        <el-form ref="formRef" :model="reply.replyForm" :rules="reply.replyRules" v-if="!isReplid && role == 'admin'"
+            label-position="top">
+            <el-form-item prop="content">
+                <el-input type="textarea" v-model="reply.replyForm.content"
+                    :autosize="{ minRows: 4, maxRows: 8 }"></el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="reply.addReply(formRef, msg.messageData.id)">提交</el-button>
+            </el-form-item>
+        </el-form>
+    </div>
+
 </template>
-  
+
 <script setup lang="ts">
 import { UserFilled, PhoneFilled, List } from "@element-plus/icons-vue";
 import { ref, reactive, onMounted } from 'vue';
@@ -76,7 +80,7 @@ const { isLogined, username, nickname, role } = storeToRefs(userStore)
 const route = useRoute();
 const uuid = ref(route.params.uuid as string);
 const isReplid = ref(false);
-
+const isFind = ref(false);
 const formRef = ref<FormInstance>()
 
 class Message {
@@ -103,11 +107,12 @@ class Message {
                 let data = res.data;
                 if (data.code != 0) {
                     ElNotification({
-                        title: '获取文章失败',
+                        title: '获取留言失败',
                         message: data.msg,
                         type: 'error',
                     })
                 } else {
+                    isFind.value = true;
                     this.messageData.id = data.data.id;
                     this.messageData.name = data.data.name;
                     this.messageData.title = data.data.title;
@@ -217,7 +222,7 @@ onMounted(() => {
     msg.getMessage();
 })
 </script>
-  
+
 <style scoped>
 .message-card,
 .not-reply-card,
@@ -246,4 +251,3 @@ onMounted(() => {
     word-wrap: break-word;
 }
 </style>
-  

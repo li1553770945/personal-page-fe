@@ -37,16 +37,16 @@
 
     <div class="reply" v-if="tab.activeName.value == 'reply'">
         <br>
-        <el-form :inline="true">
+        <el-form ref="replyQueryFormRef" :inline="true" :model="reply.replyQueryForm" :rules="reply.replyQueryRules" >
             <el-row>
                 <el-col :span="20">
-                    <el-form-item label="UUID" style="width: 95%;">
-                        <el-input v-model="replyUUID" placeholder="请输入UUID" style="width: 100%;"></el-input>
+                    <el-form-item label="留言ID" style="width: 95%;"  prop="uuid">
+                        <el-input v-model="reply.replyQueryForm.uuid" placeholder="请输入留言ID" style="width: 100%;"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="4">
                     <el-form-item>
-                        <el-button type="primary" @click="NavigateToReply">查询</el-button>
+                        <el-button type="primary" @click="reply.Query()">查询</el-button>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -55,7 +55,7 @@
 
 
     <el-dialog v-model="message.dialogVisible.value" title="提示">
-        <span>消息ID：{{ message.submitMessageID }} <br>请记录此ID，该ID是唯一获取回复的方式。该对话框关闭后ID将无法再次查询。请勿泄露，任何拥有此UUID的人都可以看到建议及回复</span>
+        <span>留言ID：{{ message.submitMessageID }} <br>请记录此ID，该ID是唯一获取回复的方式。该对话框关闭后ID将无法再次查询。请勿泄露，任何拥有此ID的人都可以看到建议及回复</span>
         <template #footer>
             <span class="dialog-footer">
                 <el-button type="primary" @click="message.dialogVisible.value = false">
@@ -75,13 +75,38 @@ import { allMessageCategoriesAPI, saveMessageAPI, getReplyAPI, getMessageAPI } f
 import { ElNotification, TabsPaneContext } from 'element-plus';
 import router from '@/routes';
 const messageFormRef = ref();
-const replyUUID = ref("");
+const replyQueryFormRef = ref();
 class Tab {
     activeName = ref("message");
     handleClick = (tab: TabsPaneContext, event: Event) => {
 
     }
 }
+
+class Reply{
+    replyQueryForm = reactive({
+        uuid: ''
+    })
+    replyQueryRules = reactive({
+        uuid: [{ required: true, message: '请输入留言ID', trigger: 'blur' }]
+    })
+    NavigateToReply = () =>{
+        router.push(`/read-msg/${this.replyQueryForm.uuid}`)
+    }
+    Query = () => {
+        const form = unref(replyQueryFormRef);
+        if (!form) return
+        form.validate((valid: any) => {
+            if (valid) {
+                this.NavigateToReply();
+            } else {
+                console.log('error submit!')
+            }
+        })
+    }
+}
+
+const reply = new Reply();
 
 class Message {
     messageForm = reactive({
@@ -117,7 +142,7 @@ class Message {
                 let data = res.data;
                 if (data.code != 0) {
                     ElNotification({
-                        title: '获取消息类别失败',
+                        title: '获取留言类别失败',
                         message: data.msg,
                         type: 'error',
                     })
@@ -129,7 +154,7 @@ class Message {
         ).catch(
             err => {
                 ElNotification({
-                    title: '获取消息类别请求失败',
+                    title: '获取留言类别请求失败',
                     message: err.message,
                     type: 'error',
                 })
@@ -195,17 +220,13 @@ class Message {
                 console.log('error submit!')
             }
         })
-        // 提交留言
+        
 
     };
 }
 
 
 
-
-const NavigateToReply = () =>{
-    router.push(`/read-msg/${replyUUID.value}`)
-}
 
 
 const message = new Message();
