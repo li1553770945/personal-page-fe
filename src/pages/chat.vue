@@ -67,6 +67,8 @@ import { reactive, ref, nextTick } from 'vue';
 import { ElNotification } from 'element-plus';
 import { stringify } from 'querystring';
 import useClipboard from 'vue-clipboard3'
+const wsURL = import.meta.env.VITE_WS_BASE_URLL;
+
 const { toClipboard } = useClipboard()
 interface ClientMessage {
     id: string;
@@ -114,29 +116,13 @@ const handleMessage = (e: MessageEvent) => {
     }
 }
 const createChat = () => {
-    if (window.location.host.match("localhost") != null || window.location.host.match("127.0.0.1") != null) {
-        globalWs = new WebSocket('ws://' + window.location.host + "/socket/new-chat")
-
-    }
-    else {
-        globalWs = new WebSocket('wss://' + window.location.host + "/socket/new-chat")
-
-    }
+    globalWs = new WebSocket(`${wsURL}/new-chat`)
     initWs(globalWs)
 
 }
 const joinChat = (joinChatID: string, joinClientID: string = "") => {
     console.log("加入聊天");
-    var addr = ""
-    if (window.location.host.match("localhost") != null || window.location.host.match("127.0.0.1") != null) {
-        addr = "ws:"
-
-    }
-    else {
-        addr = "wss:"
-
-    }
-    addr = addr + window.location.host + "/socket/join-chat?chat_id=" + joinChatID;
+    let addr = `${wsURL}/join-chat?chat_id=${joinChatID}`;
     if (joinClientID != "") {
         addr = addr + "&client_id=" + joinClientID;
     }
