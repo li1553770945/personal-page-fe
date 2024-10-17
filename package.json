@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "cross-env NODE_ENV=develop vite",
+    "dev": "cross-env NODE_ENV=production vite",
     "build": " cross-env NODE_ENV=production vite build",
     "preview": "vite preview",
     "analyze": "webpack --config webpack.dev.js --progress"

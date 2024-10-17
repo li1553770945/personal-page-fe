@@ -65,10 +65,8 @@
 <script lang="ts" setup>
 import { reactive, ref, nextTick } from 'vue';
 import { ElNotification } from 'element-plus';
-import { stringify } from 'querystring';
 import useClipboard from 'vue-clipboard3'
-const wsURL = import.meta.env.VITE_WS_BASE_URLL;
-
+const wsURL = import.meta.env.VITE_WS_BASE_URL;
 const { toClipboard } = useClipboard()
 interface ClientMessage {
     id: string;
@@ -116,6 +114,8 @@ const handleMessage = (e: MessageEvent) => {
     }
 }
 const createChat = () => {
+    console.log("wsURL", wsURL);
+
     globalWs = new WebSocket(`${wsURL}/new-chat`)
     initWs(globalWs)
 
