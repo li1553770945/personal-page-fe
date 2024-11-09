@@ -4,7 +4,7 @@ export const logoutAPI = () => instance.get("/users/logout");
 
 // post请求，有参数
 export const loginAPI = (data: any) =>
-  instance.post("/users/login", data);
+  instance.post("/auth/login", data);
 
 export const registerAPI = (data: any) =>
   instance.post("/users/register", data);

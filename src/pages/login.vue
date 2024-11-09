@@ -16,7 +16,7 @@
   
 <script lang="ts" setup>
 import { reactive } from 'vue'
-import { loginAPI } from "../request/api"
+import { loginAPI,userInfoAPI } from "../request/api"
 import { ElNotification } from 'element-plus'
 import { useUser } from "../store/user"
 import { storeToRefs } from 'pinia'
@@ -24,7 +24,7 @@ import { useRouter} from 'vue-router'
 
 const userStore = useUser()
 const router = useRouter();
-const { isLogined, username, nickname,role } = storeToRefs(userStore)
+const { token,isLogined, username, nickname,role } = storeToRefs(userStore)
 
 
 const loginForm = reactive({
@@ -45,17 +45,12 @@ const onSubmit = () => {
                 })
             } else {
                 data = data.data
+                token.value = data.token;
+                localStorage.setItem("token", data.token);
                 ElNotification({
                     title: '登录成功',
-                    message: "欢迎回来,"+data.nickname,
                     type: 'success',
                 })
-                isLogined.value = true;
-                username.value = data.username;
-                nickname.value = data.nickname;
-                role.value = data.role;
-                router.back();
-
             }
         }
     ).catch(

@@ -1,7 +1,6 @@
 import axios from 'axios'
 const baseURL = import.meta.env.VITE_API_BASE_URL;
 
-console.log("baseurl"+baseURL)
 // 创建axios实例
 const request = axios.create({
     baseURL: baseURL,// 所有的请求地址前缀部分(没有后端请求不用写)
@@ -18,11 +17,10 @@ const request = axios.create({
 // request拦截器
 request.interceptors.request.use(
     config => {
-        // 如果你要去localStor获取token
-        // let token = localStorage.getItem("x-auth-token");
-        // if (token) {
-        //     config.headers = {"x-auth-token": token}
-        // }
+        let token = localStorage.getItem("token");
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
         return config
     },
     error => {

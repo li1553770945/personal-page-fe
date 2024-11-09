@@ -6,6 +6,7 @@ export const useUser = defineStore('user', {
     state: () => {
         return {
             isLogined: false,
+            token:"",
             username: "",
             nickname: "",
             role:"",

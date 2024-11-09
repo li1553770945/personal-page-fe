@@ -42,12 +42,12 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': { // 匹配请求路径，
-        target: 'http://localhost:8000/', // 代理的目标地址
+        target: 'http://localhost:9100/', // 代理的目标地址
         changeOrigin: true,
       },
       '/socket': { // 匹配请求路径，
         ws: true,
-        target: 'ws://localhost:8000/', // 代理的目标地址
+        target: 'ws://localhost:9100/', // 代理的目标地址
         changeOrigin: true,
       }
     }

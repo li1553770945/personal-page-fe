@@ -106,7 +106,7 @@
   </el-container>
 </template>
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { Notebook, TopRight, User, Setting, Message, House, Star, MilkTea, Sugar, InfoFilled } from "@element-plus/icons-vue";
 import { useUser } from "../store/user"
 import { storeToRefs } from 'pinia'
@@ -115,7 +115,7 @@ import { ElNotification } from 'element-plus'
 import { onMounted } from 'vue'
 import { Github } from '@icon-park/vue-next';
 const userStore = useUser()
-const { isLogined, username, nickname, role } = storeToRefs(userStore)
+const { token,isLogined, username, nickname, role } = storeToRefs(userStore)
 const isCollapse = ref(false);
 let menuWidth = ref("64");
 const handleOpen = (key: string, keyPath: string[]) => {
@@ -147,10 +147,12 @@ const logout = () => {
           message: "已成功登出",
           type: 'success',
         })
+        localStorage.removeItem("token");
         isLogined.value = false;
         username.value = "";
         nickname.value = "";
         role.value = ""
+        token.value = "";
 
       }
     }
@@ -165,35 +167,49 @@ const logout = () => {
   )
 }
 
-onMounted(() => {
-  userInfoAPI().then(
-    (res) => {
-      let data = res.data;
-      if (data.code != 0) {
-        console.log("用户未登录");
-      } else {
-        data = data.data
-        ElNotification({
-          title: '用户状态恢复成功',
-          message: "欢迎回来," + data.nickname,
-          type: 'success',
-        })
-        isLogined.value = true;
-        username.value = data.username;
-        nickname.value = data.nickname;
-        role.value = data.role;
+const fetchUserInfo = () => {
+    userInfoAPI().then(
+        (res) => {
+            let data = res.data;
+            if (data.code != 0) {
+                console.log("用户未登录");
+            } else {
+                data = data.data
+                ElNotification({
+                    title: '获取用户信息成功',
+                    message: "欢迎回来, " + data.nickname,
+                    type: 'success',
+                })
+                isLogined.value = true;
+                username.value = data.username;
+                nickname.value = data.nickname;
+                role.value = data.role;
+            }
+        }
+    ).catch(
+        err => {
+            ElNotification({
+                title: '获取用户信息请求失败',
+                message: err.message,
+                type: 'error',
+            })
+        }
+    )
+}
 
-      }
+// 在 token 改变时重新请求用户信息
+watch(token, (newToken, oldToken) => {
+    if (newToken && newToken !== oldToken) {
+        fetchUserInfo();
     }
-  ).catch(
-    err => {
-      ElNotification({
-        title: '获取用户信息请求失败',
-        message: err.message,
-        type: 'error',
-      })
-    }
-  )
+})
+
+// 组件挂载时恢复用户状态
+onMounted(() => {
+  const tokenStoreValue = localStorage.getItem("token");
+  if (tokenStoreValue) {
+    token.value = tokenStoreValue;
+  }
 })
 
 const openMail = () => {

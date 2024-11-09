@@ -187,7 +187,7 @@ class ProjectsPage {
         if (data.code != 0) {
           ElNotification({
             title: '添加项目失败',
-            message: data.msg,
+            message: data.message,
             type: 'error',
           })
         } else {
@@ -219,7 +219,7 @@ class ProjectsPage {
         if (data.code != 0) {
           ElNotification({
             title: '获取项目数量失败',
-            message: data.msg,
+            message: data.message,
             type: 'error',
           })
         } else {
@@ -251,7 +251,7 @@ class ProjectsPage {
           if (data.code != 0) {
             ElNotification({
               title: '获取项目列表失败',
-              message: data.msg,
+              message: data.message,
               type: 'error',
             })
           } else {
@@ -286,7 +286,7 @@ class ProjectsPage {
           if (data.code != 0) {
             ElNotification({
               title: '删除失败',
-              message: data.msg,
+              message: data.message,
               type: 'error',
             });
           } else {
