@@ -3,7 +3,7 @@
     <el-affix>
       <Menu></Menu>
     </el-affix>
-    <el-container width="200px" class="main-container">
+    <el-container class="main-container">
       <el-main class="main-content">
         <el-scrollbar>
           <router-view></router-view>
@@ -42,6 +42,7 @@ const year = timeNow.getFullYear();
 }
 
 .main-content {
+  min-width: 800px;
   max-width: 1200px;
   /* 最大宽度为 1200px */
   width: 100%;
