@@ -51,6 +51,7 @@ const onSubmit = () => {
                     title: '登录成功',
                     type: 'success',
                 })
+                router.back();
             }
         }
     ).catch(
