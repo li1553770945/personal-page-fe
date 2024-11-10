@@ -4,28 +4,28 @@
         <el-tab-pane label="回复查询" name="reply"></el-tab-pane>
     </el-tabs>
     <div class="message" v-if="tab.activeName.value == 'message'">
-        <el-form ref="messageFormRef" :model="message.messageForm" :rules="message.messageFormRules" label-width="120px">
-            <el-form-item label="问题类别" prop="category_id">
-                <el-select v-model="message.messageForm.category_id" placeholder="请选择问题类别">
-                    <el-option v-for="category in message.categories" :label="category.name"
+        <el-form ref="feedbackFormRef" :model="feedback.feedbackForm" :rules="feedback.feedbackFormRules" label-width="120px">
+            <el-form-item label="问题类别" prop="categoryId">
+                <el-select v-model="feedback.feedbackForm.categoryId" placeholder="请选择问题类别">
+                    <el-option v-for="category in feedback.categories" :label="category.name"
                         :value="category.id"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="标题" prop="title">
-                <el-input v-model="message.messageForm.title" placeholder="请输入标题"></el-input>
+                <el-input v-model="feedback.feedbackForm.title" placeholder="请输入标题"></el-input>
             </el-form-item>
-            <el-form-item label="留言内容" prop="message">
-                <el-input type="textarea" v-model="message.messageForm.message" :autosize="{ minRows: 4, maxRows: 8 }"
+            <el-form-item label="留言内容" prop="content">
+                <el-input type="textarea" v-model="feedback.feedbackForm.content" :autosize="{ minRows: 4, maxRows: 8 }"
                     placeholder="请输入留言内容（切换页面时该内容会保存，但是刷新后被清空）"></el-input>
             </el-form-item>
             <el-form-item label="署名" prop="name">
-                <el-input v-model="message.messageForm.name" placeholder="请输入署名"></el-input>
+                <el-input v-model="feedback.feedbackForm.name" placeholder="请输入署名"></el-input>
             </el-form-item>
             <el-form-item label="联系方式" prop="contact">
-                <el-input v-model="message.messageForm.contact" placeholder="请输入联系方式（请注明是QQ，还是微信、手机号等）非必填"></el-input>
+                <el-input v-model="feedback.feedbackForm.contact" placeholder="请输入联系方式（请注明是QQ，还是微信、手机号等）非必填"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" @click.prevent="message.submitForm">提交</el-button>
+                <el-button type="primary" @click.prevent="feedback.submitForm">提交</el-button>
             </el-form-item>
             <el-form-item>
                 <router-link to="/appreciate">
@@ -54,11 +54,11 @@
     </div>
 
 
-    <el-dialog v-model="message.dialogVisible.value" title="提示">
-        <span>留言ID：{{ message.submitMessageID }} <br>请记录此ID，该ID是唯一获取回复的方式。该对话框关闭后ID将无法再次查询。请勿泄露，任何拥有此ID的人都可以看到建议及回复</span>
+    <el-dialog v-model="feedback.dialogVisible.value" title="提示">
+        <span>留言ID：{{ feedback.submitFeedbackID }} <br>请记录此ID，该ID是唯一获取回复的方式。该对话框关闭后ID将无法再次查询。请勿泄露，任何拥有此ID的人都可以看到建议及回复</span>
         <template #footer>
             <span class="dialog-footer">
-                <el-button type="primary" @click="message.dialogVisible.value = false">
+                <el-button type="primary" @click="feedback.dialogVisible.value = false">
                     确认
                 </el-button>
             </span>
@@ -70,11 +70,11 @@
 import { storeToRefs } from 'pinia';
 import { ref, reactive, unref, onMounted } from 'vue';
 import { onBeforeRouteLeave } from 'vue-router';
-import { useMessage } from "../store/message"
-import { allMessageCategoriesAPI, saveMessageAPI, getReplyAPI, getMessageAPI } from "@/request/api";
+import { useFeedback } from "../store/feedback"
+import { allFeedbackCategoriesAPI, saveFeedbackAPI} from "@/request/api";
 import { ElNotification, TabsPaneContext } from 'element-plus';
 import router from '@/routes';
-const messageFormRef = ref();
+const feedbackFormRef = ref();
 const replyQueryFormRef = ref();
 class Tab {
     activeName = ref("message");
@@ -108,10 +108,10 @@ class Reply{
 
 const reply = new Reply();
 
-class Message {
-    messageForm = reactive({
-        category_id: '',
-        message: '',
+class Feedback {
+    feedbackForm = reactive({
+        categoryId: '',
+        content: '',
         contact: '',
         name: '',
         title: '',
@@ -123,21 +123,21 @@ class Message {
             callback();
         }
     };
-    messageFormRules = reactive({
-        category_id: [{ required: true, message: '请选择类别', trigger: 'blur' },
+    feedbackFormRules = reactive({
+        categoryId: [{ required: true, message: '请选择类别', trigger: 'blur' },
         { validator: this.validateCategoryId, trigger: 'blur' }],
-        message: [{ required: true, message: '请输入留言内容', trigger: 'blur' },
+        content: [{ required: true, message: '请输入留言内容', trigger: 'blur' },
         { min: 10, max: 1000, message: '留言内容在10-1000个字', trigger: 'blur' }],
         name: [{ required: true, message: '请输入署名', trigger: 'blur' }],
         title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
     });
 
     dialogVisible = ref(false);
-    submitMessageID = ref("");
+    submitFeedbackID = ref("");
     categories = reactive<{ name: string; value: string, id: number }[]>([]);
 
     getCategories = () => {
-        allMessageCategoriesAPI().then(
+        allFeedbackCategoriesAPI().then(
             (res) => {
                 let data = res.data;
                 if (data.code != 0) {
@@ -161,29 +161,29 @@ class Message {
             }
         )
     }
-    storeMessage = () => {
-        const messageStore = useMessage();
-        const { category, message, contact, name } = storeToRefs(messageStore);
-        category.value = this.messageForm.category_id;
-        message.value = this.messageForm.message;
-        contact.value = this.messageForm.contact;
-        name.value = this.messageForm.name;
+    storeFeedback = () => {
+        const feedbackStore = useFeedback();
+        const { category,content, contact, name } = storeToRefs(feedbackStore);
+        category.value = this.feedbackForm.categoryId;
+        content.value = this.feedbackForm.content;
+        contact.value = this.feedbackForm.contact;
+        name.value = this.feedbackForm.name;
     }
-    loadMessage = () => {
-        const messageStore = useMessage();
-        const { category, message, contact, name } = storeToRefs(messageStore);
-        this.messageForm.category_id = category.value;
-        this.messageForm.message = message.value;
-        this.messageForm.contact = contact.value;
-        this.messageForm.name = name.value;
+    loadFeedback = () => {
+        const feedbackStore = useFeedback();
+        const { category, content, contact, name } = storeToRefs(feedbackStore);
+        this.feedbackForm.categoryId = category.value;
+        this.feedbackForm.content = content.value;
+        this.feedbackForm.contact = contact.value;
+        this.feedbackForm.name = name.value;
     }
     // 表单验证规则
     submitForm = async () => {
-        const form = unref(messageFormRef);
+        const form = unref(feedbackFormRef);
         if (!form) return
         await form.validate((valid: any) => {
             if (valid) {
-                saveMessageAPI(this.messageForm).then(
+                saveFeedbackAPI(this.feedbackForm).then(
                     (res) => {
                         let data = res.data;
                         if (data.code != 0) {
@@ -199,10 +199,10 @@ class Message {
                                 message: "已收到您的宝贵建议，感谢反馈",
                                 type: 'success',
                             })
-                            this.messageForm.message = "";
-                            this.messageForm.contact = "";
-                            this.messageForm.name = "";
-                            this.submitMessageID.value = data.uuid;
+                            this.feedbackForm.content = "";
+                            this.feedbackForm.contact = "";
+                            this.feedbackForm.name = "";
+                            this.submitFeedbackID.value = data.uuid;
                             this.dialogVisible.value = true;
 
                         }
@@ -229,17 +229,17 @@ class Message {
 
 
 
-const message = new Message();
+const feedback = new Feedback();
 const tab = new Tab();
 
 
 onMounted(() => {
-    message.loadMessage();
-    message.getCategories();
+    feedback.loadFeedback();
+    feedback.getCategories();
 })
 
 onBeforeRouteLeave(() => {
-    message.storeMessage();
+    feedback.storeFeedback();
 })
 
 </script>

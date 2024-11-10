@@ -43,10 +43,10 @@ let routes = [
         component: () => import('@pages/generateCode.vue')
     },
     {
-        path: '/message-box',
-        name: 'message-box',
+        path: '/feedback',
+        name: 'feedback',
 
-        component: () => import('@pages/messageBox.vue')
+        component: () => import('@pages/feedback.vue')
     },
     {
         path: '/appreciate',

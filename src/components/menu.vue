@@ -83,8 +83,8 @@
             <span>Github <el-icon>
                 <top-right /> </el-icon></span>
           </el-menu-item>
-          <router-link to="/message-box">
-            <el-menu-item index="message-box">
+          <router-link to="/feedback">
+            <el-menu-item index="feedback">
               <el-icon>
                 <MilkTea />
               </el-icon>

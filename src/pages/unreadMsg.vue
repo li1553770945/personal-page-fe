@@ -1,11 +1,11 @@
 <template>
     <div class="not-read-message">
-        <el-button type="primary" @click.prevent="notReadMessage.getNotReadMessage()">刷新</el-button>
+        <el-button type="primary" @click.prevent="notReadMessage.getNotReadFeedback()">刷新</el-button>
         <el-table :data="notReadMessage.tableData.value" style="width: 100%">
             <el-table-column prop="id" label="消息id" />
             <el-table-column label="创建时间">
                 <template v-slot="{ row }">
-                    {{ formatDate(row.created_at) }}
+                    {{ formatDateUnixSecond(row.createdAt) }}
                 </template>
             </el-table-column>
             <el-table-column prop="name" label="署名" />
@@ -21,17 +21,17 @@
 
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
-import { notReadMessageAPI } from "@/request/api";
-import { formatDate } from "@/utils/dataUtils";
+import { notReadFeedbackAPI } from "@/request/api";
+import { formatDateUnixSecond } from "@/utils/dataUtils";
 import { ElNotification } from 'element-plus';
 import router from '@/routes';
 
 const formRef = ref();
 
-class NotReadMessage {
+class NotReadFeedback {
     tableData = ref([]);
-    getNotReadMessage = () => {
-        notReadMessageAPI().then(
+    getNotReadFeedback = () => {
+        notReadFeedbackAPI().then(
             (res) => {
                 let data = res.data;
                 if (data.code != 0) {
@@ -47,6 +47,7 @@ class NotReadMessage {
                         type: 'success',
                     })
                     this.tableData.value = data;
+                    console.log(data[0].createdAt);
                 }
             }
         ).catch(
@@ -61,14 +62,14 @@ class NotReadMessage {
     }
 }
 
-const notReadMessage = new NotReadMessage();
+const notReadMessage = new NotReadFeedback();
 const NavigateToReply = (uuid: string) => {
     console.log(uuid);
     router.push(`/read-msg/${uuid}`);
 }
 
 onMounted(() => {
-    notReadMessage.getNotReadMessage();
+    notReadMessage.getNotReadFeedback();
 })
 
 </script>

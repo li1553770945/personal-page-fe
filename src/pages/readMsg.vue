@@ -3,29 +3,29 @@
     <div v-if="isFind"> <el-card class="message-card">
             <template #header>
                 <div class="message-title">
-                    <h2> {{ msg.messageData.title }}</h2>
+                    <h2> {{ feedback.feedbackData.title }}</h2>
                 </div>
                 <div class="author-contact-container">
                     <div class="author">
                         <el-icon>
                             <UserFilled />
-                        </el-icon> {{ msg.messageData.name }}
+                        </el-icon> {{ feedback.feedbackData.name }}
                     </div>
                     <div class="contact">
                         <el-icon>
                             <PhoneFilled />
-                        </el-icon> {{ msg.messageData.contact }}
+                        </el-icon> {{ feedback.feedbackData.contact }}
                     </div>
                     <div class="category">
                         <el-icon>
                             <List />
-                        </el-icon> {{ msg.messageData.category.name }}
+                        </el-icon> {{ feedback.feedbackData.category}}
                     </div>
                 </div>
             </template>
-            <div class="message-content">{{ msg.messageData.message }}</div>
+            <div class="message-content">{{ feedback.feedbackData.content }}</div>
             <template #footer>
-                发表于{{ formatDate(msg.messageData.created_at) }}
+                发表于{{ formatDateUnixSecond(feedback.feedbackData.createdAt) }}
             </template>
         </el-card>
 
@@ -35,18 +35,18 @@
                     <h2>回复</h2>
                 </div>
             </template>
-            <div class="message-content">{{ msg.replyData.content }}</div>
+            <div class="message-content">{{ feedback.replyData.content }}</div>
             <template #footer>
-                回复于{{ formatDate(msg.replyData.created_at) }}
+                回复于{{ formatDateUnixSecond(feedback.replyData.createdAt) }}
             </template>
         </el-card>
         <el-card class="not-reply-card" v-if="!isReplid && role != 'admin'">
             <template #header>
                 <div class="message-title">
-                    <h2>文章暂未回复</h2>
+                    <h2>留言暂未回复</h2>
                 </div>
             </template>
-            <el-empty description="文章暂未回复" />
+            <el-empty description="留言暂未回复" />
         </el-card>
 
         <el-form ref="formRef" :model="reply.replyForm" :rules="reply.replyRules" v-if="!isReplid && role == 'admin'"
@@ -56,7 +56,7 @@
                     :autosize="{ minRows: 4, maxRows: 8 }"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" @click="reply.addReply(msg.messageData.id)">提交</el-button>
+                <el-button type="primary" @click="reply.addReply(feedback.feedbackData.id)">提交</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -67,12 +67,11 @@
 import { UserFilled, PhoneFilled, List } from "@element-plus/icons-vue";
 import { ref, reactive, onMounted, unref } from 'vue';
 import { useRoute } from 'vue-router';
-import { getMessageAPI, getReplyAPI, addReplyAPI } from '@/request/api';
+import { getFeedbackAPI, getReplyAPI, addReplyAPI } from '@/request/api';
 import { ElNotification } from 'element-plus'
 import { useUser } from "../store/user"
 import { storeToRefs } from 'pinia'
-import { formatDate } from "@/utils/dataUtils";
-import type { FormInstance } from 'element-plus'
+import { formatDate, formatDateUnixSecond } from "@/utils/dataUtils";
 
 
 const userStore = useUser()
@@ -83,43 +82,42 @@ const isReplid = ref(false);
 const isFind = ref(false);
 const formRef = ref()
 
-class Message {
-    messageData = reactive({
+class Feedback {
+    feedbackData = reactive({
         id: "",
         title: "",
         name: "",
         contact: "",
-        message: "",
-        created_at: "",
-        category: {
-            "name": "",
-        }
+        content: "",
+        createdAt: 0,
+        category:  "",
+        
     })
     replyData = reactive({
-        id: "",
         content: "",
-        created_at: "",
+        createdAt: 0,
     })
-    getMessage = () => {
+    getFeedback = () => {
 
-        getMessageAPI(uuid.value).then(
+        getFeedbackAPI(uuid.value).then(
             (res) => {
                 let data = res.data;
                 if (data.code != 0) {
                     ElNotification({
                         title: '获取留言失败',
-                        message: data.msg,
+                        message: data.message,
                         type: 'error',
                     })
                 } else {
                     isFind.value = true;
-                    this.messageData.id = data.data.id;
-                    this.messageData.name = data.data.name;
-                    this.messageData.title = data.data.title;
-                    this.messageData.contact = data.data.contact;
-                    this.messageData.message = data.data.message;
-                    this.messageData.created_at = data.data.created_at;
-                    this.messageData.category = data.data.category;
+                    console.log(data.data.name)
+                    this.feedbackData.id = data.data.id;
+                    this.feedbackData.name = data.data.name;
+                    this.feedbackData.title = data.data.title;
+                    this.feedbackData.contact = data.data.contact;
+                    this.feedbackData.content = data.data.content;
+                    this.feedbackData.createdAt = data.data.createdAt;
+                    this.feedbackData.category = data.data.category;
                     this.getReply();
                 }
             }
@@ -140,13 +138,12 @@ class Message {
                 if (data.code != 0) {
                     ElNotification({
                         title: '获取回复失败',
-                        message: data.msg,
+                        message: data.message,
                         type: 'error',
                     })
                 } else {
-                    this.replyData.id = data.data.id;
                     this.replyData.content = data.data.content
-                    this.replyData.created_at = data.data.created_at;
+                    this.replyData.createdAt = data.data.createdAt;
                     isReplid.value = true;
                 }
             }
@@ -165,7 +162,7 @@ class Message {
 
 class Reply {
     replyForm = reactive({
-        message_id: "",
+        feedbackId: "",
         content: "",
     })
     replyRules = reactive({
@@ -179,7 +176,7 @@ class Reply {
         }
         replyForm.validate((valid:boolean) => {
             if (valid) {
-                this.replyForm.message_id = id;
+                this.replyForm.feedbackId = id;
                 addReplyAPI(this.replyForm).then(
                     (res) => {
                         let data = res.data;
@@ -195,7 +192,7 @@ class Reply {
                                 title: '回复成功',
                                 type: 'success',
                             })
-                            msg.getReply();
+                            feedback.getReply();
                         }
                     }
                 ).catch(
@@ -217,10 +214,10 @@ class Reply {
 }
 
 
-const msg = new Message();
+const feedback = new Feedback();
 const reply = new Reply();
 onMounted(() => {
-    msg.getMessage();
+    feedback.getFeedback();
 })
 </script>
 

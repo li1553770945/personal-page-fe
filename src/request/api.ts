@@ -22,24 +22,24 @@ export const fileInfoAPI = (fileKey: any) =>
 export const deleteFileAPI = (fileID: number) =>
   instance.delete(`/files/${fileID}`);
 
-export const allMessageCategoriesAPI = () =>
-  instance.get('/messages/categories')
+export const allFeedbackCategoriesAPI = () =>
+  instance.get('/feedback/categories')
 
-export const saveMessageAPI = (data: any) =>
-  instance.post("/messages", data);
+export const saveFeedbackAPI = (data: any) =>
+  instance.post("/feedback", data);
 
 export const getReplyAPI = (uuid: string) =>
-  instance.get(`/messages/reply?uuid=${uuid}`);
+  instance.get(`/feedback/reply?feedbackUuid=${uuid}`);
 
 export const addReplyAPI = (data: any) =>
-  instance.post("/messages/reply", data);
+  instance.post("/feedback/reply", data);
 
 
-export const getMessageAPI = (uuid: string) =>
-  instance.get("/messages?uuid=" + uuid);
+export const getFeedbackAPI = (uuid: string) =>
+  instance.get("/feedback?uuid=" + uuid);
 
-export const notReadMessageAPI = () =>
-  instance.get("/messages?unread=true");
+export const notReadFeedbackAPI = () =>
+  instance.get("/feedback/unread");
 
 export const getProjectsNumAPI = () =>
   instance.get("/projects/num");
