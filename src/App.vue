@@ -24,6 +24,7 @@ const year = timeNow.getFullYear();
 </script>
 
 <style scoped>
+
 .footer {
   margin-top: 20px;
 }
