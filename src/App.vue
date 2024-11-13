@@ -20,6 +20,7 @@ import { ref } from "vue";
 import Menu from "./components/menu.vue"
 const timeNow = new Date();
 const year = timeNow.getFullYear();
+
 </script>
 
 <style scoped>
@@ -44,10 +45,8 @@ const year = timeNow.getFullYear();
 .main-content {
   min-width: 800px;
   max-width: 1200px;
-  /* 最大宽度为 1200px */
   width: 100%;
-  /* 使宽度可以根据视口大小变化 */
   margin: 0 auto;
-  /* 水平居中 */
 }
 </style>
+

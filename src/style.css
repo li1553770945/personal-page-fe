@@ -4,14 +4,17 @@
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+  --background-color-light: #f6f6f7; /* 浅色背景 */
+  --background-color-dark: #161618; /* 深色背景 */
+  --text-color-light: #000000; /* 浅色文字颜色 */
+  --text-color-dark: #ffffff; /* 深色文字颜色 */
+
 }
 
 a {
@@ -42,13 +45,10 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
   cursor: pointer;
   transition: border-color 0.25s;
 }
-button:hover {
-  border-color: #646cff;
-}
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
@@ -62,15 +62,14 @@ button:focus-visible {
   min-height: 100vh;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+/* 默认（浅色模式） */
+body {
+  background-color: var(--background-color-light);
+  color: var(--text-color-light);
+}
+
+/* 深色模式 */
+[data-theme="dark"] body {
+  background-color: var(--background-color-dark);
+  color: var(--text-color-dark);
 }

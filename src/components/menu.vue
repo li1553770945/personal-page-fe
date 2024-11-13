@@ -4,9 +4,13 @@
     <el-aside :width="menuWidth">
       <!-- 侧边栏菜单区域 -->
       <el-menu default-active="home" id="menu" :collapse="isCollapse" @open="handleOpen" @close="handleClose">
-        <el-radio-group id="collapse-menu-button" v-model="isCollapse">
-          <el-radio-button :label="!isCollapse">|||</el-radio-button>
-        </el-radio-group>
+        
+        <div class="menu-buttons">
+          <el-switch v-model="isDark" :active-action-icon="Moon" :inactive-action-icon="Sunny" class="theme-switch" />
+          <el-radio-group v-model="isCollapse" id="collapse-menu-button" class="collapse-button">
+            <el-radio-button :label="!isCollapse">|||</el-radio-button>
+          </el-radio-group>
+        </div>
         <router-link to="/home"><el-menu-item index="home">
             <el-icon>
               <House />
@@ -107,17 +111,22 @@
 </template>
 <script lang="ts" setup>
 import { ref, watch } from "vue";
-import { Notebook, TopRight, User, Setting, Message, House, Star, MilkTea, Sugar, InfoFilled } from "@element-plus/icons-vue";
+import { Notebook, TopRight, User, Setting, Message, House, Star, MilkTea, Sugar, InfoFilled, Sunny,  Moon } from "@element-plus/icons-vue";
 import { useUser } from "../store/user"
 import { storeToRefs } from 'pinia'
 import { logoutAPI, userInfoAPI } from "@/request/api";
 import { ElNotification } from 'element-plus'
 import { onMounted } from 'vue'
 import { Github } from '@icon-park/vue-next';
+
+import { set, useDark, useToggle } from '@vueuse/core'
+
+
 const userStore = useUser()
-const { token,isLogined, username, nickname, role } = storeToRefs(userStore)
+const { token, isLogined, username, nickname, role } = storeToRefs(userStore)
 const isCollapse = ref(false);
 let menuWidth = ref("64");
+
 const handleOpen = (key: string, keyPath: string[]) => {
   menuWidth = ref("200");
 };
@@ -168,44 +177,55 @@ const logout = () => {
 }
 
 const fetchUserInfo = () => {
-    userInfoAPI().then(
-        (res) => {
-            let data = res.data;
-            if (data.code != 0) {
-                console.log("用户未登录");
-            } else {
-                data = data.data
-                ElNotification({
-                    title: '获取用户信息成功',
-                    message: "欢迎回来, " + data.nickname,
-                    type: 'success',
-                })
-                isLogined.value = true;
-                username.value = data.username;
-                nickname.value = data.nickname;
-                role.value = data.role;
-            }
-        }
-    ).catch(
-        err => {
-            ElNotification({
-                title: '获取用户信息请求失败',
-                message: err.message,
-                type: 'error',
-            })
-        }
-    )
+  userInfoAPI().then(
+    (res) => {
+      let data = res.data;
+      if (data.code != 0) {
+        console.log("用户未登录");
+      } else {
+        data = data.data
+        ElNotification({
+          title: '获取用户信息成功',
+          message: "欢迎回来, " + data.nickname,
+          type: 'success',
+        })
+        isLogined.value = true;
+        username.value = data.username;
+        nickname.value = data.nickname;
+        role.value = data.role;
+      }
+    }
+  ).catch(
+    err => {
+      ElNotification({
+        title: '获取用户信息请求失败',
+        message: err.message,
+        type: 'error',
+      })
+    }
+  )
 }
 
 // 在 token 改变时重新请求用户信息
 watch(token, (newToken, oldToken) => {
-    if (newToken && newToken !== oldToken) {
-        fetchUserInfo();
-    }
+  if (newToken && newToken !== oldToken) {
+    fetchUserInfo();
+  }
+})
+
+const isDark = useDark()
+
+const changeDarkAttribute = ()=>{
+  const theme = isDark.value ? 'dark' : 'light'
+  document.documentElement.setAttribute('data-theme', theme)
+}
+watch(isDark, (newValue, oldValue) => {
+  changeDarkAttribute()
 })
 
 // 组件挂载时恢复用户状态
 onMounted(() => {
+  changeDarkAttribute();  
   const tokenStoreValue = localStorage.getItem("token");
   if (tokenStoreValue) {
     token.value = tokenStoreValue;
@@ -224,17 +244,60 @@ const openGithub = () => {
 <style>
 #menu {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;  /* 让按钮垂直排列 */
+  justify-content: flex-start; /* 将按钮排列在顶部 */
 }
 
-
-#collapse-menu-button {
-  margin-left: 15px;
+.menu-buttons {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;  /* 按钮居中 */
   margin-bottom: 20px;
   margin-top: 20px;
-  margin-right: 20px;
 }
 
-#contact-me {
-  text-align: center;
+.theme-switch {
+  margin-bottom: 15px;  /* 深色模式开关与折叠按钮之间的间距 */
 }
+
+.collapse-button {
+  display: flex;
+  justify-content: center;  /* 将折叠按钮居中 */
+}
+
+#collapse-menu-button .el-radio-button {
+  padding: 5px 10px;
+  transition: background-color 0.3s;
+}
+
+
+#menu .el-menu-item {
+  padding: 10px 20px;  /* 菜单项的内边距 */
+}
+
+/* 改变菜单图标和文字的颜色以适应深色模式 */
+[data-theme="dark"] .el-menu-item {
+  background-color: #333;
+  color: #fff;
+}
+
+[data-theme="dark"] .el-menu-item:hover {
+  background-color: #444;
+}
+
+[data-theme="dark"] .el-sub-menu:hover {
+  background-color: #444;
+}
+
+[data-theme="dark"] .el-menu {
+  background-color: #333;
+  color: #fff;
+}
+.el-switch.is-checked .el-switch__core{
+  --el-switch-on-color: var(--background-color-dark);  /* 激活状态的背景色 */
+  --el-switch-off-color: var(--background-color-light);   /* 非激活状态的背景色 */
+}
+
 </style>
