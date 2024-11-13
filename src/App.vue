@@ -8,7 +8,7 @@
         <el-scrollbar>
           <router-view></router-view>
           <el-footer class="footer" style="text-align:center">Copyright © 2022-{{ year }} PeaceSheep<br>
-            <a id="beian" href="https://beian.miit.gov.cn/" target="_blank">冀ICP备2022004632号-1</a>
+            <a class="beian" href="https://beian.miit.gov.cn/" target="_blank">冀ICP备2022004632号-1</a>
           </el-footer>
         </el-scrollbar>
       </el-main>
@@ -28,9 +28,9 @@ const year = timeNow.getFullYear();
 .footer {
   margin-top: 20px;
 }
-#beian {
-  text-decoration: none;
-  color: #000;
+.beian {
+  color: inherit; /* 继承父元素的颜色 */
+  text-decoration: none; /* 如果你不希望链接有下划线，也可以加上这个 */
 }
 
 .main-container {
