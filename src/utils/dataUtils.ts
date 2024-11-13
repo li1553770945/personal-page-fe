@@ -11,7 +11,7 @@ export function formatDate (dateString: string){
 }
 
 
-export function formatDateUnixSecond(dateUnix: number): string {
+export function formatDateTimeUnixSecond(dateUnix: number): string {
     // 如果传入的 Unix 时间戳是秒级而不是毫秒级，需要乘以 1000
     const date = new Date(dateUnix * 1000);
 
@@ -24,5 +24,20 @@ export function formatDateUnixSecond(dateUnix: number): string {
 
     // 拼接格式化后的字符串
     const formattedDate = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+    return formattedDate;
+}
+
+
+export function formatDateUnixSecond(dateUnix: number): string {
+    // 如果传入的 Unix 时间戳是秒级而不是毫秒级，需要乘以 1000
+    const date = new Date(dateUnix * 1000);
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // 月份从0开始
+    const day = String(date.getDate()).padStart(2, '0');
+  
+
+    // 拼接格式化后的字符串
+    const formattedDate = `${year}-${month}-${day}`;
     return formattedDate;
 }

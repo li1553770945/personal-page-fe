@@ -25,7 +25,7 @@
             </template>
             <div class="message-content">{{ feedback.feedbackData.content }}</div>
             <template #footer>
-                发表于{{ formatDateUnixSecond(feedback.feedbackData.createdAt) }}
+                发表于{{ formatDateTimeUnixSecond(feedback.feedbackData.createdAt) }}
             </template>
         </el-card>
 
@@ -37,7 +37,7 @@
             </template>
             <div class="message-content">{{ feedback.replyData.content }}</div>
             <template #footer>
-                回复于{{ formatDateUnixSecond(feedback.replyData.createdAt) }}
+                回复于{{ formatDateTimeUnixSecond(feedback.replyData.createdAt) }}
             </template>
         </el-card>
         <el-card class="not-reply-card" v-if="!isReplid && role != 'admin'">
@@ -71,7 +71,7 @@ import { getFeedbackAPI, getReplyAPI, addReplyAPI } from '@/request/api';
 import { ElNotification } from 'element-plus'
 import { useUser } from "../store/user"
 import { storeToRefs } from 'pinia'
-import { formatDate, formatDateUnixSecond } from "@/utils/dataUtils";
+import { formatDate, formatDateTimeUnixSecond } from "@/utils/dataUtils";
 
 
 const userStore = useUser()

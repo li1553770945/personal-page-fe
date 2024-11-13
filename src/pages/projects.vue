@@ -127,7 +127,6 @@ import { ElMessageBox } from 'element-plus';
 import { useUser } from "../store/user"
 import { storeToRefs } from 'pinia'
 import { formatDateUnixSecond } from "@/utils/dataUtils";
-import { useDark } from '@vueuse/core'
 
 const userStore = useUser()
 const { isLogined, username, nickname, role } = storeToRefs(userStore)

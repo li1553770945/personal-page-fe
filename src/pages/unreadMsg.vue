@@ -5,7 +5,7 @@
             <el-table-column prop="id" label="消息id" />
             <el-table-column label="创建时间">
                 <template v-slot="{ row }">
-                    {{ formatDateUnixSecond(row.createdAt) }}
+                    {{ formatDateTimeUnixSecond(row.createdAt) }}
                 </template>
             </el-table-column>
             <el-table-column prop="name" label="署名" />
@@ -22,7 +22,7 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
 import { notReadFeedbackAPI } from "@/request/api";
-import { formatDateUnixSecond } from "@/utils/dataUtils";
+import { formatDateTimeUnixSecond } from "@/utils/dataUtils";
 import { ElNotification } from 'element-plus';
 import router from '@/routes';
 
