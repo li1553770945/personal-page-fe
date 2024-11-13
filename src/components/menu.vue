@@ -277,19 +277,6 @@ const openGithub = () => {
   padding: 10px 20px;  /* 菜单项的内边距 */
 }
 
-/* 改变菜单图标和文字的颜色以适应深色模式 */
-[data-theme="dark"] .el-menu-item {
-  background-color: #333;
-  color: #fff;
-}
-
-[data-theme="dark"] .el-menu-item:hover {
-  background-color: #444;
-}
-
-[data-theme="dark"] .el-sub-menu:hover {
-  background-color: #444;
-}
 
 [data-theme="dark"] .el-menu {
   background-color: #333;
