@@ -119,7 +119,7 @@ import { ElNotification } from 'element-plus'
 import { onMounted } from 'vue'
 import { Github } from '@icon-park/vue-next';
 
-import { set, useDark, useToggle } from '@vueuse/core'
+import { useDark } from '@vueuse/core'
 
 
 const userStore = useUser()

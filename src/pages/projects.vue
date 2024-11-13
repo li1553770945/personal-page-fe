@@ -46,17 +46,18 @@
               </div>
             </div>
             <div class="project-info">
-              <span class="project-dates">{{ formatDate(project.start_date) }} - {{ project.status != 1 ?
-                formatDate(project.end_date) : '现在' }}</span>
-              <el-divider class="vertical-devider" direction="vertical"  border-style="solid" style="border-color: #666666; border-width: 1px; height: 1.5em;"/>
+              <span class="project-dates">{{ formatDateUnixSecond(project.start_date) }} - {{ project.status != 1 ?
+                formatDateUnixSecond(project.end_date) : '现在' }}</span>
+              <el-divider class="vertical-devider" direction="vertical" border-style="solid"
+                style="border-color: #666666; border-width: 1px; height: 1.5em;" />
               工作量：<el-rate v-model="project.volume_of_work" disabled />
-              <el-divider class="vertical-devider" direction="vertical"  border-style="solid" style="border-color: #666666; border-width: 1px; height: 1.5em;"/>
+              <el-divider class="vertical-devider" direction="vertical" border-style="solid"
+                style="border-color: #666666; border-width: 1px; height: 1.5em;" />
               难度：<el-rate v-model="project.difficulty" disabled />
-              <el-divider class="vertical-devider" direction="vertical"  border-style="solid" style="border-color: #666666; border-width: 1px; height: 1.5em;"/>
+              <el-divider class="vertical-devider" direction="vertical" border-style="solid"
+                style="border-color: #666666; border-width: 1px; height: 1.5em;" />
               <div class="project-link">
-                <a :href="project.link" target="_blank">
-                  <github theme="outline" size="24" fill="#333" />
-                </a>
+                  <github theme="outline" size="24" @click="openLink(project.link)" />
               </div>
             </div>
             <div class="project-description">
@@ -119,12 +120,15 @@
 
 import { Github } from '@icon-park/vue-next';
 
-import { ref, reactive, onMounted } from 'vue';
+import { ref, reactive, onMounted, watch } from 'vue';
 import { getProjectsAPI, getProjectsNumAPI, deleteProjectAPI, addProjectAPI } from '@/request/api';
 import { ElNotification } from 'element-plus';
 import { ElMessageBox } from 'element-plus';
 import { useUser } from "../store/user"
 import { storeToRefs } from 'pinia'
+import { formatDateUnixSecond } from "@/utils/dataUtils";
+import { useDark } from '@vueuse/core'
+
 const userStore = useUser()
 const { isLogined, username, nickname, role } = storeToRefs(userStore)
 const addProjectDialogVisible = ref(false);
@@ -138,8 +142,8 @@ class ProjectsPage {
     status: number;
     volume_of_work: number;
     difficulty: number;
-    start_date: string;
-    end_date: string;
+    start_date: number;
+    end_date: number;
   }[]>([]);
   projectsNum = ref(0);
   pageSize = ref(10);
@@ -326,14 +330,6 @@ onMounted(() => {
   projectsPage.getProjects();
 })
 
-const formatDate = (date: string) => {
-  const dateObj = new Date(date);
-  const year = dateObj.getUTCFullYear(); // get the year
-  const month = dateObj.getUTCMonth() + 1; // get the month (0-indexed, hence +1)
-  const day = dateObj.getUTCDate(); // get the day
-  return `${year}年${month.toString()}月`;
-}
-
 const statusClass = (status: number) => {
   switch (status) {
     case 1: return 'status-in-progress'; // 开发中
@@ -341,6 +337,10 @@ const statusClass = (status: number) => {
     case 3: return 'status-abandoned';   // 已废弃
     default: return '';
   }
+}
+
+const openLink = (link: string) => {
+  window.open(link);
 }
 
 </script>
@@ -356,7 +356,6 @@ const statusClass = (status: number) => {
   padding: 20px;
   border-radius: 4px;
   margin: 20px;
-  background-color: #fafafa;
 }
 
 .project-title {
@@ -371,7 +370,6 @@ const statusClass = (status: number) => {
 
 .project-info {
   font-size: 14px;
-  color: #666;
   margin-bottom: 5px;
 }
 
@@ -498,6 +496,4 @@ h2 {
 .delete-button {
   margin-left: 10px;
 }
-
-
 </style>
