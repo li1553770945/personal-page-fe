@@ -40,7 +40,7 @@ const onSubmit = () => {
             if (data.code != 0) {
                 ElNotification({
                     title: '登录失败',
-                    message: data.msg,
+                    message: data.message,
                     type: 'error',
                 })
             } else {
