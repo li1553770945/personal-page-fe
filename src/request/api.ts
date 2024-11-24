@@ -53,9 +53,11 @@ export const addProjectAPI = (data:any) =>
 export const deleteProjectAPI = (id:number) =>
   instance.delete("/projects/"+id);
 
+export const createRoomAPI = () => 
+  instance.post("/rooms");
 
-
-
+export const joinRoomAPI = (roomId:string) => 
+  instance.post(`/rooms/join/?roomId=${roomId}`);
 
 
   
