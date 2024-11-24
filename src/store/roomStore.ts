@@ -29,6 +29,7 @@ export const useRoomStore = defineStore('room', () => {
                 curRoomId.value = data.roomId;
                 clientId.value = data.clientId;
                 clientToken.value = data.clientToken;
+                lastRoomId.value = data.roomId;
                 localStorage.setItem("clientToken", data.clientToken);
                 localStorage.setItem("roomId", data.roomId);
                 localStorage.setItem("clientId", data.clientId);
@@ -62,14 +63,15 @@ export const useRoomStore = defineStore('room', () => {
                 return false;
             } else {
                 data = data.data
-                curRoomId.value = data.roomId;
+                curRoomId.value = roomId;
                 clientId.value = data.clientId;
                 clientToken.value = data.clientToken;
+                lastRoomId.value = roomId;
                 localStorage.setItem("clientToken", data.clientToken);
                 localStorage.setItem("roomId", roomId);
                 localStorage.setItem("clientId", data.clientId);
                 ElNotification({
-                    title: '加入房间成功，房间id:' + curRoomId.value,
+                    title: '加入房间成功，房间id:' + roomId,
                     type: 'success',
                 })
               
