@@ -94,10 +94,12 @@ export const useConnectStore = defineStore("connect", () => {
     }
   };
   const handleReconnect = (e:Event) => {
+    console.log("连接中断");
+    console.log(e);
     stopHeartbeat(); // 清理心跳包定时器
     ElNotification({
       title: "连接失败",
-      message: `websocket连接中断:${e}，正在进行第${retryCount.value}次重连`,
+      message: `websocket连接中断，正在进行第${retryCount.value}次重连`,
       type: "error",
     });
     if (needReconnect.value == false || retryCount.value == 4 || curRoomId.value == "") {
