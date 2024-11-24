@@ -1,5 +1,5 @@
 <template>
-  <el-scrollbar class="message-box" height="50vh">
+  <el-scrollbar ref="scrollbarRef" class="message-box" height="50vh">
     <div>
       <div
         v-for="msg in messages"
@@ -14,8 +14,30 @@
 
 <script setup>
 import { useMessageStore } from "../../store/messageStore";
+import { nextTick, ref } from "vue";
 
 const { messages } = useMessageStore();
+const scrollbarRef = ref(null);
+
+// 监听消息列表的变化并滚动到最新消息
+const scrollToBottom = () => {
+  nextTick(() => {
+    if (scrollbarRef.value) {
+      const scrollEl = scrollbarRef.value.$el.querySelector('.el-scrollbar__wrap');
+      scrollEl.scrollTop = scrollEl.scrollHeight;
+    }
+  });
+};
+
+// 自动监听 messages 数组变化（通过 watch）
+import { watch } from "vue";
+watch(
+  messages,
+  () => {
+    scrollToBottom();
+  },
+  { deep: true } // 确保深度监听
+);
 </script>
 
 <style scoped>
