@@ -4,6 +4,7 @@ import { computed, ref } from "vue";
 import { ElNotification } from "element-plus";
 import { useRoomStore } from "@/store/roomStore";
 import { useMessageStore } from "@/store/messageStore";
+import { tr } from "element-plus/es/locale";
 const { curRoomId, clientToken } = storeToRefs(useRoomStore());
 const messageStore = useMessageStore();
 const { addMessage } = messageStore;
@@ -16,6 +17,9 @@ export const useConnectStore = defineStore("connect", () => {
   const retryCount = ref(0); // 重试次数
   const dialogVisible = ref(false); // 对话框是否可见
   const sending = ref(false);
+  const connecting = ref(false);
+  const needReconnect = ref(true);
+  let heartbeatInterval: NodeJS.Timeout | null = null; 
 
   // 计算连接状态和状态文本
   const statusText = computed(() => {
@@ -52,6 +56,8 @@ export const useConnectStore = defineStore("connect", () => {
         message: "websocket连接成功",
       });
       connectionStatus.value = "connected";
+      retryCount.value = 0;
+      needReconnect.value = true;
     } else if (obj.event == "im-error") {
       ElNotification({
         title: "错误",
@@ -65,6 +71,7 @@ export const useConnectStore = defineStore("connect", () => {
         type: "error",
       });
       connectionStatus.value = "connect-fail";
+      needReconnect.value = false;
       dialogVisible.value = true;
       globalWs.value?.close();
     }
@@ -86,32 +93,14 @@ export const useConnectStore = defineStore("connect", () => {
         console.log("未知消息类型", obj.type);
     }
   };
-  const handleClose = (e: CloseEvent) => {
-    console.log("连接已关闭");
-    if (globalWs.value) {
-      globalWs.value.close();
-    }
-    connectionStatus.value = "connect-interupt";
-    ElNotification({
-      title: "连接已关闭",
-      message: "websocket连接关闭，状态码:" + e.code,
-      type: "warning",
-    });
-    globalWs.value?.close();
-    globalWs.value = null;
-  };
-  const handleOpen = (e: Event) => {
-    globalWs.value?.send(
-      JSON.stringify({ event: "im-auth-req", data: clientToken.value })
-    );
-  };
-  const handleError = (e: Event) => {
+  const handleReconnect = (e:Event) => {
+    stopHeartbeat(); // 清理心跳包定时器
     ElNotification({
       title: "连接失败",
       message: `websocket连接中断:${e}，正在进行第${retryCount.value}次重连`,
       type: "error",
     });
-    if (retryCount.value == 4 || curRoomId.value == "") {
+    if (needReconnect.value == false || retryCount.value == 4 || curRoomId.value == "") {
       dialogVisible.value = true;
       connectionStatus.value = "connect-fail";
       globalWs.value?.close();
@@ -120,6 +109,41 @@ export const useConnectStore = defineStore("connect", () => {
       connectionStatus.value = "connect-interupt";
       retryCount.value = retryCount.value + 1;
       connect(curRoomId.value);
+    }
+  };
+  const handleClose = (e: CloseEvent) => {
+    handleReconnect(e);
+  };
+  const handleOpen = (e: Event) => {
+    globalWs.value?.send(
+      JSON.stringify({ event: "im-auth-req", data: clientToken.value })
+    );
+    startHeartbeat();
+  };
+  const handleError = (e: Event) => {
+    handleReconnect(e);
+  };
+  const startHeartbeat = () => {
+    stopHeartbeat(); // 先清理已有的心跳定时器
+    heartbeatInterval = setInterval(() => {
+      if (globalWs.value && globalWs.value.readyState === WebSocket.OPEN) {
+        globalWs.value.send(
+          JSON.stringify({
+            event: "im-ping",
+            type: "im-ping",
+            data: "im-ping",
+          })
+        );
+        console.log("心跳包已发送");
+      }
+    }, 10000); // 每10秒发送一次
+  };
+
+  const stopHeartbeat = () => {
+    if (heartbeatInterval) {
+      clearInterval(heartbeatInterval);
+      heartbeatInterval = null;
+      console.log("心跳包已停止");
     }
   };
   const sendMessage = (content: string): boolean => {
