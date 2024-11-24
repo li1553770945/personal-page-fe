@@ -3,24 +3,30 @@
     <!-- 聊天容器 -->
     <div class="chat-container">
       <!-- 创建或加入房间的控件 -->
-      <HeaderRoomControls />
+      <HeaderRoomControls  />
       <!-- 显示消息的组件 -->
-      <MessageDisplay />
+      <MessageDisplay class="message-display-component" />
       <!-- 发送新消息的输入框 -->
-      <MessageInput />
+      <MessageInput class="message-input-component"/>
     </div>
   </template>
   
   <script lang="ts" setup>
-  import { computed, onMounted } from 'vue';
   import HeaderRoomControls from '../components/chat/headerRoomControls.vue';
   import MessageDisplay from '../components/chat/messageDisplay.vue';
   import MessageInput from '../components/chat/messageInput.vue';
   
   
-  // 在组件挂载时执行初始化操作
-  onMounted(() => {
-    // 如需要，这里进行初始化操作
-  });
+ 
   </script>
+ <style scoped>
+ .message-input-component {
+    margin-top: 1rem;
+  }
+
+  .message-display-component{
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
   
+</style> 

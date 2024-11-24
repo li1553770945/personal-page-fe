@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import { createRoomAPI, joinRoomAPI } from '@/request/api';
 import { ElNotification } from 'element-plus';
 
@@ -49,9 +49,9 @@ export const useRoomStore = defineStore('room', () => {
             return false;
         }
     }
-    const joinRoom = async (): Promise<boolean> => {
+    const joinRoom = async (roomId:string): Promise<boolean> => {
         try {
-            const res = await joinRoomAPI(inputRoomId.value);
+            const res = await joinRoomAPI(roomId);
             let data = res.data;
             if (data.code != 0) {
                 ElNotification({
@@ -66,7 +66,7 @@ export const useRoomStore = defineStore('room', () => {
                 clientId.value = data.clientId;
                 clientToken.value = data.clientToken;
                 localStorage.setItem("clientToken", data.clientToken);
-                localStorage.setItem("roomId", data.roomId);
+                localStorage.setItem("roomId", roomId);
                 localStorage.setItem("clientId", data.clientId);
                 ElNotification({
                     title: '加入房间成功，房间id:' + curRoomId.value,

@@ -4,17 +4,22 @@
     <div class="status-bar" :class="'status-bar-' + connectionStatus">
       {{ statusText }}
     </div>
-    <el-row>
-      <el-col :span="8">
+    <div class="information-header" v-if=" connectionStatus == 'connected' ">
+            当前聊天ID:{{ curRoomId }}
+            <br>
+            当前客户端ID:{{ clientId }}
+        </div>
+    <el-row class="operator-header" v-if=" connectionStatus != 'connected' ">
+      <el-col :span="4">
         <el-button @click="CreateAndConnect()">创建聊天室</el-button>
       </el-col>
       <el-col :span="8">
         <el-input v-model="inputRoomId" placeholder="请输入房间ID"></el-input>
       </el-col>
-      <el-col :span="8">
+      <el-col :span="4">
         <el-button @click="JoinAndConnect()">加入聊天室</el-button>
       </el-col>
-      <el-col span="4" style="margin:1rem;" v-if="lastRoomId">
+      <el-col :span="4"  v-if="lastRoomId">
         <el-button @click="ReJoinAndConnect()">重新加入聊天{{ lastRoomId }}</el-button>
       </el-col>
     </el-row>
@@ -39,7 +44,7 @@ import { onMounted } from 'vue';
 
 const roomStore = useRoomStore();
 const { createRoom, joinRoom, reJoinRoom } = roomStore;
-const { inputRoomId, lastRoomId } = storeToRefs(roomStore);
+const { inputRoomId, lastRoomId,curRoomId,clientId } = storeToRefs(roomStore);
 
 const connectStore = useConnectStore();
 const { connect } = connectStore;
@@ -47,20 +52,45 @@ const { connectionStatus, dialogVisible, statusText } = storeToRefs(connectStore
 
 const CreateAndConnect = () => {
   createRoom().then((result: boolean) => {
-    if (result) { connect(); }
+    if (result) { connect(curRoomId.value); }
   })
 }
 const JoinAndConnect = () => {
-  joinRoom().then((result: boolean) => {
-    if (result) { connect(); }
+  joinRoom(inputRoomId.value).then((result: boolean) => {
+    if (result) { connect(inputRoomId.value); }
   })
 }
 const ReJoinAndConnect = () => {
   reJoinRoom();
-  connect();
+  connect(curRoomId.value);
 }
 
 onMounted(() => {
-  console.log(localStorage.getItem('roomId'))
+  console.log(connectionStatus.value)
 })
 </script>
+
+<style scoped>
+.status-bar {
+    /* 设置顶部文字的样式 */
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.status-bar-connected {
+    /* 设置连接成功状态的背景色和文字颜色 */
+    background-color: green;
+    color: white;
+}
+
+.status-bar-not-connected,
+.status-bar-connect-fail,
+.status-bar-connect-interupt {
+    /* 设置连接失败状态的背景色和文字颜色 */
+    background-color: red;
+    color: white;
+}
+</style>
