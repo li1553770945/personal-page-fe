@@ -139,7 +139,7 @@ export const useConnectStore = defineStore("connect", () => {
         );
         console.log("心跳包已发送");
       }
-    }, 10000); // 每10秒发送一次
+    }, 30000); // 每10秒发送一次
   };
 
   const stopHeartbeat = () => {
