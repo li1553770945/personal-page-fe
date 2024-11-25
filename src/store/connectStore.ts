@@ -4,11 +4,9 @@ import { computed, ref } from "vue";
 import { ElNotification } from "element-plus";
 import { useRoomStore } from "@/store/roomStore";
 import { useMessageStore } from "@/store/messageStore";
-import { tr } from "element-plus/es/locale";
 const { curRoomId, clientToken } = storeToRefs(useRoomStore());
 const messageStore = useMessageStore();
 const { addMessage } = messageStore;
-const { inputMessage } = storeToRefs(messageStore);
 const wsBaseURL = import.meta.env.VITE_WS_BASE_URL;
 
 export const useConnectStore = defineStore("connect", () => {
@@ -18,6 +16,9 @@ export const useConnectStore = defineStore("connect", () => {
   const dialogVisible = ref(false); // 对话框是否可见
   const sending = ref(false);
   const connecting = ref(false);
+  const creating = ref(false);
+  const joining = ref(false);
+  const rejoining = ref(false);
   const needReconnect = ref(true);
   let heartbeatInterval: NodeJS.Timeout | null = null; 
 
@@ -180,6 +181,10 @@ export const useConnectStore = defineStore("connect", () => {
     retryCount,
     dialogVisible,
     statusText,
+    connecting,
+    creating,
+    joining,
+    rejoining,
     sendMessage,
   };
 });

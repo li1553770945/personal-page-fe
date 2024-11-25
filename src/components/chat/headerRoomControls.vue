@@ -11,16 +11,16 @@
         </div>
     <el-row class="operator-header" v-if=" connectionStatus != 'connected' ">
       <el-col :span="4">
-        <el-button @click="CreateAndConnect()">创建聊天室</el-button>
+        <el-button @click="CreateAndConnect()" type="primary" :disabled="connecting" :loading="creating">创建聊天室</el-button>
       </el-col>
       <el-col :span="8">
         <el-input v-model="inputRoomId" placeholder="请输入房间ID"></el-input>
       </el-col>
       <el-col :span="4">
-        <el-button @click="JoinAndConnect()">加入聊天室</el-button>
+        <el-button @click="JoinAndConnect()" :disabled="connecting" :loading="joining">加入聊天室</el-button>
       </el-col>
       <el-col :span="4"  v-if="lastRoomId">
-        <el-button @click="ReJoinAndConnect()">重新加入聊天{{ lastRoomId }}</el-button>
+        <el-button @click="ReJoinAndConnect()" :disabled="connecting" :loading="rejoining">重新加入聊天{{ lastRoomId }}</el-button>
       </el-col>
     </el-row>
   </div>
@@ -48,21 +48,33 @@ const { inputRoomId, lastRoomId,curRoomId,clientId } = storeToRefs(roomStore);
 
 const connectStore = useConnectStore();
 const { connect } = connectStore;
-const { connectionStatus, dialogVisible, statusText } = storeToRefs(connectStore);
+const { connectionStatus, dialogVisible, statusText,connecting,joining,creating,rejoining } = storeToRefs(connectStore);
 
 const CreateAndConnect = () => {
+  connecting.value = true;
+  creating.value = true;
   createRoom().then((result: boolean) => {
     if (result) { connect(curRoomId.value); }
+    connecting.value = false;
+    creating.value = false;
   })
 }
 const JoinAndConnect = () => {
+  connecting.value = true;
+  joining.value = true;
   joinRoom(inputRoomId.value).then((result: boolean) => {
     if (result) { connect(inputRoomId.value); }
+    connecting.value = false;
+    joining.value = false;
   })
 }
 const ReJoinAndConnect = () => {
+  connecting.value = true;
+  rejoining.value = true;
   reJoinRoom();
   connect(curRoomId.value);
+  connecting.value = false;
+  rejoining.value = false;
 }
 
 onMounted(() => {
