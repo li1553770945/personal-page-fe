@@ -12,10 +12,9 @@ const wsBaseURL = import.meta.env.VITE_WS_BASE_URL;
 export const useConnectStore = defineStore("connect", () => {
   const globalWs = ref<WebSocket | null>(null);
   const connectionStatus = ref("not-connected"); // 连接状态
-  const retryCount = ref(0); // 重试次数
+  const retryCount = ref(1); // 重试次数
   const dialogVisible = ref(false); // 对话框是否可见
   const sending = ref(false);
-  const connecting = ref(false);
   const creating = ref(false);
   const joining = ref(false);
   const rejoining = ref(false);
@@ -25,6 +24,8 @@ export const useConnectStore = defineStore("connect", () => {
   // 计算连接状态和状态文本
   const statusText = computed(() => {
     switch (connectionStatus.value) {
+      case "connecting":
+        return "正在连接至服务器，请稍后";
       case "connected":
         return "已连接至服务器";
       case "not-connected":
@@ -57,8 +58,11 @@ export const useConnectStore = defineStore("connect", () => {
         message: "websocket连接成功",
       });
       connectionStatus.value = "connected";
-      retryCount.value = 0;
+      retryCount.value = 1;
       needReconnect.value = true;
+      joining.value = false;
+      rejoining.value = false;
+      creating.value = false;
     } else if (obj.event == "im-error") {
       ElNotification({
         title: "错误",
@@ -98,20 +102,27 @@ export const useConnectStore = defineStore("connect", () => {
     console.log("连接中断");
     console.log(e);
     stopHeartbeat(); // 清理心跳包定时器
-    ElNotification({
-      title: "连接失败",
-      message: `websocket连接中断，正在进行第${retryCount.value}次重连`,
-      type: "error",
-    });
-    if (needReconnect.value == false || retryCount.value == 4 || curRoomId.value == "") {
+    
+    if (needReconnect.value == false || retryCount.value > 4 || curRoomId.value == "") {
       dialogVisible.value = true;
       connectionStatus.value = "connect-fail";
       globalWs.value?.close();
       globalWs.value = null;
+
+      joining.value = false;
+      rejoining.value = false;
+      creating.value = false;
+      
     } else {
-      connectionStatus.value = "connect-interupt";
+      ElNotification({
+        title: "连接失败",
+        message: `websocket连接中断，正在进行第${retryCount.value}次重连`,
+        type: "error",
+      });
+      connectionStatus.value = "connecting";
       retryCount.value = retryCount.value + 1;
       connect(curRoomId.value);
+      
     }
   };
   const handleClose = (e: CloseEvent) => {
@@ -181,7 +192,6 @@ export const useConnectStore = defineStore("connect", () => {
     retryCount,
     dialogVisible,
     statusText,
-    connecting,
     creating,
     joining,
     rejoining,
