@@ -135,7 +135,7 @@ const handleClose = (key: string, keyPath: string[]) => {
 };
 
 const openBlogWindow = () => {
-  window.open("https://blog.peacesheep.xyz");
+  window.open("https://blog.peacesheep.cn");
 };
 
 
