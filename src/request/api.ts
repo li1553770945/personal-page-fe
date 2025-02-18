@@ -16,11 +16,18 @@ export const userInfoAPI = () =>
   instance.get(`users/me`);
 
 
-export const fileInfoAPI = (fileKey: any) =>
-  instance.get(`/files/info?file-key=${fileKey}`);
+export const downloadFileAPI = (key: string) =>
+  instance.get(`/files/download?key=${key}`);
 
-export const deleteFileAPI = (fileID: number) =>
-  instance.delete(`/files/${fileID}`);
+export const fileInfoAPI = (key: string) =>
+  instance.get(`/files?key=${key}`);
+
+
+export const deleteFileAPI = (key:string) =>
+  instance.delete(`/files`,{data:{key:key}});
+
+export const uploadFileAPI = (data:any) =>
+  instance.post(`/files`,data);
 
 export const allFeedbackCategoriesAPI = () =>
   instance.get('/feedback/categories')

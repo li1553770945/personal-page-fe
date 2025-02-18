@@ -8,8 +8,9 @@
             </template>
             <el-form :model="fileForm" label-width="120px">
                 <el-form-item label="选择文件">
-                    <el-upload ref="upload" class="upload-demo" action="/api/files" :limit="1" :on-exceed="handleExceed"
-                        :auto-upload="false" :data="fileForm" :on-success="handleSuccess" :on-error="handleError">
+                    <el-upload ref="upload" class="upload-demo" method="put" :action="uploadUrl" :limit="1"
+                        :on-exceed="handleExceed" :auto-upload="false" :on-change="handleFileChange"
+                        :before-upload="beforeUpload">
                         <template #trigger>
                             <el-button type="primary">选择文件</el-button>
                         </template>
@@ -32,8 +33,9 @@
                     </div>
 
                 </el-form-item>
-                <el-form-item v-if="uploadFileName != ''">
-                    {{ uploadFileName }}的key是{{ uploadFileKey }}
+                
+                <el-form-item>
+                    {{ uploadStatus }} <div v-if=" uploadStatus != '' ">，{{ uploadFileName }}的key是{{ uploadReturnFileKey }}</div>
                 </el-form-item>
                 <el-form-item>
                     <el-button class="ml-3" type="primary" @click="submitUpload">
@@ -43,7 +45,7 @@
             </el-form>
         </el-card>
         <br>
-        <el-divider  v-if="isLogined" />
+        <el-divider v-if="isLogined" />
         <el-card class="box-card">
             <template #header>
                 <div class="card-header">
@@ -60,7 +62,7 @@
             </el-form>
         </el-card>
         <br>
-        <el-divider  v-if="isLogined" />
+        <el-divider v-if="isLogined" />
         <el-card class="box-card" v-if="isLogined">
             <template #header>
                 <div class="card-header">
@@ -94,21 +96,23 @@
 import { ref, reactive } from 'vue'
 import { ElNotification, genFileId } from 'element-plus'
 import type { UploadInstance, UploadProps, UploadRawFile } from 'element-plus'
-import { fileInfoAPI, deleteFileAPI } from "../request/api"
+import { fileInfoAPI, uploadFileAPI, downloadFileAPI, deleteFileAPI } from "../request/api"
 import { useUser } from "../store/user"
 import { storeToRefs } from 'pinia'
+import axios from 'axios'
 const userStore = useUser()
 const { isLogined, username, nickname, role } = storeToRefs(userStore)
 const upload = ref<UploadInstance>()
+const uploadUrl = ref("");
 const fileForm = reactive({
     file_key: "",
     count: 0,
 })
 const dialogVisible = ref(false);
 const deleteFileName = ref("");
-const deleteFileID = ref(0);
 const uploadFileName = ref("");
-const uploadFileKey = ref("");
+const uploadReturnFileKey = ref("");
+const uploadStatus = ref("")
 const downloadForm = reactive({
     file_key: "",
 })
@@ -122,22 +126,64 @@ const handleExceed: UploadProps['onExceed'] = (files) => {
     upload.value!.handleStart(file)
 }
 
-const submitUpload = () => {
-    upload.value!.submit()
+const handleFileChange = (file: { name: string }) => {
+    uploadFileName.value = file.name; // 获取文件名
 }
-const downloadSubmit = () => {
-    fileInfoAPI(downloadForm.file_key).then(
+
+const submitUpload = () => {
+    uploadFileAPI({
+        name: uploadFileName.value,
+        key: fileForm.file_key,
+        maxDownload: fileForm.count,
+
+    }).then(
         (res) => {
             let data = res.data;
             if (data.code != 0) {
                 ElNotification({
-                    title: '下载失败',
-                    message: data.msg,
+                    title: '获取上传url失败',
+                    message: data.message,
                     type: 'error',
                 })
             } else {
-                window.open(`/api/files?file-key=${downloadForm.file_key}`);
+                data = data.data;
+                uploadUrl.value = data.signedUrl;
+                uploadReturnFileKey.value = data.key;
+                uploadStatus.value = "上传中";
+                upload.value!.submit();
 
+            }
+        }
+    ).catch(
+        err => {
+            ElNotification({
+                title: '请求失败',
+                message: err.message,
+                type: 'error',
+            })
+        }
+    )
+}
+const downloadSubmit = () => {
+    downloadFileAPI(downloadForm.file_key).then(
+        (res) => {
+            let data = res.data;
+            if (data.code != 0) {
+                ElNotification({
+                    title: '获取下载url失败',
+                    message: data.message,
+                    type: 'error',
+                })
+            } else {
+                data = data.data;
+                const link = document.createElement('a'); // 创建一个 <a> 标签
+                link.href = data.signedUrl; // 设置文件下载地址
+                link.download = data.name; // 设置下载时文件的名称
+                document.body.appendChild(link); // 将 <a> 标签添加到页面中
+                console.log(link.href);
+                console.log(link.download);
+                link.click(); // 模拟点击下载
+                document.body.removeChild(link); // 下载完成后移除 <a> 标签
             }
         }
     ).catch(
@@ -158,12 +204,11 @@ const deleteSubmit = () => {
             if (data.code != 0) {
                 ElNotification({
                     title: '获取文件信息失败',
-                    message: data.msg,
+                    message: data.message,
                     type: 'error',
                 })
             } else {
-                deleteFileName.value = data.data.file_name;
-                deleteFileID.value = data.data.id;
+                deleteFileName.value = data.data.name;
                 dialogVisible.value = true;
 
             }
@@ -180,13 +225,13 @@ const deleteSubmit = () => {
 }
 
 const deleteFile = () => {
-    deleteFileAPI(deleteFileID.value).then(
+    deleteFileAPI(deleteForm.file_key).then(
         (res) => {
             let data = res.data;
             if (data.code != 0) {
                 ElNotification({
                     title: '删除失败',
-                    message: data.msg,
+                    message: data.message,
                     type: 'error',
                 })
             } else {
@@ -208,6 +253,33 @@ const deleteFile = () => {
     )
 }
 
+const beforeUpload = (file: any) => {
+    console.log("beforeUpload");
+    // 构建自定义请求体，使用二进制数据上传
+    axios.put(uploadUrl.value, file, {
+        headers: {
+            'Content-Type': 'application/octet-stream',
+            'Accept': '*/*',
+            'Connection': 'keep-alive',
+        },
+    })
+        .then(response => {
+            ElNotification({
+                    title: '上传成功',
+                    type: 'success',
+                })
+                uploadStatus.value = "上传成功";
+        })
+        .catch(error => {
+            ElNotification({
+                    title: '上传失败',
+                    type: 'success',
+                })
+        });
+
+    return false; // 阻止默认上传行为
+}
+
 const handleSuccess = (res: any, _file: any, _files: any) => {
     if (res['code'] != 0) {
         ElNotification({
@@ -220,9 +292,7 @@ const handleSuccess = (res: any, _file: any, _files: any) => {
             title: '上传成功',
             type: 'success',
         })
-        uploadFileName.value = res['data'].file_name
-        uploadFileKey.value = res['data'].file_key
-
+        uploadStatus.value = "上传成功";
     }
 }
 const handleError = (error: any, _file: any, _files: any) => {
@@ -231,11 +301,12 @@ const handleError = (error: any, _file: any, _files: any) => {
         message: error,
         type: 'error',
     })
+    uploadStatus.value = "上传失败";
 }
 </script>
 
 <style scoped>
-.file{
-    width:100%;
+.file {
+    width: 100%;
 }
 </style>
