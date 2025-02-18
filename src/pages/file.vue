@@ -176,14 +176,8 @@ const downloadSubmit = () => {
                 })
             } else {
                 data = data.data;
-                const link = document.createElement('a'); // 创建一个 <a> 标签
-                link.href = data.signedUrl; // 设置文件下载地址
-                link.download = data.name; // 设置下载时文件的名称
-                document.body.appendChild(link); // 将 <a> 标签添加到页面中
-                console.log(link.href);
-                console.log(link.download);
-                link.click(); // 模拟点击下载
-                document.body.removeChild(link); // 下载完成后移除 <a> 标签
+                window.open(data.signedUrl,'_blank'); // 设置文件下载地址
+                
             }
         }
     ).catch(
@@ -280,29 +274,7 @@ const beforeUpload = (file: any) => {
     return false; // 阻止默认上传行为
 }
 
-const handleSuccess = (res: any, _file: any, _files: any) => {
-    if (res['code'] != 0) {
-        ElNotification({
-            title: '上传失败',
-            message: res['msg'],
-            type: 'error',
-        })
-    } else {
-        ElNotification({
-            title: '上传成功',
-            type: 'success',
-        })
-        uploadStatus.value = "上传成功";
-    }
-}
-const handleError = (error: any, _file: any, _files: any) => {
-    ElNotification({
-        title: '上传失败',
-        message: error,
-        type: 'error',
-    })
-    uploadStatus.value = "上传失败";
-}
+
 </script>
 
 <style scoped>
