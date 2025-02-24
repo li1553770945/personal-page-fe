@@ -54,14 +54,23 @@ const CreateAndConnect = () => {
   connectionStatus.value = 'connecting';
   creating.value = true;
   createRoom().then((result: boolean) => {
-    if (result) { connect(curRoomId.value); }
+    if (result) { 
+      connect(curRoomId.value);
+     }
+    else{
+      creating.value = false;
+      connectionStatus.value = "connect-fail"
+    }
   })
 }
 const JoinAndConnect = () => {
   connectionStatus.value = 'connecting';
   joining.value = true;
   joinRoom(inputRoomId.value).then((result: boolean) => {
-    if (result) { connect(inputRoomId.value); }
+    if (result) { connect(inputRoomId.value); } else{
+      joining.value = false;
+      connectionStatus.value = "connect-fail"
+    }
   })
 }
 const ReJoinAndConnect = () => {
