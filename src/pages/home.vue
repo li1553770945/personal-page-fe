@@ -45,7 +45,12 @@
               <el-card>
                 <div class="work-experience-header">
                   <span class="position"><b>{{ item.company }} {{ item.department }} {{ item.position }}  </b></span>
-                  &nbsp; <el-tag v-if="item.type=='实习'" type="primary">实习</el-tag><el-tag v-if="item.type=='正式'" type="primary">正式</el-tag>
+                  <div class="spacer"></div>
+                  <div class="type">
+                    <el-tag v-if="item.type=='实习'" type="primary">实习</el-tag>
+                    <el-tag v-if="item.type=='正式'" type="primary">正式</el-tag>
+                  </div>
+                  
                 </div>
                 <div class="work-experience-body">
                   <div>{{ item.description }}</div>
@@ -126,7 +131,7 @@ const work = [
     department: '爱橙科技',
     position: '分布式基础基础',
     time: '2025年4月-今',
-    description: '等待后续添加',
+    description: '待添加',
     is_current: true,
     type:"实习",
   },
@@ -370,5 +375,15 @@ const contests = [
   background-repeat: no-repeat;
   vertical-align: middle;
   margin-right: 5px;
+}
+
+.work-experience-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.spacer {
+  flex-grow: 1;
 }
 </style>
