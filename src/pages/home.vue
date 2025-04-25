@@ -44,7 +44,8 @@
               :color="item.is_current ? '#409EFF' : '#0bbd87'">
               <el-card>
                 <div class="work-experience-header">
-                  <span class="position"><b>{{ item.company }} {{ item.department }} {{ item.position }} </b></span>
+                  <span class="position"><b>{{ item.company }} {{ item.department }} {{ item.position }}  </b></span>
+                  &nbsp; <el-tag v-if="item.type=='实习'" type="primary">实习</el-tag><el-tag v-if="item.type=='正式'" type="primary">正式</el-tag>
                 </div>
                 <div class="work-experience-body">
                   <div>{{ item.description }}</div>
@@ -118,8 +119,19 @@ import DockerIcon from '@/assets/icons/home/Docker.svg';
 import K8sIcon from '@/assets/icons/home/k8s.svg';
 
 const work = [
+{
+    id: 2,
+    company: '阿里巴巴',
+    city: '杭州',
+    department: '爱橙科技',
+    position: '分布式基础基础',
+    time: '2025年4月-今',
+    description: '等待后续添加',
+    is_current: true,
+    type:"实习",
+  },
   {
-    id: 0,
+    id: 1,
     company: '字节跳动',
     city: '南京',
     department: 'Data部门',
@@ -127,6 +139,7 @@ const work = [
     time: '2022年11月-2023年2月',
     description: '为字节跳动商业化数据平台后端开发 RPC 服务，将现有项目的 RPC 依赖管理方式从本地改为使用 overpass；对现有项目进行控制反转重构',
     is_current: false,
+    type:"实习",
   },
   {
     id: 0,
@@ -137,7 +150,10 @@ const work = [
     time: '2022年7月-2022年8月',
     description: '使用 C++语言，设计开发一款对象存储系统。项目使用分布式架构，支持多租户隔离，支持百万级文件存储，利用 epoll 的 IO 多路复用机制，综合使用 TCP 和 UDP 协议，具有高性能、高可用等特点',
     is_current: false,
+    type:"实习",
   }
+
+
 ]
 const education = [
   {

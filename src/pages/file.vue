@@ -29,7 +29,7 @@
                     <el-input-number v-model="fileForm.count" :min="0" :max="100" />
 
                     <div class="el-upload__tip text-red">
-                        选择0为永不消失
+                        &nbsp; 选择0为永不消失
                     </div>
 
                 </el-form-item>
