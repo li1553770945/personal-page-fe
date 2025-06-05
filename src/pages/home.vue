@@ -165,7 +165,7 @@ const education = [
     id: 1,
     school: '东南大学',
     degree: '硕士',
-    major: '电子信息',
+    major: '计算机技术',
     city: "南京",
     college: "计算机科学与工程学院",
     time: '2023年9月-2026年9月',
