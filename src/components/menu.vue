@@ -4,7 +4,7 @@
     <el-aside :width="menuWidth">
       <!-- 侧边栏菜单区域 -->
       <el-menu default-active="home" id="menu" :collapse="isCollapse" @open="handleOpen" @close="handleClose">
-        
+
         <div class="menu-buttons">
           <el-switch v-model="isDark" :active-action-icon="Moon" :inactive-action-icon="Sunny" class="theme-switch" />
           <el-radio-group v-model="isCollapse" id="collapse-menu-button" class="collapse-button">
@@ -57,13 +57,22 @@
           </div>
           <div id="logined" v-if="isLogined">
             <el-menu-item index="10-11">{{ nickname }}</el-menu-item>
-            <div id="generate-code" v-if="role == 'admin'">
-              <router-link to="/generate-code"><el-menu-item index="10-12">生成激活码</el-menu-item></router-link>
-            </div>
-            <div id="unread-msg" v-if="role == 'admin'">
-              <router-link to="/unread-msg"><el-menu-item index="unread-msg">未读消息</el-menu-item></router-link>
-            </div>
             <el-menu-item index="10-13" @click="logout">登出</el-menu-item>
+          </div>
+        </el-sub-menu>
+        <el-sub-menu index="admin" v-if="isLogined && role == 'admin'">
+          <template #title>
+            <el-icon>
+              <Grid />
+            </el-icon>
+            <span>后台管理</span>
+          </template>
+
+          <div id="generate-code">
+            <router-link to="/generate-code"><el-menu-item index="10-12">生成激活码</el-menu-item></router-link>
+          </div>
+          <div id="unread-msg">
+            <router-link to="/unread-msg"><el-menu-item index="unread-msg">未读消息</el-menu-item></router-link>
           </div>
         </el-sub-menu>
         <el-sub-menu index="contact">
@@ -111,7 +120,7 @@
 </template>
 <script lang="ts" setup>
 import { ref, watch } from "vue";
-import { Notebook, TopRight, User, Setting, Message, House, Star, MilkTea, Sugar, InfoFilled, Sunny,  Moon } from "@element-plus/icons-vue";
+import { Notebook, TopRight, User, Setting, Message, House, Star, MilkTea, Sugar, InfoFilled, Sunny, Moon,Grid} from "@element-plus/icons-vue";
 import { useUser } from "../store/user"
 import { storeToRefs } from 'pinia'
 import { logoutAPI, userInfoAPI } from "@/request/api";
@@ -135,7 +144,7 @@ const handleClose = (key: string, keyPath: string[]) => {
 };
 
 const openBlogWindow = () => {
-  window.open("https://blog.peacesheep.cn");
+  window.open("https://blog.peacesheep.xyz");
 };
 
 
@@ -215,7 +224,7 @@ watch(token, (newToken, oldToken) => {
 
 const isDark = useDark()
 
-const changeDarkAttribute = ()=>{
+const changeDarkAttribute = () => {
   const theme = isDark.value ? 'dark' : 'light'
   document.documentElement.setAttribute('data-theme', theme)
 }
@@ -225,7 +234,7 @@ watch(isDark, (newValue, oldValue) => {
 
 // 组件挂载时恢复用户状态
 onMounted(() => {
-  changeDarkAttribute();  
+  changeDarkAttribute();
   const tokenStoreValue = localStorage.getItem("token");
   if (tokenStoreValue) {
     token.value = tokenStoreValue;
@@ -245,26 +254,31 @@ const openGithub = () => {
 #menu {
   min-height: 100vh;
   display: flex;
-  flex-direction: column;  /* 让按钮垂直排列 */
-  justify-content: flex-start; /* 将按钮排列在顶部 */
+  flex-direction: column;
+  /* 让按钮垂直排列 */
+  justify-content: flex-start;
+  /* 将按钮排列在顶部 */
 }
 
 .menu-buttons {
   padding: 10px;
   display: flex;
   flex-direction: column;
-  align-items: center;  /* 按钮居中 */
+  align-items: center;
+  /* 按钮居中 */
   margin-bottom: 20px;
   margin-top: 20px;
 }
 
 .theme-switch {
-  margin-bottom: 15px;  /* 深色模式开关与折叠按钮之间的间距 */
+  margin-bottom: 15px;
+  /* 深色模式开关与折叠按钮之间的间距 */
 }
 
 .collapse-button {
   display: flex;
-  justify-content: center;  /* 将折叠按钮居中 */
+  justify-content: center;
+  /* 将折叠按钮居中 */
 }
 
 #collapse-menu-button .el-radio-button {
@@ -274,7 +288,8 @@ const openGithub = () => {
 
 
 #menu .el-menu-item {
-  padding: 10px 20px;  /* 菜单项的内边距 */
+  padding: 10px 20px;
+  /* 菜单项的内边距 */
 }
 
 
@@ -282,9 +297,11 @@ const openGithub = () => {
   background-color: #333;
   color: #fff;
 }
-.el-switch.is-checked .el-switch__core{
-  --el-switch-on-color: var(--background-color-dark);  /* 激活状态的背景色 */
-  --el-switch-off-color: var(--background-color-light);   /* 非激活状态的背景色 */
-}
 
+.el-switch.is-checked .el-switch__core {
+  --el-switch-on-color: var(--background-color-dark);
+  /* 激活状态的背景色 */
+  --el-switch-off-color: var(--background-color-light);
+  /* 非激活状态的背景色 */
+}
 </style>
