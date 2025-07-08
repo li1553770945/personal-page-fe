@@ -123,6 +123,18 @@ import cmakeIcon from '@/assets/icons/home/cmake.svg';
 import DockerIcon from '@/assets/icons/home/Docker.svg';
 import K8sIcon from '@/assets/icons/home/k8s.svg';
 import { Level } from '@icon-park/vue-next';
+import { onMounted } from 'vue';
+import RoutePreloader from '@/utils/routePreloader';
+
+// 在组件挂载后启动预加载
+onMounted(() => {
+  // 延迟1.5秒后开始预加载，确保首页渲染完成
+  setTimeout(() => {
+    if (!RoutePreloader.isPreloadComplete() && !RoutePreloader.isCurrentlyPreloading()) {
+      RoutePreloader.preloadAll();
+    }
+  }, 1500);
+});
 
 const work = [
 {

@@ -8,7 +8,7 @@
         <div class="menu-buttons">
           <el-switch v-model="isDark" :active-action-icon="Moon" :inactive-action-icon="Sunny" class="theme-switch" />
           <el-radio-group v-model="isCollapse" id="collapse-menu-button" class="collapse-button">
-            <el-radio-button :label="!isCollapse">|||</el-radio-button>
+            <el-radio-button :value="!isCollapse">|||</el-radio-button>
           </el-radio-group>
         </div>
         <router-link to="/home"><el-menu-item index="home">

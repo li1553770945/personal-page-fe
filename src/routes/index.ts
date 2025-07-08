@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { ElLoading } from 'element-plus';
+import RoutePreloader from '@/utils/routePreloader';
 
 let routes = [
      //使用import可以路由懒加载，如果不使用，太多组件一起加载会造成白屏
@@ -82,11 +83,27 @@ let routes = [
     //component: () => import(''),
     //}
 ]
+
+// 预加载所有路由组件的函数
+const preloadRouteComponents = async () => {
+    try {
+        const result = await RoutePreloader.preloadAll();
+        return result;
+    } catch (error) {
+        console.error('路由预加载失败:', error);
+        throw error;
+    }
+};
+
 // 路由
 const router = createRouter({
     history: createWebHistory(),
     routes
 })
+
+// 预加载标志
+let isPreloadTriggered = false;
+
 // 导出
 
 
@@ -103,6 +120,15 @@ const minimumDisplayTime = 300; // 加载动画的最小显示时间（0.3秒）
 router.beforeEach((to, from, next) => {
     clearTimeout(showTimer);
     startTime = null;
+
+    // 如果是首次访问首页且未触发预加载，则启动预加载
+    if (to.name === 'home' && !isPreloadTriggered) {
+        isPreloadTriggered = true;
+        // 延迟一段时间后开始预加载，确保首页渲染完成
+        setTimeout(() => {
+            preloadRouteComponents();
+        }, 1000); // 1秒后开始预加载
+    }
 
     // 延迟显示加载动画
     showTimer = setTimeout(() => {
@@ -135,3 +161,4 @@ router.afterEach(() => {
 });
 
 export default router;
+export { preloadRouteComponents };
