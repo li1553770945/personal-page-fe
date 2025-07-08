@@ -122,6 +122,7 @@ import gitIcon from '@/assets/icons/home/git.svg';
 import cmakeIcon from '@/assets/icons/home/cmake.svg';
 import DockerIcon from '@/assets/icons/home/Docker.svg';
 import K8sIcon from '@/assets/icons/home/k8s.svg';
+import { Level } from '@icon-park/vue-next';
 
 const work = [
 {
@@ -131,7 +132,7 @@ const work = [
     department: '爱橙科技',
     position: '分布式基础基础',
     time: '2025年4月-今',
-    description: '待添加',
+    description: '负责阿里网关Higressd的MCP协议适配工作，使用Go编写Envoy插件并以动态库形式加载，从网关层面将阿里现有HSF服务以MCP协议形式暴露，使得Agent能够直接调用阿里现有微服务。优化原有插件编译流程，单次测试时间从10分钟降低到小于1分钟，编写了多语言网关端到端测试，完成了插件的CI流程设计，使用OTEL和Grafana实现MCPServer指标监控，并配合开发MCPServer管理页面前后端',
     is_current: true,
     type:"实习",
   },
@@ -142,7 +143,7 @@ const work = [
     department: 'Data部门',
     position: '后端开发',
     time: '2022年11月-2023年2月',
-    description: '为字节跳动商业化数据平台后端开发 RPC 服务，将现有项目的 RPC 依赖管理方式从本地改为使用 overpass；对现有项目进行控制反转重构',
+    description: '为字节跳动商业化数据平台后端开发 RPC 服务，将现有项目的Kitex依赖从本地重构为 overpass，极大缩短微服务版本升级流程。采用 Google 开源组件库 go-wire 实现依赖注入机制，对现有DDD架构项目中大量使用全局变量的情况进行控制反转重构，使项目结构更清晰',
     is_current: false,
     type:"实习",
   },
@@ -153,7 +154,7 @@ const work = [
     department: '魔方工作室',
     position: '后台开发',
     time: '2022年7月-2022年8月',
-    description: '使用 C++语言，设计开发一款对象存储系统。项目使用分布式架构，支持多租户隔离，支持百万级文件存储，利用 epoll 的 IO 多路复用机制，综合使用 TCP 和 UDP 协议，具有高性能、高可用等特点',
+    description: '使用 C++ 语言设计并开发了一款对象存储系统，能够在1分钟内处理10w小文件的上传和下载。系统充分利用了 epoll 的 IO 多路复用机制。元信息使用leveldb，网络传输根据不同场景综合使用 TCP 和 UDP 协议，优化数据传输性能',
     is_current: false,
     type:"实习",
   }
@@ -196,7 +197,6 @@ const papers = [
 ]
 
 const badge_type = [
-
   'info',
   'warning',
   'primary',
@@ -266,6 +266,10 @@ const contests = [
     name: '全国研究生数学建模竞赛',
     level: '国家二等奖',
   },
+   {
+    name:'ICPC国际大学生程序设计竞赛亚洲总决赛(EC-Final)',
+    level: '铜奖',
+  },
   {
     name:'ICPC国际大学生程序设计竞赛亚洲区域赛',
     level: '银奖',
@@ -273,7 +277,24 @@ const contests = [
   {
     name: '江苏省大学生程序设计竞赛',
     level: '金奖',
+  },
+  {
+    name:"“蓝桥杯”全国软件和信息技术专业人才大赛全国总决赛",
+    level:"二等奖",
+  },
+  {
+    name:"中国研究生数学建模竞赛",
+    level:"国家二等奖",
+  },
+  {
+    name:"全国研究生操作系统开源创新大赛",
+    level:"三等奖",
+  },
+  {
+    name:"华为Hackthon软件难题挑战赛|软件之星",
+    level:"软件之星"
   }
+
 ]
 </script>
 
