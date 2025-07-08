@@ -117,8 +117,9 @@ const onSubmit = async () => {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 60vh;
+  height: 100vh;
   padding: 20px;
+  box-sizing: border-box;
 }
 
 .login-card {

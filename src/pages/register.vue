@@ -158,8 +158,10 @@ const handleSubmit = async () => {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 70vh;
+  height: 100vh;
   padding: 20px;
+  box-sizing: border-box;
+  overflow-y: auto;
 }
 
 .register-card {

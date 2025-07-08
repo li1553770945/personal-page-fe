@@ -20,6 +20,15 @@
  
   </script>
  <style scoped>
+ .chat-container {
+    height: 100vh;
+    overflow-y: auto;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+  }
+
  .message-input-component {
     margin-top: 1rem;
   }
@@ -27,6 +36,8 @@
   .message-display-component{
     margin-top: 1rem;
     margin-bottom: 1rem;
+    flex: 1;
+    overflow-y: auto;
   }
   
 </style> 

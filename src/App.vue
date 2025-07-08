@@ -30,7 +30,7 @@ const year = timeNow.getFullYear();
   flex-direction: column;
   justify-content: flex-start;
   align-items: stretch;
-  min-height: 100vh;
+  height: 100vh;
   background: var(--el-bg-color-page);
 }
 
@@ -39,18 +39,20 @@ const year = timeNow.getFullYear();
   max-width: 1200px;
   width: 100%;
   margin: 0 auto;
-  padding: var(--main-padding);
+  padding: 0;
   box-sizing: border-box;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .footer {
-  margin-top: auto;
-  padding: 20px;
+  padding: 16px 20px;
   text-align: center;
   color: var(--el-text-color-regular);
   font-size: 14px;
   background: var(--el-bg-color);
   border-top: 1px solid var(--el-border-color-light);
+  flex-shrink: 0;
 }
 
 .beian {

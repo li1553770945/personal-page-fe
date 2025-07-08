@@ -321,6 +321,8 @@ const contests = [
   max-width: 1000px;
   margin: 0 auto;
   padding: 20px;
+  height: 100%;
+  overflow-y: auto;
 }
 
 /* 头部区域 */
@@ -530,6 +532,8 @@ const contests = [
 @media (max-width: 768px) {
   .home {
     padding: 12px;
+    height: 100vh;
+    overflow-y: auto;
   }
   
   .profile-card {

@@ -1,8 +1,9 @@
 <template>
-    <el-tabs v-model="tab.activeName.value" class="demo-tabs" @tab-click="tab.handleClick">
-        <el-tab-pane label="提建议" name="message"></el-tab-pane>
-        <el-tab-pane label="回复查询" name="reply"></el-tab-pane>
-    </el-tabs>
+    <div class="feedback-page">
+        <el-tabs v-model="tab.activeName.value" class="demo-tabs" @tab-click="tab.handleClick">
+            <el-tab-pane label="提建议" name="message"></el-tab-pane>
+            <el-tab-pane label="回复查询" name="reply"></el-tab-pane>
+        </el-tabs>
     <div class="message" v-if="tab.activeName.value == 'message'">
         <div class="feedback-container">
             <h3 class="section-title">提交建议或反馈</h3>
@@ -76,6 +77,7 @@
             </span>
         </template>
     </el-dialog>
+    </div>
 </template>
 
 <script lang="ts" setup>
@@ -308,6 +310,13 @@ onBeforeRouteLeave(() => {
     border-radius: 12px;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
     border: 1px solid var(--el-border-color-light);
+  }
+
+  .feedback-page {
+    height: 100vh;
+    overflow-y: auto;
+    padding: 20px;
+    box-sizing: border-box;
   }
 
   .section-title {
