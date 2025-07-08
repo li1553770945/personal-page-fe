@@ -4,53 +4,65 @@
         <el-tab-pane label="回复查询" name="reply"></el-tab-pane>
     </el-tabs>
     <div class="message" v-if="tab.activeName.value == 'message'">
-        <el-form ref="feedbackFormRef" :model="feedback.feedbackForm" :rules="feedback.feedbackFormRules" label-width="120px">
-            <el-form-item label="问题类别" prop="categoryId">
-                <el-select v-model="feedback.feedbackForm.categoryId" placeholder="请选择问题类别">
-                    <el-option v-for="category in feedback.categories" :label="category.name"
-                        :value="category.id"></el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="标题" prop="title">
-                <el-input v-model="feedback.feedbackForm.title" placeholder="请输入标题"></el-input>
-            </el-form-item>
-            <el-form-item label="留言内容" prop="content">
-                <el-input type="textarea" v-model="feedback.feedbackForm.content" :autosize="{ minRows: 4, maxRows: 8 }"
-                    placeholder="请输入留言内容（切换页面时该内容会保存，但是刷新后被清空）"></el-input>
-            </el-form-item>
-            <el-form-item label="署名" prop="name">
-                <el-input v-model="feedback.feedbackForm.name" placeholder="请输入署名"></el-input>
-            </el-form-item>
-            <el-form-item label="联系方式" prop="contact">
-                <el-input v-model="feedback.feedbackForm.contact" placeholder="请输入联系方式（请注明是QQ，还是微信、手机号等）非必填"></el-input>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="primary" @click.prevent="feedback.submitForm">提交</el-button>
-            </el-form-item>
-            <el-form-item>
-                <router-link to="/appreciate">
-                    <h3>如果感觉有帮助，您可以点击这句话赞赏我。</h3>
-                </router-link>
-            </el-form-item>
-        </el-form>
+        <div class="feedback-container">
+            <h3 class="section-title">提交建议或反馈</h3>
+            <el-form ref="feedbackFormRef" :model="feedback.feedbackForm" :rules="feedback.feedbackFormRules" label-width="100px" size="large">
+                <el-form-item label="问题类别" prop="categoryId">
+                    <el-select v-model="feedback.feedbackForm.categoryId" placeholder="请选择问题类别" style="width: 100%;">
+                        <el-option v-for="category in feedback.categories" :label="category.name"
+                            :value="category.id"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="标题" prop="title">
+                    <el-input v-model="feedback.feedbackForm.title" placeholder="请输入标题" maxlength="100" show-word-limit></el-input>
+                </el-form-item>
+                <el-form-item label="留言内容" prop="content">
+                    <el-input type="textarea" v-model="feedback.feedbackForm.content" 
+                        :autosize="{ minRows: 4, maxRows: 8 }"
+                        placeholder="请详细描述您的问题或建议（切换页面时该内容会保存，但是刷新后被清空）"
+                        maxlength="1000" show-word-limit></el-input>
+                </el-form-item>
+                <el-form-item label="署名" prop="name">
+                    <el-input v-model="feedback.feedbackForm.name" placeholder="请输入您的姓名或昵称" maxlength="50"></el-input>
+                </el-form-item>
+                <el-form-item label="联系方式" prop="contact">
+                    <el-input v-model="feedback.feedbackForm.contact" 
+                        placeholder="请输入联系方式（如：QQ、微信、手机号、邮箱等，选填）" maxlength="100"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click.prevent="feedback.submitForm" :loading="isSubmitting">提交反馈</el-button>
+                </el-form-item>
+                <el-divider />
+                <el-form-item>
+                    <router-link to="/appreciate" class="appreciate-link">
+                        <el-button type="success" plain>
+                            <el-icon><Star /></el-icon>
+                            如果感觉有帮助，您可以赞赏我
+                        </el-button>
+                    </router-link>
+                </el-form-item>
+            </el-form>
+        </div>
     </div>
 
     <div class="reply" v-if="tab.activeName.value == 'reply'">
-        <br>
-        <el-form ref="replyQueryFormRef" :inline="true" :model="reply.replyQueryForm" :rules="reply.replyQueryRules" >
-            <el-row>
-                <el-col :span="20">
-                    <el-form-item label="留言ID" style="width: 95%;"  prop="uuid">
-                        <el-input v-model="reply.replyQueryForm.uuid" placeholder="请输入留言ID" style="width: 100%;"></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="4">
-                    <el-form-item>
-                        <el-button type="primary" @click="reply.Query()">查询</el-button>
-                    </el-form-item>
-                </el-col>
-            </el-row>
-        </el-form>
+        <div class="reply-container">
+            <h3 class="section-title">查询回复</h3>
+            <el-form ref="replyQueryFormRef" :model="reply.replyQueryForm" :rules="reply.replyQueryRules" label-width="100px" size="large">
+                <el-form-item label="留言ID" prop="uuid">
+                    <el-input 
+                        v-model="reply.replyQueryForm.uuid" 
+                        placeholder="请输入您提交留言后收到的ID" 
+                        clearable
+                        style="width: 300px;"
+                    />
+                    <el-button type="primary" @click="reply.Query()" style="margin-left: 12px;" :loading="reply.isQuerying">
+                        查询回复
+                    </el-button>
+                </el-form-item>
+            </el-form>
+        </div>
+             
     </div>
 
 
@@ -73,9 +85,11 @@ import { onBeforeRouteLeave } from 'vue-router';
 import { useFeedback } from "../store/feedback"
 import { allFeedbackCategoriesAPI, saveFeedbackAPI} from "@/request/api";
 import { ElNotification, TabsPaneContext } from 'element-plus';
+import { Star } from '@element-plus/icons-vue';
 import router from '@/routes';
 const feedbackFormRef = ref();
 const replyQueryFormRef = ref();
+const isSubmitting = ref(false);
 class Tab {
     activeName = ref("message");
     handleClick = (tab: TabsPaneContext, event: Event) => {
@@ -84,6 +98,7 @@ class Tab {
 }
 
 class Reply{
+    isQuerying = ref(false)
     replyQueryForm = reactive({
         uuid: ''
     })
@@ -283,6 +298,45 @@ onBeforeRouteLeave(() => {
     margin-top: 16px;
     font-size: 14px;
     line-height: 1.8;
+  }
+
+  .feedback-container, .reply-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background: var(--el-bg-color);
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--el-border-color-light);
+  }
+
+  .section-title {
+    margin-bottom: 24px;
+    color: var(--el-text-color-primary);
+    font-weight: 600;
+    text-align: center;
+  }
+
+  .appreciate-link {
+    text-decoration: none;
+  }
+
+  .el-tabs {
+    background: var(--el-bg-color);
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  }
+
+  .el-form-item {
+    margin-bottom: 20px;
+  }
+
+  [data-theme="dark"] .feedback-container,
+  [data-theme="dark"] .reply-container {
+    background: var(--el-bg-color-page);
+    border-color: var(--el-border-color);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
   }
 </style>
 

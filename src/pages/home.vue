@@ -1,116 +1,122 @@
 <template>
   <div class="home">
-    <div class="resume">
-      <el-container class="info">
-        <!-- <el-aside width="200px">Aside</el-aside> -->
-        <el-main>
-          <el-row class="name">
-            <h2>李亚宁</h2>
-          </el-row>
-          <!-- <el-row class="education-info">
-            东南大学 硕士 电子信息
-          </el-row> -->
-        </el-main>
-      </el-container>
-      <el-container class="education">
-        <el-main class="main">
-          <el-row class="item-name">
-            <h3>教育经历</h3>
-          </el-row>
-          <el-timeline>
-            <el-timeline-item v-for="item in education" :key="item.id" :timestamp="item.time" placement="top"
-              :color="item.is_current ? '#409EFF' : '#0bbd87'">
-              <el-card>
-                <div class="education-header">
-                  <b>{{ item.school }} {{ item.college }} {{ item.major }} </b>
-                </div>
-                <div class="work-experience-body">
-                  <b>主修课程: </b>{{ item.course }}
-                  <br>
-                  <b>荣誉奖项: </b>{{ item.reward }}
-                </div>
-              </el-card>
-            </el-timeline-item>
-          </el-timeline>
-        </el-main>
-      </el-container>
-      <el-container class="work">
-        <el-main class="main">
-          <el-row class="item-name">
-            <h3>工作/实习经历</h3>
-          </el-row>
-          <el-timeline>
-            <el-timeline-item v-for="item in work" :key="item.company" :timestamp="item.time" placement="top"
-              :color="item.is_current ? '#409EFF' : '#0bbd87'">
-              <el-card>
-                <div class="work-experience-header">
-                  <span class="position"><b>{{ item.company }} {{ item.department }} {{ item.position }}  </b></span>
-                  <div class="spacer"></div>
-                  <div class="type">
-                    <el-tag v-if="item.type=='实习'" type="primary">实习</el-tag>
-                    <el-tag v-if="item.type=='正式'" type="primary">正式</el-tag>
-                  </div>
-                  
-                </div>
-                <div class="work-experience-body">
-                  <div>{{ item.description }}</div>
-                </div>
-              </el-card>
-            </el-timeline-item>
-          </el-timeline>
-        </el-main>
-      </el-container>
-      <el-container class="contests">
-        <el-main>
-          <el-row class="item-name">
-            <h3>竞赛获奖</h3>
-          </el-row>
-          <div class="paper-content">
-              <ul>
-                <li v-for="item in contests" class="contests-li">
-                    {{ item.name }} - {{ item.level }}
-                </li>
-              </ul>
-            </div>
-        </el-main>
-      </el-container>
-      <el-container class="papers">
-        <el-main>
-          <el-row class="item-name">
-            <h3>论文发表</h3>
-          </el-row>
-          <div class="paper-content">
-              <ul>
-                <li v-for="item in papers" class="paper-li">
-                  <span class="paper-content" v-html="item.content"></span>
-                  <span class="paper-level">({{ item.level }})</span>
-                </li>
-              </ul>
-            </div>
-        </el-main>
-      </el-container>
-      <el-container class="skill">
-        <el-main>
-          <el-row class="item-name">
-            <h3>技能</h3>
-          </el-row>
-          <div v-for="item in skills" class="skill-item">
-            <div class="skill-content"><span class="skill-icon"
-                :style="{ backgroundImage: 'url(' + item.icon + ')' }" />
-              <el-badge :value="badge_name[item.type]" :type="badge_type[item.type]" :offset="[5, -5]">
-                {{ item.name }}
-              </el-badge>
-            </div>
+    <div class="hero-section">
+      <div class="profile-card">
+        <div class="profile-header">
+          <h1 class="name">李亚宁</h1>
+          <p class="title">后端开发工程师 / 研究生</p>
+        </div>
+      </div>
+    </div>
 
+    <div class="content-sections">
+      <!-- 教育经历 -->
+      <section class="section education-section">
+        <h2 class="section-title">
+          <el-icon><Reading /></el-icon>
+          教育经历
+        </h2>
+        <el-timeline>
+          <el-timeline-item v-for="item in education" :key="item.id" :timestamp="item.time" placement="top"
+            :color="item.is_current ? '#409EFF' : '#67C23A'">
+            <div class="timeline-card">
+              <div class="education-header">
+                <h3>{{ item.school }} {{ item.college }}</h3>
+                <el-tag :type="item.is_current ? 'primary' : 'success'" size="small">
+                  {{ item.degree }} · {{ item.major }}
+                </el-tag>
+              </div>
+              <div class="timeline-content">
+                <p><strong>主修课程：</strong>{{ item.course }}</p>
+                <p><strong>荣誉奖项：</strong>{{ item.reward }}</p>
+              </div>
+            </div>
+          </el-timeline-item>
+        </el-timeline>
+      </section>
+
+      <!-- 工作经历 -->
+      <section class="section work-section">
+        <h2 class="section-title">
+          <el-icon><Briefcase /></el-icon>
+          工作/实习经历
+        </h2>
+        <el-timeline>
+          <el-timeline-item v-for="item in work" :key="item.company" :timestamp="item.time" placement="top"
+            :color="item.is_current ? '#409EFF' : '#67C23A'">
+            <div class="timeline-card">
+              <div class="work-header">
+                <h3>{{ item.company }} · {{ item.department }}</h3>
+                <div class="work-tags">
+                  <el-tag :type="item.type === '实习' ? 'info' : 'success'" size="small">
+                    {{ item.type }}
+                  </el-tag>
+                  <el-tag type="primary" size="small">{{ item.position }}</el-tag>
+                </div>
+              </div>
+              <div class="timeline-content">
+                <p>{{ item.description }}</p>
+              </div>
+            </div>
+          </el-timeline-item>
+        </el-timeline>
+      </section>
+
+      <!-- 竞赛获奖 -->
+      <section class="section contests-section">
+        <h2 class="section-title">
+          <el-icon><Trophy /></el-icon>
+          竞赛获奖
+        </h2>
+        <div class="contests-grid">
+          <div v-for="item in contests" :key="item.name" class="contest-item">
+            <el-icon class="contest-icon"><Medal /></el-icon>
+            <div class="contest-content">
+              <h4>{{ item.name }}</h4>
+              <span class="contest-level">{{ item.level }}</span>
+            </div>
           </div>
-        </el-main>
-      </el-container>
+        </div>
+      </section>
 
+      <!-- 论文发表 -->
+      <section class="section papers-section">
+        <h2 class="section-title">
+          <el-icon><Document /></el-icon>
+          论文发表
+        </h2>
+        <div class="papers-list">
+          <div v-for="item in papers" :key="item.content" class="paper-item">
+            <div class="paper-content" v-html="item.content"></div>
+            <el-tag class="paper-level" type="warning" size="small">{{ item.level }}</el-tag>
+          </div>
+        </div>
+      </section>
+
+      <!-- 技能 -->
+      <section class="section skills-section">
+        <h2 class="section-title">
+          <el-icon><Tools /></el-icon>
+          技能
+        </h2>
+        <div class="skills-grid">
+          <div v-for="item in skills" :key="item.name" class="skill-item">
+            <div class="skill-icon" :style="{ backgroundImage: 'url(' + item.icon + ')' }"></div>
+            <div class="skill-content">
+              <h4>{{ item.name }}</h4>
+              <el-tag :type="badge_type[item.type]" size="small">
+                {{ badge_name[item.type] }}
+              </el-tag>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { Reading, Briefcase, Trophy, Medal, Document, Tools } from '@element-plus/icons-vue';
 
 import cppIcon from '@/assets/icons/home/cpp.svg';
 import vueIcon from '@/assets/icons/home/vue.svg';
@@ -312,111 +318,257 @@ const contests = [
 
 <style scoped>
 .home {
-  width: 100%;
-  text-align: left;
-  display: flex;
-  justify-content: center
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
 }
 
-.resume {
-  flex: 0 0 800px;
-  max-width: 800px;
-  min-width: 800px;
+/* 头部区域 */
+.hero-section {
+  margin-bottom: 40px;
 }
 
-.subtile {
-  font-size: 20px;
-  color: aqua;
+.profile-card {
+  background: linear-gradient(135deg, var(--el-color-primary-light-3), var(--el-color-primary));
+  padding: 40px;
+  border-radius: 16px;
+  color: white;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(64, 158, 255, 0.3);
 }
 
-.work-experience {
-  border-top: 1px solid #eee;
-  padding: 10px 0;
+.profile-header .name {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 8px;
 }
 
-.work-experience-header {
-  display: flex;
-  justify-content: left;
-  padding-bottom: 5px;
-}
-
-.work-experience-body {
-  padding-top: 5px;
-}
-
-.spacer {
-  flex-grow: 1;
-}
-
-.department {
-  margin-left: 2em;
-}
-
-.city {
-  margin-right: 2em;
-}
-
-
-.main {
-  padding-top: 0;
-  padding-bottom: 0;
-}
-
-/* .resume {
-  border: 2px solid #000000;
-} */
-
-.divider {
+.profile-header .title {
+  font-size: 1.2rem;
+  opacity: 0.9;
   margin: 0;
 }
 
-.item {
-  margin: 0;
+/* 内容区域 */
+.content-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
 }
 
+.section {
+  background: var(--el-bg-color);
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: var(--shadow-light);
+  border: 1px solid var(--el-border-color-light);
+}
 
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--el-text-color-primary);
+  margin-bottom: 24px;
+}
+
+.section-title .el-icon {
+  font-size: 1.5rem;
+  color: var(--el-color-primary);
+}
+
+/* 时间线卡片 */
+.timeline-card {
+  background: var(--el-bg-color-page);
+  border-radius: 8px;
+  padding: 20px;
+  border: 1px solid var(--el-border-color-lighter);
+  transition: all var(--transition-normal);
+}
+
+.timeline-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-heavy);
+}
+
+.education-header, .work-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.education-header h3, .work-header h3 {
+  margin: 0;
+  color: var(--el-text-color-primary);
+  font-weight: 600;
+}
+
+.work-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.timeline-content {
+  color: var(--el-text-color-regular);
+  line-height: 1.6;
+}
+
+.timeline-content p {
+  margin: 8px 0;
+}
+
+/* 竞赛获奖网格 */
+.contests-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.contest-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: var(--el-bg-color-page);
+  border-radius: 8px;
+  border: 1px solid var(--el-border-color-lighter);
+  transition: all var(--transition-normal);
+}
+
+.contest-item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-light);
+}
+
+.contest-icon {
+  font-size: 2rem;
+  color: var(--el-color-warning);
+}
+
+.contest-content h4 {
+  margin: 0 0 4px 0;
+  color: var(--el-text-color-primary);
+}
+
+.contest-level {
+  color: var(--el-text-color-regular);
+  font-size: 0.9rem;
+}
+
+/* 论文列表 */
+.papers-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.paper-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px;
+  background: var(--el-bg-color-page);
+  border-radius: 8px;
+  border: 1px solid var(--el-border-color-lighter);
+}
+
+.paper-content {
+  flex: 1;
+  line-height: 1.6;
+  color: var(--el-text-color-regular);
+}
 
 .paper-level {
-  color: red;
+  flex-shrink: 0;
 }
 
-
+/* 技能网格 */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
 
 .skill-item {
-  display: inline-block;
-  vertical-align: middle;
-  margin-right: 1em;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: var(--el-bg-color-page);
+  border-radius: 8px;
+  border: 1px solid var(--el-border-color-lighter);
+  transition: all var(--transition-normal);
 }
 
-.skill-content {
-  border: 1.5px solid var(--el-border-color);
-  border-radius: 5px;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  padding-left: 10px;
-  padding-right: 10px;
-  display: inline-block;
-  margin: 5px;
-  font-size: 1.2em;
+.skill-item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-light);
 }
 
 .skill-icon {
-  display: inline-block;
-  width: 1.3em;
-  height: 1.3em;
+  width: 32px;
+  height: 32px;
   background-size: contain;
   background-repeat: no-repeat;
-  vertical-align: middle;
-  margin-right: 5px;
+  background-position: center;
+  flex-shrink: 0;
 }
 
-.work-experience-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.skill-content h4 {
+  margin: 0 0 4px 0;
+  color: var(--el-text-color-primary);
 }
 
-.spacer {
-  flex-grow: 1;
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .home {
+    padding: 12px;
+  }
+  
+  .profile-card {
+    padding: 24px;
+  }
+  
+  .profile-header .name {
+    font-size: 2rem;
+  }
+  
+  .section {
+    padding: 20px;
+  }
+  
+  .education-header, .work-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .contests-grid, .skills-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 暗色主题适配 */
+[data-theme="dark"] .profile-card {
+  background: linear-gradient(135deg, var(--el-color-primary-dark-2), var(--el-color-primary-light-3));
+}
+
+[data-theme="dark"] .section {
+  background: var(--el-bg-color-page);
+  border-color: var(--el-border-color);
+}
+
+[data-theme="dark"] .timeline-card,
+[data-theme="dark"] .contest-item,
+[data-theme="dark"] .paper-item,
+[data-theme="dark"] .skill-item {
+  background: var(--el-bg-color);
+  border-color: var(--el-border-color);
 }
 </style>

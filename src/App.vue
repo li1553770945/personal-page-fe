@@ -25,29 +25,49 @@ const year = timeNow.getFullYear();
 
 <style scoped>
 
-.footer {
-  margin-top: 20px;
-}
-.beian {
-  color: inherit; /* 继承父元素的颜色 */
-  text-decoration: none; /* 如果你不希望链接有下划线，也可以加上这个 */
-}
-
 .main-container {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  /* 修改此处以允许footer附着在底部 */
-  align-items: center;
-  height: 100vh;
-  text-align: center;
+  align-items: stretch;
+  min-height: 100vh;
+  background: var(--el-bg-color-page);
 }
 
 .main-content {
-  min-width: 800px;
+  flex: 1;
   max-width: 1200px;
   width: 100%;
   margin: 0 auto;
+  padding: var(--main-padding);
+  box-sizing: border-box;
+}
+
+.footer {
+  margin-top: auto;
+  padding: 20px;
+  text-align: center;
+  color: var(--el-text-color-regular);
+  font-size: 14px;
+  background: var(--el-bg-color);
+  border-top: 1px solid var(--el-border-color-light);
+}
+
+.beian {
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.beian:hover {
+  color: var(--el-color-primary);
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    min-width: auto;
+    padding: 12px;
+  }
 }
 </style>
 

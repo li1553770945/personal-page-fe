@@ -7,9 +7,13 @@
 
         <div class="menu-buttons">
           <el-switch v-model="isDark" :active-action-icon="Moon" :inactive-action-icon="Sunny" class="theme-switch" />
-          <el-radio-group v-model="isCollapse" id="collapse-menu-button" class="collapse-button">
-            <el-radio-button :value="!isCollapse">|||</el-radio-button>
-          </el-radio-group>
+          <el-button 
+            :icon="isCollapse ? Expand : Fold" 
+            @click="isCollapse = !isCollapse" 
+            class="collapse-button"
+            size="small"
+            circle
+          />
         </div>
         <router-link to="/home"><el-menu-item index="home">
             <el-icon>
@@ -120,7 +124,7 @@
 </template>
 <script lang="ts" setup>
 import { ref, watch } from "vue";
-import { Notebook, TopRight, User, Setting, Message, House, Star, MilkTea, Sugar, InfoFilled, Sunny, Moon,Grid} from "@element-plus/icons-vue";
+import { Notebook, TopRight, User, Setting, Message, House, Star, MilkTea, Sugar, InfoFilled, Sunny, Moon, Grid, Expand, Fold} from "@element-plus/icons-vue";
 import { useUser } from "../store/user"
 import { storeToRefs } from 'pinia'
 import { logoutAPI, userInfoAPI } from "@/request/api";
@@ -255,53 +259,61 @@ const openGithub = () => {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  /* 让按钮垂直排列 */
   justify-content: flex-start;
-  /* 将按钮排列在顶部 */
+  transition: width 0.3s ease;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
 }
 
 .menu-buttons {
-  padding: 10px;
+  padding: 15px 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* 按钮居中 */
+  gap: 15px;
   margin-bottom: 20px;
   margin-top: 20px;
+  border-bottom: 1px solid var(--el-border-color-light);
 }
 
 .theme-switch {
-  margin-bottom: 15px;
-  /* 深色模式开关与折叠按钮之间的间距 */
+  margin: 0;
 }
 
 .collapse-button {
-  display: flex;
-  justify-content: center;
-  /* 将折叠按钮居中 */
+  transition: all 0.3s ease;
 }
 
-#collapse-menu-button .el-radio-button {
-  padding: 5px 10px;
-  transition: background-color 0.3s;
+.collapse-button:hover {
+  transform: scale(1.1);
 }
-
 
 #menu .el-menu-item {
-  padding: 10px 20px;
-  /* 菜单项的内边距 */
+  padding: 12px 20px;
+  margin: 2px 8px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
 }
 
+#menu .el-menu-item:hover {
+  background-color: var(--el-color-primary-light-9);
+  transform: translateX(4px);
+}
+
+.el-sub-menu .el-menu-item {
+  padding-left: 40px !important;
+}
 
 [data-theme="dark"] .el-menu {
-  background-color: #333;
+  background-color: #1a1a1a;
   color: #fff;
 }
 
+[data-theme="dark"] #menu .el-menu-item:hover {
+  background-color: rgba(64, 158, 255, 0.1);
+}
+
 .el-switch.is-checked .el-switch__core {
-  --el-switch-on-color: var(--background-color-dark);
-  /* 激活状态的背景色 */
-  --el-switch-off-color: var(--background-color-light);
-  /* 非激活状态的背景色 */
+  --el-switch-on-color: var(--el-color-primary);
+  --el-switch-off-color: var(--el-color-info);
 }
 </style>
