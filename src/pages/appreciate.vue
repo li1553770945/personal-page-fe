@@ -8,9 +8,9 @@
 
         </template>
         <div id="images">
-            <el-image id="image" style="width: 200px;margin: 30px; " src="http://img.peacesheep.cn/1677950486664.jpg" />
+            <el-image id="image" style="width: 200px;margin: 30px; " src="http://img.peacesheep.xyz/1677950486664.jpg" />
             <el-image id="image" style="width: 200px;margin: 30px;"
-                src="https://img.peacesheep.cn/2025/02/341c1175b0ca3bbcd9d9dd526474a65a.png" />
+                src="https://img.peacesheep.xyz/2025/02/341c1175b0ca3bbcd9d9dd526474a65a.png" />
         </div>
     </el-card>
 </template>

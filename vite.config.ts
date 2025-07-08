@@ -6,8 +6,37 @@ import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import { resolve } from "path";
 import { visualizer } from "rollup-plugin-visualizer";
 import viteCompression from 'vite-plugin-compression';
+import { loadEnv } from 'vite';
 
-export default defineConfig({
+export default defineConfig(({ mode }) => {
+  // 加载对应模式的环境变量
+  const env = loadEnv(mode, process.cwd(), '')
+  
+  // 根据环境变量判断是否需要代理
+  const needProxy = env.VITE_API_BASE_URL === '/api'
+  
+  // 根据模式确定代理目标
+  const getProxyTarget = () => {
+    if (mode === 'development') {
+      return {
+        api: 'http://localhost:9100/',
+        socket: 'ws://localhost:9100/'
+      }
+    } else if (mode === 'development.prod') {
+      return {
+        api: 'https://api.peacesheep.xyz/',
+        socket: 'wss://socket.peacesheep.xyz/'
+      }
+    }
+    return {
+      api: 'http://localhost:9100/',
+      socket: 'ws://localhost:9100/'
+    }
+  }
+  
+  const proxyTarget = getProxyTarget()
+  
+  return {
   plugins: [
     vue(),
     visualizer({
@@ -40,17 +69,19 @@ export default defineConfig({
   },
 
   server: {
-    proxy: {
+    proxy: needProxy ? {
       '/api': { // 匹配请求路径，
-        target: 'http://localhost:9100/', // 代理的目标地址
+        target: proxyTarget.api, // 代理的目标地址
         changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '/api') // 保持 /api 路径
       },
       '/socket': { // 匹配请求路径，
         ws: true,
-        target: 'ws://localhost:9100/', // 代理的目标地址
+        target: proxyTarget.socket, // 代理的目标地址
         changeOrigin: true,
       }
-    }
+    } : {}
   }
 
+  }
 })
