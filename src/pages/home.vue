@@ -4,7 +4,7 @@
       <div class="profile-card">
         <div class="profile-header">
           <h1 class="name">李亚宁</h1>
-          <p class="title">后端开发工程师 / 研究生</p>
+          <p class="title">基础架构 / 后端开发 /  / AI Agent </p>
         </div>
       </div>
     </div>
@@ -148,7 +148,7 @@ const work = [
     company: '阿里巴巴',
     city: '杭州',
     department: '爱橙科技',
-    position: '分布式基础基础',
+    position: '分布式基础技术',
     time: '2025年4月-今',
     description: '负责阿里网关Higressd的MCP协议适配工作，使用Go编写Envoy插件并以动态库形式加载，从网关层面将阿里现有HSF服务以MCP协议形式暴露，使得Agent能够直接调用阿里现有微服务。优化原有插件编译流程，单次测试时间从10分钟降低到小于1分钟，编写了多语言网关端到端测试，完成了插件的CI流程设计，使用OTEL和Grafana实现MCPServer指标监控，并配合开发MCPServer管理页面前后端',
     is_current: true,
