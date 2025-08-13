@@ -348,6 +348,7 @@ const openLink = (link: string) => {
 .projects {
   font-family: 'Arial', sans-serif;
   min-height: 90vh;
+  padding-top: 16px; /* 顶部留白，避免顶到窗口顶部 */
 }
 
 .project-item {

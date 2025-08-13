@@ -141,10 +141,10 @@ const isCollapse = ref(false);
 let menuWidth = ref("64");
 
 const handleOpen = (key: string, keyPath: string[]) => {
-  menuWidth = ref("200");
+  menuWidth.value = "200";
 };
 const handleClose = (key: string, keyPath: string[]) => {
-  menuWidth = ref("64");
+  menuWidth.value = "64";
 };
 
 const openBlogWindow = () => {
@@ -260,15 +260,17 @@ const openGithub = () => {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  align-items: stretch;
   transition: width 0.3s ease;
   box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+  text-align: left;
 }
 
 .menu-buttons {
-  padding: 15px 10px;
+  padding: 15px 20px; /* 与菜单项左右内边距保持一致，保证左侧对齐 */
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: center; /* 顶部按钮区域居中对齐 */
   gap: 15px;
   margin-bottom: 20px;
   margin-top: 20px;
@@ -294,13 +296,40 @@ const openGithub = () => {
   transition: all 0.3s ease;
 }
 
+#menu .el-sub-menu__title {
+  margin: 2px 8px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
 #menu .el-menu-item:hover {
   background-color: var(--el-color-primary-light-9);
   transform: translateX(4px);
 }
 
+#menu .el-sub-menu__title:hover {
+  background-color: var(--el-color-primary-light-9);
+  transform: translateX(4px);
+}
+
 .el-sub-menu .el-menu-item {
+  /* 保持层级缩进，但不影响左侧图标列 */
   padding-left: 40px !important;
+}
+
+/* 折叠状态下也保持图标靠左，而不是默认居中 */
+#menu.el-menu--collapse .el-menu-item,
+#menu.el-menu--collapse .el-sub-menu__title {
+  justify-content: flex-start;
+  padding-left: 20px;
+}
+
+/* 统一图标列宽度，保证所有图标在同一列对齐 */
+#menu .el-icon {
+  width: 24px; /* 统一图标列宽 */
+  display: inline-flex;
+  justify-content: center;
+  margin-right: 8px;
 }
 
 [data-theme="dark"] .el-menu {
