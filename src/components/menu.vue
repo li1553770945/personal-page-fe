@@ -60,7 +60,7 @@
             <router-link to="/register"><el-menu-item index="10-2">注册</el-menu-item></router-link>
           </div>
           <div id="logined" v-if="isLogined">
-            <el-menu-item index="10-11">{{ nickname }}</el-menu-item>
+            <el-menu-item index="10-11" @click="gotoProfile" class="nickname-item">{{ nickname }}</el-menu-item>
             <el-menu-item index="10-13" @click="logout">登出</el-menu-item>
           </div>
         </el-sub-menu>
@@ -131,6 +131,7 @@ import { logoutAPI, userInfoAPI } from "@/request/api";
 import { ElNotification } from 'element-plus'
 import { onMounted } from 'vue'
 import { Github } from '@icon-park/vue-next';
+import router from '@/routes';
 
 import { useDark } from '@vueuse/core'
 
@@ -252,6 +253,12 @@ const openGithub = () => {
   window.open("https://github.com/li1553770945");
 
 }
+
+const gotoProfile = () => {
+  if (isLogined.value) {
+    router.push('/profile')
+  }
+}
 </script>
 
 <style>
@@ -344,5 +351,13 @@ const openGithub = () => {
 .el-switch.is-checked .el-switch__core {
   --el-switch-on-color: var(--el-color-primary);
   --el-switch-off-color: var(--el-color-info);
+}
+
+.nickname-item {
+  font-weight: 600;
+}
+
+.nickname-item:hover {
+  color: var(--el-color-primary);
 }
 </style>

@@ -1,66 +1,86 @@
 <template>
-    <h1 v-if="!isFind">未找到该留言</h1>
-    <div v-if="isFind"> <el-card class="message-card">
-            <template #header>
-                <div class="message-title">
-                    <h2> {{ feedback.feedbackData.title }}</h2>
-                </div>
-                <div class="author-contact-container">
-                    <div class="author">
-                        <el-icon>
-                            <UserFilled />
-                        </el-icon> {{ feedback.feedbackData.name }}
-                    </div>
-                    <div class="contact">
-                        <el-icon>
-                            <PhoneFilled />
-                        </el-icon> {{ feedback.feedbackData.contact }}
-                    </div>
-                    <div class="category">
-                        <el-icon>
-                            <List />
-                        </el-icon> {{ feedback.feedbackData.category}}
-                    </div>
-                </div>
-            </template>
-            <div class="message-content">{{ feedback.feedbackData.content }}</div>
-            <template #footer>
-                发表于{{ formatDateTimeUnixSecond(feedback.feedbackData.createdAt) }}
-            </template>
-        </el-card>
+    <div class="read-msg-page">
+        <!-- 加载状态 -->
+        <div v-if="isLoading" class="loading-wrapper">
+            <el-skeleton :rows="6" animated class="skeleton-card" />
+            <el-skeleton :rows="4" animated class="skeleton-card small" />
+        </div>
 
-        <el-card class="reply-card" v-if="isReplid">
-            <template #header>
-                <div class="message-title">
-                    <h2>回复</h2>
-                </div>
-            </template>
-            <div class="message-content">{{ feedback.replyData.content }}</div>
-            <template #footer>
-                回复于{{ formatDateTimeUnixSecond(feedback.replyData.createdAt) }}
-            </template>
-        </el-card>
-        <el-card class="not-reply-card" v-if="!isReplid && role != 'admin'">
-            <template #header>
-                <div class="message-title">
-                    <h2>留言暂未回复</h2>
-                </div>
-            </template>
-            <el-empty description="留言暂未回复" />
-        </el-card>
+        <!-- 未找到 -->
+        <el-empty v-else-if="!isFind" description="未找到该留言" />
 
-        <el-form ref="formRef" :model="reply.replyForm" :rules="reply.replyRules" v-if="!isReplid && role == 'admin'"
-            label-position="top">
-            <el-form-item prop="content">
-                <el-input type="textarea" v-model="reply.replyForm.content"
-                    :autosize="{ minRows: 4, maxRows: 8 }"></el-input>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="primary" @click="reply.addReply(feedback.feedbackData.id)">提交</el-button>
-            </el-form-item>
-        </el-form>
+        <!-- 找到数据展示 -->
+        <div v-else>
+            <el-card class="message-card" shadow="hover">
+                <template #header>
+                    <div class="header-main">
+                        <h2 class="title">{{ feedback.feedbackData.title }}</h2>
+                        <div class="meta-line">
+                            <el-space wrap size="large">
+                                <span class="meta-item">
+                                    <el-icon><UserFilled /></el-icon>
+                                    <span>{{ feedback.feedbackData.name || '匿名' }}</span>
+                                </span>
+                                <span class="meta-item">
+                                    <el-icon><PhoneFilled /></el-icon>
+                                    <span>{{ feedback.feedbackData.contact || '无' }}</span>
+                                </span>
+                                <span class="meta-item">
+                                    <el-icon><List /></el-icon>
+                                    <el-tag size="small" type="info">{{ feedback.feedbackData.category || '未分类' }}</el-tag>
+                                </span>
+                                <span class="meta-item time">提交于 {{ formatDateTimeUnixSecond(feedback.feedbackData.createdAt) }}</span>
+                            </el-space>
+                        </div>
+                    </div>
+                </template>
+                <div class="message-content">{{ feedback.feedbackData.content }}</div>
+            </el-card>
+
+            <!-- 已回复 -->
+            <el-card v-if="isReplid" class="reply-card" shadow="never">
+                <template #header>
+                    <div class="reply-header">
+                        <el-icon class="reply-icon"><List /></el-icon>
+                        <h3>回复</h3>
+                    </div>
+                </template>
+                <div class="reply-content">{{ feedback.replyData.content }}</div>
+                <template #footer>
+                    <span class="footer-time">回复于 {{ formatDateTimeUnixSecond(feedback.replyData.createdAt) }}</span>
+                </template>
+            </el-card>
+
+            <!-- 未回复 (普通用户) -->
+            <el-card v-if="!isReplid && role != 'admin'" class="not-reply-card" shadow="never">
+                <el-empty description="留言暂未回复" />
+            </el-card>
+
+            <!-- 管理员回复表单 -->
+            <el-card v-if="!isReplid && role == 'admin'" class="reply-form-card" shadow="never">
+                <template #header>
+                    <div class="reply-header">
+                        <h3>添加回复</h3>
+                    </div>
+                </template>
+                <el-form ref="formRef" :model="reply.replyForm" :rules="reply.replyRules" label-position="top" class="reply-form">
+                    <el-form-item prop="content" label="回复内容">
+                        <el-input
+                            type="textarea"
+                            v-model="reply.replyForm.content"
+                            :autosize="{ minRows: 5, maxRows: 10 }"
+                            maxlength="1000"
+                            show-word-limit
+                            placeholder="请输入回复内容 (10-1000 字)"/>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="reply.addReply(feedback.feedbackData.id)">提交</el-button>
+                        <el-button @click="reply.replyForm.content = ''" type="default">重置</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-card>
+        </div>
     </div>
-
 </template>
 
 <script setup lang="ts">
@@ -79,7 +99,8 @@ const { isLogined, username, nickname, role } = storeToRefs(userStore)
 const route = useRoute();
 const uuid = ref(route.params.uuid as string);
 const isReplid = ref(false);
-const isFind = ref(false);
+const isFind = ref(false); // 是否找到有效数据
+const isLoading = ref(true); // 初始加载状态
 const formRef = ref()
 
 class Feedback {
@@ -108,17 +129,13 @@ class Feedback {
                         message: data.message,
                         type: 'error',
                     })
+                    isLoading.value = false;
                 } else {
                     isFind.value = true;
                     console.log(data.data.name)
-                    this.feedbackData.id = data.data.id;
-                    this.feedbackData.name = data.data.name;
-                    this.feedbackData.title = data.data.title;
-                    this.feedbackData.contact = data.data.contact;
-                    this.feedbackData.content = data.data.content;
-                    this.feedbackData.createdAt = data.data.createdAt;
-                    this.feedbackData.category = data.data.category;
+                    this.feedbackData = data.data;
                     this.getReply();
+                    isLoading.value = false;
                 }
             }
         ).catch(
@@ -128,6 +145,7 @@ class Feedback {
                     message: err.message,
                     type: 'error',
                 })
+                isLoading.value = false;
             }
         )
     }
@@ -222,30 +240,53 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.message-card,
-.not-reply-card,
-.reply-card {
-    margin-bottom: 20px;
+/* 页面整体容器 */
+.read-msg-page {
+    max-width: 880px;
+    margin: 32px auto 60px;
+    padding: 0 16px;
+    box-sizing: border-box;
 }
 
-.message-title {
-    text-align: center;
-}
-
-.author-contact-container {
+/* 加载骨架布局 */
+.loading-wrapper {
     display: flex;
-    justify-content: start;
-    align-items: center;
+    flex-direction: column;
+    gap: 20px;
 }
-
-.author,
-.category,
-.contact {
-    margin-right: 20px;
-    color: gray;
+.skeleton-card {
+    padding: 18px 22px;
+    border: 1px solid var(--el-border-color);
+    border-radius: 8px;
 }
+.skeleton-card.small { max-width: 620px; }
 
-.message-content {
-    word-wrap: break-word;
+/* 卡片间距 */
+.message-card,
+.reply-card,
+.not-reply-card,
+.reply-form-card { margin-bottom: 22px; }
+
+.header-main { display: flex; flex-direction: column; gap: 6px; }
+.title { margin: 0; font-size: 20px; font-weight: 600; }
+.meta-line { font-size: 13px; color: var(--el-text-color-secondary); }
+.meta-item { display: inline-flex; align-items: center; gap: 4px; }
+.meta-item.time { opacity: 0.85; }
+
+.message-content, .reply-content { line-height: 1.75; font-size: 15px; white-space: pre-wrap; }
+
+.reply-header { display: flex; align-items: center; gap: 6px; }
+.reply-header h3 { margin: 0; font-size: 16px; font-weight: 600; }
+.reply-icon { color: var(--el-color-primary); }
+.footer-time { font-size: 12px; color: var(--el-text-color-secondary); }
+
+.reply-form :deep(.el-form-item) { margin-bottom: 18px; }
+.reply-form :deep(textarea) { font-family: inherit; }
+
+@media (max-width: 600px) {
+    .read-msg-page { margin-top: 20px; }
+    .title { font-size: 18px; }
+    .meta-line { display: flex; flex-direction: column; gap: 4px; }
+    .meta-item.time { margin-top: 2px; }
 }
 </style>

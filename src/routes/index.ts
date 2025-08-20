@@ -76,6 +76,11 @@ let routes = [
         name: 'chat',
         component: () => import('@pages/chat.vue')
     },
+    {
+        path: '/profile',
+        name: 'profile',
+        component: () => import('@pages/profile.vue')
+    },
     //{
     //配置404页面
     //path: '/:catchAll(.*)',

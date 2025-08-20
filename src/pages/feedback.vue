@@ -57,7 +57,7 @@
                         clearable
                         style="width: 300px;"
                     />
-                    <el-button type="primary" @click="reply.Query()" style="margin-left: 12px;" :loading="reply.isQuerying">
+                    <el-button type="primary" @click="reply.Query()" style="margin-left: 12px;" :loading="reply.isQuerying.value">
                         查询回复
                     </el-button>
                 </el-form-item>

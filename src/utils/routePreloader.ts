@@ -44,7 +44,8 @@ export class RoutePreloader {
             import('@pages/unreadMsg.vue'),
             import('@pages/readMsg.vue'),
             import('@pages/projects.vue'),
-            import('@pages/chat.vue')
+            import('@pages/chat.vue'),
+            import('@pages/profile.vue')
         ];
 
         try {
