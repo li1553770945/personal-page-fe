@@ -57,7 +57,7 @@ export default defineConfig(({ mode }) => {
       resolvers: [ElementPlusResolver()],
     }),
   ],
-  base: "./", // 设置打包路径
+  base: "/", // 设置打包路径
   resolve: {
     // ↓路径别名
     alias: {
