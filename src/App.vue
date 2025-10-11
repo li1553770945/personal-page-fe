@@ -8,7 +8,7 @@
         <el-scrollbar>
           <router-view></router-view>
           <el-footer class="footer" style="text-align:center">Copyright © 2022-{{ year }} PeaceSheep<br>
-            <a class="beian" href="https://beian.miit.gov.cn/" target="_blank">冀ICP备2025103290号-2</a>
+            <a class="beian" href="https://beian.miit.gov.cn/" target="_blank">冀ICP备2025103290号</a>
           </el-footer>
         </el-scrollbar>
       </el-main>
