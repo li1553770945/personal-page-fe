@@ -9,20 +9,21 @@
           :limit="1"
         >
           <template #trigger>
-            <el-button type="primary" :icon="Document" size="small">选择文件</el-button>
+            <el-button type="primary" :icon="Document" size="default">选择文件</el-button>
           </template>
         </el-upload>
-        <span v-if="selectedFile" class="file-info">
-          {{ selectedFile.name }}
+        <div v-if="selectedFile" class="file-info">
+          <span class="file-name">{{ selectedFile.name }}</span>
           <el-button 
             type="danger" 
             :icon="Close" 
             size="small" 
             text 
+            circle
             @click="clearFile"
-            style="margin-left: 8px;"
+            class="file-close-btn"
           ></el-button>
-        </span>
+        </div>
       </div>
       <el-input 
         v-model="inputMessage" 
@@ -166,27 +167,63 @@
   .input-box {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 12px;
+    background: var(--el-bg-color);
+    border: 1px solid var(--el-border-color-light);
+    border-radius: 8px;
+    padding: 16px;
   }
   
   .input-toolbar {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 8px 0;
+    gap: 12px;
+    flex-wrap: wrap;
   }
   
   .file-info {
-    font-size: 12px;
-    color: var(--el-text-color-regular);
     display: flex;
     align-items: center;
+    gap: 8px;
+    background: var(--el-fill-color-light);
+    padding: 8px 12px;
+    border-radius: 6px;
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .file-name {
+    font-size: 14px;
+    color: var(--el-text-color-primary);
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .file-close-btn {
+    flex-shrink: 0;
   }
   
   .input-actions {
     display: flex;
-    gap: 8px;
+    gap: 12px;
     justify-content: flex-end;
+  }
+  
+  @media (max-width: 768px) {
+    .input-box {
+      padding: 12px;
+    }
+    
+    .input-toolbar {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    
+    .file-info {
+      width: 100%;
+    }
   }
   </style>
   

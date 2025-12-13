@@ -115,13 +115,12 @@ watch(
 
 <style scoped>
 .message-box {
-  border: 1px solid #2d2b2b;
+  border: 1px solid var(--el-border-color-light);
   border-radius: 8px;
-  padding: 1rem;
+  padding: 16px;
   overflow-y: auto;
-  min-height: 50vh;
-  max-height: 50vh;
-  background-color: #f5f5f5;
+  background-color: var(--el-bg-color);
+  height: 100%;
 }
 
 .message {

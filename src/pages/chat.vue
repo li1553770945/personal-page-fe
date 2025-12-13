@@ -3,19 +3,19 @@
     <!-- 聊天容器 -->
     <div class="chat-container">
       <!-- 创建或加入房间的控件 -->
-      <div class="header-section">
-        <HeaderRoomControls  />
-        <!-- 分享按钮 -->
-        <el-button 
-          v-if="curRoomId && connectionStatus === 'connected'"
-          type="success" 
-          :icon="Share"
-          @click="copyShareLink"
-          class="share-button"
-        >
-          分享聊天室
-        </el-button>
-      </div>
+      <HeaderRoomControls>
+        <template #actions>
+          <el-button 
+            v-if="curRoomId && connectionStatus === 'connected'"
+            type="success" 
+            :icon="Share"
+            @click="copyShareLink"
+            size="default"
+          >
+            分享聊天室
+          </el-button>
+        </template>
+      </HeaderRoomControls>
       <!-- 显示消息的组件 -->
       <MessageDisplay class="message-display-component" />
       <!-- 发送新消息的输入框 -->
@@ -165,39 +165,17 @@
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-  }
-
-  .header-section {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    margin-bottom: 1rem;
-  }
-
-  .share-button {
-    flex-shrink: 0;
-    margin-top: 0;
+    gap: 16px;
   }
 
  .message-input-component {
-    margin-top: 1rem;
+    flex-shrink: 0;
   }
 
   .message-display-component{
-    margin-top: 1rem;
-    margin-bottom: 1rem;
     flex: 1;
     overflow-y: auto;
-  }
-
-  @media (max-width: 768px) {
-    .header-section {
-      flex-direction: column;
-    }
-    
-    .share-button {
-      width: 100%;
-    }
+    min-height: 0;
   }
   
 </style> 
