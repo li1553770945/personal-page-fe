@@ -84,15 +84,43 @@ export const useConnectStore = defineStore("connect", () => {
   const handleMessage = (obj: { type: string; data: string }) => {
     switch (obj.type) {
       case "text":
-        const msg = {
-          id: new Date().toDateString(),
+        const textMsg = {
+          id: Date.now().toString(),
           content: obj.data,
-          time: "",
+          time: new Date().toLocaleString(),
           sendBySelf: false,
           status: "",
           error_msg: "",
+          type: "text" as const,
         };
-        addMessage(msg);
+        addMessage(textMsg);
+        break;
+      case "file":
+        try {
+          const fileData = JSON.parse(obj.data);
+          const fileMsg = {
+            id: Date.now().toString(),
+            content: fileData.name || "文件",
+            time: new Date().toLocaleString(),
+            sendBySelf: false,
+            status: "",
+            error_msg: "",
+            type: "file" as const,
+            fileInfo: {
+              key: fileData.key,
+              name: fileData.name,
+              size: fileData.size,
+            },
+          };
+          addMessage(fileMsg);
+        } catch (e) {
+          console.error("解析文件消息失败", e);
+          ElNotification({
+            title: "接收消息失败",
+            message: "文件消息格式错误",
+            type: "error",
+          });
+        }
         break;
       default:
         console.log("未知消息类型", obj.type);
@@ -173,6 +201,40 @@ export const useConnectStore = defineStore("connect", () => {
         sendBySelf: true,
         status: "sending",
         error_msg: "",
+        type: "text",
+      });
+      return true;
+    } else {
+      sending.value = false;
+      ElNotification({
+        title: "发送失败",
+        message: "websocket连接未建立",
+        type: "error",
+      });
+      return false;
+    }
+  };
+
+  const sendFileMessage = (fileInfo: { key: string; name: string; size?: number }): boolean => {
+    if (globalWs.value) {
+      sending.value = true;
+      const fileData = {
+        key: fileInfo.key,
+        name: fileInfo.name,
+        size: fileInfo.size,
+      };
+      globalWs.value.send(
+        JSON.stringify({ event: "im-message", type: "file", data: JSON.stringify(fileData) })
+      );
+      addMessage({
+        id: Date.now().toString(),
+        content: fileInfo.name,
+        time: new Date().toLocaleString(),
+        sendBySelf: true,
+        status: "sending",
+        error_msg: "",
+        type: "file",
+        fileInfo: fileData,
       });
       return true;
     } else {
@@ -196,5 +258,6 @@ export const useConnectStore = defineStore("connect", () => {
     joining,
     rejoining,
     sendMessage,
+    sendFileMessage,
   };
 });

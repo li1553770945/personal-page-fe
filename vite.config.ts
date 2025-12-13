@@ -79,6 +79,7 @@ export default defineConfig(({ mode }) => {
         ws: true,
         target: proxyTarget.socket, // 代理的目标地址
         changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/socket/, '') // 去掉 /socket 前缀，直接转发到目标服务器
       }
     } : {}
   }

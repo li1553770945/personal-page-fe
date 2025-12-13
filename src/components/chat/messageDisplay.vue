@@ -6,18 +6,91 @@
         :key="msg.id"
         :class="['message', msg.sendBySelf ? 'sent-by-self' : 'received']"
       >
-        <div class="text">{{ msg.content }}</div>
+        <!-- 文本消息 -->
+        <div v-if="!msg.type || msg.type === 'text'" class="text">{{ msg.content }}</div>
+        <!-- 文件消息 -->
+        <div v-else-if="msg.type === 'file' && msg.fileInfo" class="file-message">
+          <div class="file-icon">
+            <el-icon :size="24"><Document /></el-icon>
+          </div>
+          <div class="file-content">
+            <div class="file-name">{{ msg.fileInfo.name }}</div>
+            <div v-if="msg.fileInfo.size" class="file-size">{{ formatFileSize(msg.fileInfo.size) }}</div>
+            <el-button 
+              type="primary" 
+              size="small" 
+              :loading="downloading[msg.fileInfo.key]"
+              @click="handleDownloadFile(msg.fileInfo.key, msg.fileInfo.name)"
+              style="margin-top: 8px;"
+            >
+              {{ downloading[msg.fileInfo.key] ? '下载中...' : '下载文件' }}
+            </el-button>
+          </div>
+        </div>
       </div>
     </div>
   </el-scrollbar>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useMessageStore } from "../../store/messageStore";
-import { nextTick, ref } from "vue";
+import { nextTick, ref, reactive } from "vue";
+import { Document } from '@element-plus/icons-vue';
+import { downloadFileAPI } from '../../request/api';
+import { ElNotification, ElScrollbar } from 'element-plus';
 
 const { messages } = useMessageStore();
-const scrollbarRef = ref(null);
+const scrollbarRef = ref<InstanceType<typeof ElScrollbar> | null>(null);
+const downloading = reactive<Record<string, boolean>>({});
+
+// 格式化文件大小
+const formatFileSize = (bytes: number): string => {
+  if (bytes === 0) return '0 B';
+  const k = 1024;
+  const sizes = ['B', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+};
+
+// 下载文件
+const handleDownloadFile = async (key: string, fileName: string) => {
+  if (downloading[key]) return;
+  
+  downloading[key] = true;
+  try {
+    const res = await downloadFileAPI(key);
+    const data = res.data;
+    
+    if (data.code !== 0) {
+      throw new Error(data.message || '获取下载链接失败');
+    }
+    
+    const { signedUrl } = data.data;
+    
+    // 创建下载链接
+    const link = document.createElement('a');
+    link.href = signedUrl;
+    link.download = fileName;
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    ElNotification({
+      title: '开始下载',
+      message: `正在下载 ${fileName}`,
+      type: 'success',
+    });
+  } catch (error: any) {
+    ElNotification({
+      title: '下载失败',
+      message: error.message || '文件下载失败',
+      type: 'error',
+    });
+  } finally {
+    downloading[key] = false;
+  }
+};
 
 // 监听消息列表的变化并滚动到最新消息
 const scrollToBottom = () => {
@@ -88,5 +161,49 @@ watch(
   color: #333;
   border-top-left-radius: 0px; /* 圆角 */
   box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1); /* 添加轻微阴影 */
+}
+
+/* 文件消息样式 */
+.file-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  min-width: 200px;
+  max-width: 400px;
+}
+
+.sent-by-self .file-message {
+  background-color: #e3f2fd;
+}
+
+.received .file-message {
+  background-color: #ffffff;
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.file-icon {
+  flex-shrink: 0;
+  color: var(--el-color-primary);
+}
+
+.file-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.file-name {
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 4px;
+  word-break: break-all;
+}
+
+.file-size {
+  font-size: 12px;
+  color: #999;
+  margin-bottom: 4px;
 }
 </style>
